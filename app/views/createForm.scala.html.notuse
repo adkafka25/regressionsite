@@ -1,0 +1,31 @@
+@(runForm: Form[Run])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+    
+    <h1>Add a computer</h1>
+    
+    @form(routes.Application.save()) {
+        
+        <fieldset>
+        
+            @inputText(runForm("name"), '_label -> "Computer name")
+            @inputText(runForm("introduced"), '_label -> "Introduced date")
+            @inputText(runForm("discontinued"), '_label -> "Discontinued date")
+			@inputText(runForm("version"), '_label -> "Version")
+			
+            
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this run" class="btn primary"> or 
+            <a href="@routes.Application.listRun()" class="btn">Cancel</a> 
+        </div>
+        
+    }
+    
+}
