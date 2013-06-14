@@ -6,6 +6,7 @@
 GET     /                           controllers.Application.index()
 
 # List views
+GET		/runs						controllers.Application.listRun(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "", filterBy ?= "name")
 GET		/runs/:filterBy             controllers.Application.listRun(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "", filterBy)
 GET		/pages/						controllers.Application.listPage(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
 GET		/bugs						controllers.Application.listBug(p:Int ?= 0, s ?= "number", o ?= "asc", f ?= "")
