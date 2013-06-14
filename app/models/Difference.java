@@ -35,7 +35,7 @@ public class Difference extends Model {
 		joinColumns=@JoinColumn(name="Difference_ID", referencedColumnName="Difference_ID"),
 		inverseJoinColumns=@JoinColumn(name="Page_ID", referencedColumnName="Page_ID")
 	)
-	public Set<PageOut> pagesout = new HashSet<PageOut>();
+	public Set<PageOut> pagesoutdifference = new HashSet<PageOut>();
 	
     /**
      * Generic query helper for entity Computer with id Long
@@ -69,10 +69,10 @@ public class Difference extends Model {
 	 * @param page The page to fin differences of
 	 * @return Returns list of differences
 	 */
-	public static List<Difference> listDifferences(PageOut page){
+	public static List<Difference> listDifferences(PageOut pageout){
 		return 
 			find.where()
-				.eq("pagesout",page)
+				.eq("pagesoutdifference",pageout)
 				.findList();
 	}
 	

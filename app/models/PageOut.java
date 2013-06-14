@@ -41,9 +41,13 @@ public class PageOut extends Model {
 	public Error error;
 
     //@Column(name="Difference_ID")
-	@ManyToMany(mappedBy="pagesout")
+	@ManyToMany(mappedBy="pagesoutdifference")
 	//@JoinColumn(name="Difference_ID")
 	public Set<Difference> difference = new HashSet<Difference>();
+	
+	@ManyToMany(mappedBy="pagesoutbug")
+	//public Set<Bug> bug = new HashSet<Bug>();
+	public Map<PageOut,Bug> bug = new HashMap<PageOut,Bug>();
 
     /**
      * Generic query helper for entity PageOut with id Long
@@ -71,8 +75,8 @@ public class PageOut extends Model {
                 .getPage(page);
     }
 	
-		/**
-	 * Returns a list of differences associated with that Page
+	/**
+	 * Returns a list of pages associated with that page
 	 * 
 	 * @param page The page to fin differences of
 	 * @return Returns list of differences
@@ -85,6 +89,32 @@ public class PageOut extends Model {
 	}
 	
 	/**
+	 * Returns a list of pages associated with that bug
+	 * 
+	 * @param page The page to fin differences of
+	 * @return Returns list of differences
+	 */
+	public static List<PageOut> listPageFromBug(Bug bug){
+		return
+			find.where()
+				.eq("bug",bug)
+				.findList();
+	}
+	
+	/**
+	 * Returns one Page associated with that Page
+	 * 
+	 * @param page The page to fin differences of
+	 * @return Returns list of differences
+	 */
+	public static PageOut pageFromBug( Bug bug ){
+		return
+			find.where()
+				.eq("bug",bug)
+				.findUnique();
+	}
+	
+	/**
      * Return a page of PageOut
      *
      * @param page Page to display
@@ -93,10 +123,11 @@ public class PageOut extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static Page<PageOut> pageFromRun(int page, int pageSize, String sortBy, String order, Long runID) {
+    public static Page<PageOut> pageFromRun(int page, int pageSize, String sortBy, String order, Long runID, String filter) {
 		return 
             find.where()
                 .eq("run.id", runID)
+				.ilike("name", "%" + filter + "%")
                 .orderBy(sortBy + " " + order)
                 .fetch("run")
 				.fetch("performance")

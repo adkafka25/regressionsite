@@ -70,7 +70,7 @@
                     @header("name", "Page Name")
                     @header("run.name", "Run")
                     @header("format.name", "Format")
-                    @header("Performance.time", "Performance Time")
+                    @header("performance.time", "Performance Time")
 					@header("error.name", "Error")
 					@header("difference.name", "Difference Desc")
                 </tr>
@@ -79,7 +79,7 @@
 
                 @for(page <- currentPage.getList) {
                     <tr>
-                        <td><a href="@controllers.Application.listPageByRun(0,"name","asc",page.run.id)">@page.name</a></td>
+                        <td>@page.name</a></td>
 						<td>
                             @if(page.run == null) {
                                 <em>-</em>
@@ -110,7 +110,17 @@
                         </td>
 						<td>
 							@for(difference <- Difference.listDifferences(page)) {
-								&bull; <i>@difference.name</i> </br>
+								@if(difference.difftype.name == "Worse") {
+									<font color="red">&bull; <i>@difference.name</i></font>  
+								} else {
+									@if(difference.difftype.name == "Better") {
+										<font color="green">&bull; <i>@difference.name</i></font>
+									} else {
+										<font color="black">&bull; <i>@difference.name</i></font>
+									}
+								}
+								
+								</br>
 							}
                         </td>
 						
