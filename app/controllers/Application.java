@@ -13,7 +13,7 @@ public class Application extends Controller {
      * This result directly redirect to application home.
      */
     public static Result GO_HOME = redirect(
-        routes.Application.listRun(0, "name", "asc", "")
+        routes.Application.listRun(0, "name", "asc", "", "name")
     );
   
   
@@ -29,11 +29,11 @@ public class Application extends Controller {
      * @param order Sort order (either asc or desc)
      * @param filter Filter applied on page names
      */
-    public static Result listRun(int page, String sortBy, String order, String filter) {
+    public static Result listRun(int page, String sortBy, String order, String filter, String filterBy) {
         return ok(
             listRuns.render(
-                Run.page(page, 10, sortBy, order, filter),
-                sortBy, order, filter
+                Run.page(page, 10, sortBy, order, filter, filterBy),
+                sortBy, order, filter, filterBy
             )
         );
     }

@@ -66,10 +66,10 @@ public class Run extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static Page<Run> page(int page, int pageSize, String sortBy, String order, String filter) {
+    public static Page<Run> page(int page, int pageSize, String sortBy, String order, String filter, String filterBy) {
         return 
             find.where()
-                .ilike("name", "%" + filter + "%")
+                .ilike(filterBy, "%" + filter + "%")
                 .orderBy(sortBy + " " + order)
                 .fetch("version")
 				.fetch("format")

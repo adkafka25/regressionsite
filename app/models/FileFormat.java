@@ -48,6 +48,13 @@ public class FileFormat extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
+    /**
+     * Creates a list of File Formats
+     * @return a list of all the File Formats.
+     */
+    public static List<FileFormat> getList() {
+    	return find.all();
+    }
 	
     
 }

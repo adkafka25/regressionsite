@@ -1,9 +1,9 @@
-@(currentPage: com.avaje.ebean.Page[Run], currentSortBy: String, currentOrder: String, currentFilter: String)
+@(currentPage: com.avaje.ebean.Page[Run], currentSortBy: String, currentOrder: String, currentFilter: String, filterBy:String)
 
 @****************************************
 * Helper generating navigation links    *
 ****************************************@
-@link(newPage:Int, newSortBy:String) = @{
+@link(newPage:Int, newSortBy:String, filterBy:String ) = @{
     
     var sortBy = currentSortBy
     var order = currentOrder
@@ -22,24 +22,26 @@
     }
     
     // Generate the link
-    routes.Application.listRun(newPage, sortBy, order, currentFilter)
+    routes.Application.listRun(newPage, sortBy, order, currentFilter, filterBy)
     
 }
 
 @linkByRun(runID:Long) = @{
-	routes.Application.listPageByRun(0,"name","asc",runID)
+	routes.Application.listPageByRun(0,"name","asc",runID, filterBy)
 }
+
 
 @**********************************
 * Helper generating table headers *
 ***********************************@
 @header(key:String, title:String) = {
     <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
-        <a href="@link(0, key)">@title</a>
+        <a href="@link(0, key, filterBy)">@title</a>
     </th>
 }
 
 @main {
+	;
     
     <h1 id="homeTitle">@currentPage.getTotalRowCount Runs Found</h1>
 
@@ -53,9 +55,20 @@
 	
     <div id="actions">
         
-        <form action="@link(0, "name")" method="GET">
+        <form action="@link(0, "name", "name")" method="GET">
             <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by run name...">
             <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        </form>
+        
+        <form action="@link(0, "name", "format.name")" method="GET">
+        
+        
+        <select name="f">
+        @for(file <- FileFormat.getList ) {
+  			<option value= @file.name >@file.name</option>
+  			}
+		</select> 
+        <input type="submit" id="searchsubmit" value="Filter by File Fomat" class="btn primary">
         </form>
         
     </div>
@@ -129,7 +142,7 @@
             <ul>
                 @if(currentPage.hasPrev) {
                     <li class="prev">
-                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                        <a href="@link(currentPage.getPageIndex - 1, null, filterBy)">&larr; Previous</a>
                     </li>
                 } else {
                     <li class="prev disabled">
@@ -141,7 +154,7 @@
                 </li>
                 @if(currentPage.hasNext) {
                     <li class="next">
-                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                        <a href="@link(currentPage.getPageIndex + 1, null, filterBy)">Next &rarr;</a>
                     </li>
                 } else {
                     <li class="next disabled">
