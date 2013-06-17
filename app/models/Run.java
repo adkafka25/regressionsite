@@ -102,11 +102,12 @@ public class Run extends Model {
 	 */
 	public static List<SortType> getSortFields(){
 		SortType name = new SortType("name", "Name");
+		SortType date = new SortType("date.name", "Date");
 		SortType versionName = new SortType("version.name", "Version Name");
 		SortType versionPlatform = new SortType("version.platform.name", "Version Platform Name");
 		SortType subVersion = new SortType("svn.num", "SVN");
 		SortType performance = new SortType("performance.time", "Performance Time");
-		SortType[] sortable = {name, versionName, versionPlatform, subVersion, performance};
+		SortType[] sortable = {name, date, versionName, versionPlatform, subVersion, performance};
 		List<SortType> sortFields = Arrays.asList(sortable);
 		return sortFields;
 	}
