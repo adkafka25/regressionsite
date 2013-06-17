@@ -39,6 +39,14 @@ public class Application extends Controller {
     }
 	
 	/**
+     * This result directly redirect to run index view.
+     */
+    public static Result runIndex(){
+		return GO_HOME;
+	}
+	
+	
+	/**
      * Display the paginated list of pages.
      *
      * @param page Current page number (starts from 0)

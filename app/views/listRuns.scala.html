@@ -59,15 +59,13 @@
             <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
         </form>
         
-        <form action="@link(0, "name", "format.name")" method="GET">
-        
-        
-        <select name="f">
-        @for(file <- FileFormat.getList ) {
-  			<option value= @file.name >@file.name</option>
-  			}
-		</select> 
-        <input type="submit" id="searchsubmit" value="Filter by File Fomat" class="btn primary">
+        <form action="@link(0, "format.name", "format.name")" method="GET">
+			<select name="f">
+			@for(file <- FileFormat.getList ) {
+				<option value= @file.name >@file.name</option>
+				}
+			</select> 
+			<input type="submit" id="searchsubmit" value="Filter by File Fomat" class="btn primary">
         </form>
         
     </div>
