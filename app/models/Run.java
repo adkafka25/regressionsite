@@ -100,9 +100,14 @@ public class Run extends Model {
 	 * 
 	 * @return List of sortable fields by a text box
 	 */
-	public static List<String> getSortFields(){
-		String[] sortable = {"name", "version.name", "version.platform.name", "date.name", "SVN.num", "performance.time"};
-		List<String> sortFields = Arrays.asList(sortable);
+	public static List<SortType> getSortFields(){
+		SortType name = new SortType("name", "Name");
+		SortType versionName = new SortType("version.name", "Version Name");
+		SortType versionPlatform = new SortType("version.platform.name", "Version Platform Name");
+		SortType subVersion = new SortType("svn.num", "SVN");
+		SortType performance = new SortType("performance.time", "Performance Time");
+		SortType[] sortable = {name, versionName, versionPlatform, subVersion, performance};
+		List<SortType> sortFields = Arrays.asList(sortable);
 		return sortFields;
 	}
 	
