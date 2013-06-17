@@ -50,14 +50,29 @@
         </div>
     } 
 
+<form>
+	<select name="myList" id="ddlMyList">
+			<option value="">- Please Select -</option>
+		@for(field <- Run.getSortFields ) {
+			<option value= @field.getValue >@field.getHeader</option>
+			}
+	 <input type="search" id="searchbox" value="@currentFilter" placeholder="Search for...">
+	<input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite()"/>
 
+<script>
+function NavigateToSite() {
+	var ddl = document.getElementById("ddlMyList");
+	var textInput = document.getElementById("searchbox").value;
+	var selectedVal = ddl.options[ddl.selectedIndex].value;
+	window.location = selectedVal + "?f=" + textInput ;
+}
+</script>
+
+
+</select>
+</form> 
 	
     <div id="actions">
-        
-        <form action="@link(0, "name", "name")" method="GET">
-            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by...">
-            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
-        </form>
         
         <form action="@link(0, "format.name", "format.name")" method="GET">
 			<select name="f">
@@ -65,7 +80,7 @@
 				<option value= @file.name >@file.name</option>
 				}
 			</select> 
-			<input type="submit" id="searchsubmit" value="Filter by File Fomat" class="btn primary">
+			<input type="submit" id="searchsubmit" value="Search by File Fomat" class="btn primary">
         </form>
         
     </div>
