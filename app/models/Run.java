@@ -94,5 +94,17 @@ public class Run extends Model {
 		return run.name;
 	}
 	
+	
+	/**
+	 * This method returns the sortable fields of Run class
+	 * 
+	 * @return List of sortable fields by a text box
+	 */
+	public static List<String> getSortFields(){
+		String[] sortable = {"name", "version.name", "version.platform.name", "date.name", "SVN.num", "performance.time"};
+		List<String> sortFields = Arrays.asList(sortable);
+		return sortFields;
+	}
+	
     
 }
