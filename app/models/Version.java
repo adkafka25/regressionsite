@@ -53,5 +53,23 @@ public class Version extends Model {
                 .getPage(page);
     }
 	
+	/**
+	 * Returns the versionID of given version.name
+	 * @param versionName Which version name to find ID for
+	 */
+	public static Long getVersionID(String versionName, Long platformID){
+		Version version=find.where()
+			.eq("name",versionName)
+			.eq("platform.id",platformID)
+			.findUnique();
+		if( version == null ){ //If no version was found... add it and return that id
+			Version newVersion = new Version();
+			newVersion.name=versionName;
+			newVersion.platform=Platform.getByID(platformID);
+			newVersion.save();
+			return newVersion.id;
+		}
+		return version.id;
+	}
     
 }

@@ -22,6 +22,7 @@ public class Date extends Model {
     
 	@Column(name="Date_Name")
     @Constraints.Required
+	@Formats.DateTime(pattern="yyyy-mm-dd")
     public String name;
     
     /**
@@ -43,10 +44,27 @@ public class Date extends Model {
             find.where()
                 .ilike("name", "%" + filter + "%")
                 .orderBy(sortBy + " " + order)
-                .fetch("INSERT FOREIGN KEY NAME")
                 .findPagingList(pageSize)
                 .getPage(page);
     }
+	
+	/**
+	 * Returns the dateID of given date.name
+	 * @param dateName Which date name to find ID for
+	 * @return id of date. Creates new one if no dateName already existed
+	 */
+	public static Long getDateID(String dateName){ //Used in saveRun
+		Date date=find.where()
+			.eq("name",dateName)
+			.findUnique();
+		if( date == null ){ //If no date was found... add it and return that id
+			Date newDate = new Date();
+			newDate.name=dateName;
+			newDate.save();
+			return newDate.id;
+		}
+		return date.id;
+	}
 	
     
 }

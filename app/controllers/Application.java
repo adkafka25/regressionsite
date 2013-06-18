@@ -5,8 +5,18 @@ import play.mvc.*;
 
 //Get scala templates
 import views.html.*;
+//For forms
+import play.data.*;
+import play.data.Form.*;
 //Get objects
 import models.*;
+
+//for testing/file
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class Application extends Controller {
 	/**
@@ -96,4 +106,18 @@ public class Application extends Controller {
             )
         );
     }
+	
+	
+	/**
+	 * This function creates the form for adding a new run
+	 */
+	public static Result createNewRun(){
+		Form<Run> runForm = Form.form(Run.class);
+        return ok(
+            createForm.render(runForm)
+        );
+	}
+	
+	
+	
 }

@@ -1,0 +1,89 @@
+@(runForm: Form[Run])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+    
+    <h1>Add a new Run</h1>
+    
+    @form(routes.AddToDB.saveRun()) {
+        
+        <fieldset>
+        
+            @inputText(runForm("name"), '_label -> "Run Name")
+			<div class="clearfix ">
+				<label for="path">Path to Issues folder</label>
+				<div class="input">
+					
+				<input type="text" id="path" name="path" value="" >
+
+					<span class="help-inline">Required. ex: "\\snowtest\Regression\java\13.5-Build2.1-AFP\Issues.13.5-Build2-AFP"</span> 
+				</div>
+			</div>
+
+			@select(
+                runForm("version.platform.id"), 
+                options(Platform.options()), 
+                '_label -> "Platform", '_default -> "-- Choose a Platform --",
+                '_showConstraints -> false
+            )
+			
+			<div class="clearfix ">
+				<label for="version_name">Version</label>
+				<div class="input">
+					
+				<input type="text" id="version_name" name="version.name" value="" required>
+
+					<span class="help-inline">Required</span> 
+				</div>
+			</div>
+			
+			@select(
+                runForm("format.id"), 
+                options(FileFormat.options()), 
+                '_label -> "Format", '_default -> "-- Choose a Format --",
+                '_showConstraints -> false
+            )
+			<div class="clearfix ">
+				<label for="date_name">Date</label>
+				<div class="input">
+					
+				<input type="text" id="date_name" name="date.name" value="" required pattern="\d{4}-\d{2}-\d{2}" >
+
+					<span class="help-inline">Required, Date (&#x27;yyyy-mm-dd&#x27;)</span> 
+				</div>
+			</div>
+			
+			<div class="clearfix ">
+				<label for="svn_num">SVN</label>
+				<div class="input">
+					
+				<input type="text" id="svn_num" name="svn.num" value="" required >
+
+					<span class="help-inline">Required</span> 
+				</div>
+			</div>
+			
+            <div class="clearfix ">
+				<label for="performance_time">Performance</label>
+				<div class="input">
+					
+				<input type="text" id="performance_time" name="performance.time" value="" >
+
+					<span class="help-inline">Required, Date (&#x27;hh:mm:ss&#x27;)</span> 
+				</div>
+			</div>
+			
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this run" class="btn primary"> or 
+            <a href="@routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+        
+    }
+    
+}
