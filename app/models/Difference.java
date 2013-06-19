@@ -76,6 +76,27 @@ public class Difference extends Model {
 				.findList();
 	}
 	
-    
+    /**
+	 * Returns the differneceID of given difference and difftype
+	 * @param difference Which difference name to find ID for
+	 * @param diffType What difference type it is (Better, Neutral, Worse)
+	 * @return id of difference. Creates new one if no difference previously existed
+	 */
+	public static Long getDifferenceID(String difference, String diffType){ //Used in AddToDB
+		long diffTypeID=DiffType.getDiffTypeID(diffType);
+		
+		Difference diff=find.where()
+			.eq("name",difference)
+			.eq("difftype.id",diffTypeID)
+			.findUnique();
+		if( diff == null ){ //If no difference was found... add it and return that id
+			Difference newDifference = new Difference();
+			newDifference.name=difference;
+			newDifference.difftype=DiffType.getDiffTypeByID(diffTypeID);
+			newDifference.save();
+			return newDifference.id;
+		}
+		return diff.id;
+	}
 }
 

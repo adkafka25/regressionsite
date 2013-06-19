@@ -90,6 +90,22 @@ public class Bug extends Model {
                 .getPage(page);
     }
 	
-    
+    /**
+	 * Returns the bugerneceID of given bug and bugtype
+	 * @param bug Which bug name to find ID for
+	 * @return id of bug. Creates new one if no bug previously existed
+	 */
+	public static Long getBugID(Long bugNum){ //Used in AddToDB
+		Bug bug=find.where()
+			.eq("number",bugNum)
+			.findUnique();
+		if( bug == null ){ //If no bug was found... add it and return that id
+			Bug newBug = new Bug();
+			newBug.number=bugNum;
+			newBug.save();
+			return newBug.id;
+		}
+		return bug.id;
+	}
 }
 

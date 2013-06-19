@@ -50,6 +50,9 @@ public class Run extends Model {
 	@Formats.DateTime(pattern="hh:mm:ss")
 	public Performance performance;
 	
+	//Path to issues folder
+	@Transient
+	public String path;
 	
 	/**
      * Generic query helper for entity Computer with id Long

@@ -17,9 +17,9 @@
 				<label for="path">Path to Issues folder</label>
 				<div class="input">
 					
-				<input type="text" id="path" name="path" value="" >
+				<input type="text" id="path" name="path" value="" required pattern="..(S|s)nowtest.(R|r)egression.(java|native).*(I|i)ssues.*">
 
-					<span class="help-inline">Required. ex: "\\snowtest\Regression\java\13.5-Build2.1-AFP\Issues.13.5-Build2-AFP"</span> 
+					<span class="help-inline">Required. ex: "\\snowtest\Regression\java\13.5-Build2.1-AFP\Issues.13.5-Build2-AFP" <br /> Must begin with \\snowtest\Regression\(java or native)\....\Issues*"</span> 
 				</div>
 			</div>
 
@@ -27,7 +27,7 @@
                 runForm("version.platform.id"), 
                 options(Platform.options()), 
                 '_label -> "Platform", '_default -> "-- Choose a Platform --",
-                '_showConstraints -> false
+                '_showConstraints -> true
             )
 			
 			<div class="clearfix ">
@@ -60,7 +60,7 @@
 				<label for="svn_num">SVN</label>
 				<div class="input">
 					
-				<input type="text" id="svn_num" name="svn.num" value="" required >
+				<input type="text" id="svn_num" name="svn.num" value="" required pattern="\d*">
 
 					<span class="help-inline">Required</span> 
 				</div>
@@ -70,7 +70,7 @@
 				<label for="performance_time">Performance</label>
 				<div class="input">
 					
-				<input type="text" id="performance_time" name="performance.time" value="" >
+				<input type="text" id="performance_time" name="performance.time" value="" required pattern="\d{2}:\d{2}:\d{2}">
 
 					<span class="help-inline">Required, Date (&#x27;hh:mm:ss&#x27;)</span> 
 				</div>
