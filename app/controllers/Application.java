@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.List;
+
 import play.*;
 import play.mvc.*;
 
@@ -13,14 +15,19 @@ public class Application extends Controller {
      * This result directly redirect to application home.
      */
     public static Result GO_HOME = redirect(
-        routes.Application.listRun(0, "name", "asc", "", "name")
+        routes.Application.home()
     );
   
   
     public static Result index() {
         return GO_HOME;
     }
-  
+    public static Result home() {
+        return ok(
+            home.render()
+        );
+    }
+    
 	/**
      * Display the paginated list of runs.
      *
@@ -95,5 +102,27 @@ public class Application extends Controller {
                 sortBy, order, runID, filter
             )
         );
+    
     }
+    /**
+     * Creates data for the home page graph.     
+     * @return a string that is formatted for google graphs.
+     */
+    public static String createData(){
+		List<Date> allDates = models.Date.getList();
+		//int[] frequency = models.Company.allFrequency();
+		
+		String data = "[['Date','Java','Native'],";
+		
+		for(Date date: allDates){
+			String name=date.getName();
+			int occurences = models.Bug.frequency(date);
+			data+="['"+name+"', "+ 4 + "," +occurences+"],";
+		}
+		data = data.substring(0,data.length()-1);
+		
+		data+="]";
+		
+		return data;
+	}
 }

@@ -1,6 +1,7 @@
 package models;
 
 import java.util.*;
+
 import javax.persistence.*;
 
 import play.db.ebean.*;
@@ -46,6 +47,21 @@ public class Platform extends Model {
                 .orderBy(sortBy + " " + order)
                 .findPagingList(pageSize)
                 .getPage(page);
+    }
+    /**
+     * Creates a list of Platforms
+     * @return a list of all the Platforms
+     */
+    public static List<Platform> getList() {
+    	return find.all();
+    }
+    
+    /**
+     * 
+     * @return name of the platform.
+     */
+    public String getName() {
+    	return name;
     }
 	
     

@@ -112,5 +112,51 @@ public class Run extends Model {
 		return sortFields;
 	}
 	
-    
+	public static List<Run> searchRuns(String platformSearch, String formatSearch) {
+		
+		List<Run> list =find.where()
+		.eq("version.platform.name", platformSearch)
+		.eq("format.name", formatSearch)
+		.findList();
+		
+		return list;
+	}
+	/**
+	 * 
+	 * @return name of the run.
+	 */
+	public String getName(){
+		return name;
+	}
+	/**
+	 * 
+	 * @return all runs.
+	 */
+	public static List<Run> getList(){
+		return find.all();
+	}
+
+	/**
+	 * 
+	 * @return a string with the platform name and the format name.
+	 */
+	public String getPlatformFormat(){
+		return version.platform.getName() + "\\" + format.getName();
+	
+	}
+	/**
+	 * 
+	 * @return a string with the platform name and the version name.
+	 */
+	public String getPlatformVersion(){
+		return version.platform.getName() + "\\" + version.getName();
+	
+	}
+	/**
+	 * 
+	 * @return a string with the date name.
+	 */
+	public String getDate() {
+		return date.getName();
+	}
 }

@@ -52,6 +52,18 @@ public class Version extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
-	
+    /**
+     * @return all versions.
+     */
+    public static List<Version> getList() {
+    	return find.all();
+    }
+    /**
+     * 
+     * @return name of version.
+     */
+	public String getName() {
+		return name;
+	}
     
 }

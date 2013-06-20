@@ -89,7 +89,30 @@ public class Bug extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
+    /**     * 
+     * @return all the bugs in a list.
+     */
+	public static List<Bug> getList() {
+		return find.all();
+	}
+	/**
+	 * Return the frequency of bugs in a given date and platform. 
+	 * Used to populate home graph.
+	 * @param date which you are searching for 
+	 * @param platform which you are searching for
+	 * @return frequency
+	 */
+	public static int frequency(Date date) {
+		int frequency = 0;
+		List<Bug> list = getList();
+		for (Bug error: list) {
+			if (getDate(error).equals(date.getName())) {
+				frequency++;
+			}
+		}
+		
+		return frequency;
+	}
 	
-    
 }
 
