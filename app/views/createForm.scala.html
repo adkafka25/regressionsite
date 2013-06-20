@@ -6,13 +6,36 @@
 
 @main {
     
+	<script type="text/javascript">
+	function checkForm(){
+		if ( document.newRun.version_platform_id.value == ""){
+			alert("Please select a platform!");
+			return false;
+		}
+		else if ( document.newRun.format_id.value == ""){
+			alert("Please select a file format");
+			return false;
+		}
+		else{
+			document.newRun.submit();
+		}
+	}
+	
+	</script>
+	
+	
     <h1>Add a new Run</h1>
     
-    @form(routes.AddToDB.saveRun()) {
-        
+    <form name=newRun action="@routes.AddToDB.saveRun()" method="POST" >    
         <fieldset>
         
-            @inputText(runForm("name"), '_label -> "Run Name")
+            <div class="clearfix ">
+				<label for="name">Run Name</label>
+					<div class="input">
+						<input id="name" type="text" value="" name="name" required>
+						<span class="help-inline">Required</span>
+					</div>
+				</div>
 			<div class="clearfix ">
 				<label for="path">Path to Issues folder</label>
 				<div class="input">
@@ -62,7 +85,7 @@
 					
 				<input type="text" id="svn_num" name="svn.num" value="" required pattern="\d*">
 
-					<span class="help-inline">Required</span> 
+					<span class="help-inline">Required (Numbers only)</span> 
 				</div>
 			</div>
 			
@@ -80,10 +103,10 @@
         </fieldset>
         
         <div class="actions">
-            <input type="submit" value="Create this run" class="btn primary"> or 
+            <input type="submit" value="Create this run" class="btn primary" onclick="return checkForm()"> or 
             <a href="@routes.Application.index()" class="btn">Cancel</a> 
         </div>
         
-    }
+    </form>
     
 }

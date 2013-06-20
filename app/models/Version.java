@@ -26,6 +26,7 @@ public class Version extends Model {
     
 	@Column(name="Platform_ID")
     @OneToOne
+	@Constraints.Required
 	@JoinColumn(name="Platform_ID")
     public Platform platform;
 	

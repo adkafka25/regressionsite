@@ -13,10 +13,7 @@ import views.html.*;
 import models.*;
 
 //for testing/file
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 //For entering data to mysql
@@ -288,18 +285,20 @@ public class AddToDB extends Controller{
      * Handle the 'new run form' submission 
      */
     public static Result saveRun() {
-        Form<Run> runForm = Form.form(Run.class).bindFromRequest();
-		
-		//Form<Run> fixedRunForm = runForm.fill(Version.getVersionID(runForm.get().version.id));
+        Form<Run> runForm = Form.form(Run.class).bindFromRequest();//Get from info from POST
 		
 		 if(runForm.hasErrors()) { //doesn't do much...
             return badRequest(createForm.render(runForm));
         }
 		
+		String folderPath = runForm.get().path;
+		File folder = new File(folderPath); //for checking if it exists
+		
 		//if path is invalid, log it and don't create run
-		if(runForm.get().path==null){
+		if(folderPath==null || !folder.exists()){
 			List<String> log = new ArrayList<String>();
 			log.add("Error: Invalid please set Path to Issues Folder");
+			log.add("Path = "+folderPath+" is invalid or non-existant");
 			return badRequest(
 				test.render(log)
 			);
