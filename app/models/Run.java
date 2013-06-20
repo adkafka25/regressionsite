@@ -26,11 +26,13 @@ public class Run extends Model {
 	//Version
 	@Column(name="Version_ID")
 	@OneToOne
+	@Constraints.Required
 	@JoinColumn(name="Version_ID")
 	public Version version;
 	//Format
 	@Column(name="Format_ID")
 	@OneToOne
+	@Constraints.Required
 	@JoinColumn(name="Format_ID")
 	public FileFormat format;
 	//Date
@@ -50,6 +52,9 @@ public class Run extends Model {
 	@Formats.DateTime(pattern="hh:mm:ss")
 	public Performance performance;
 	
+	//Path to issues folder
+	@Transient
+	public String path;
 	
 	/**
      * Generic query helper for entity Computer with id Long

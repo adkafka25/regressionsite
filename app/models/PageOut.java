@@ -97,7 +97,7 @@ public class PageOut extends Model {
 	public static List<PageOut> listPageFromBug(Bug bug){
 		return
 			find.where()
-				.eq("bug",bug)
+				.eq("bug.number",bug.number)
 				.findList();
 	}
 	
@@ -108,10 +108,8 @@ public class PageOut extends Model {
 	 * @return Returns list of differences
 	 */
 	public static PageOut pageFromBug( Bug bug ){
-		return
-			find.where()
-				.eq("bug",bug)
-				.findUnique();
+		List<PageOut> listPages = listPageFromBug(bug);
+		return listPages.get(0);
 	}
 	
 	/**

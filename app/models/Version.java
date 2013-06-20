@@ -26,6 +26,7 @@ public class Version extends Model {
     
 	@Column(name="Platform_ID")
     @OneToOne
+	@Constraints.Required
 	@JoinColumn(name="Platform_ID")
     public Platform platform;
 	
@@ -52,6 +53,7 @@ public class Version extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
+
     /**
      * @return all versions.
      */
@@ -64,6 +66,26 @@ public class Version extends Model {
      */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Returns the versionID of given version.name
+	 * @param versionName Which version name to find ID for
+	 */
+	public static Long getVersionID(String versionName, Long platformID){
+		Version version=find.where()
+			.eq("name",versionName)
+			.eq("platform.id",platformID)
+			.findUnique();
+		if( version == null ){ //If no version was found... add it and return that id
+			Version newVersion = new Version();
+			newVersion.name=versionName;
+			newVersion.platform=Platform.getByID(platformID);
+			newVersion.save();
+			return newVersion.id;
+		}
+		return version.id;
+
 	}
     
 }

@@ -1,0 +1,133 @@
+
+@main{
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js">
+      </script>
+      <script type="text/javascript" src="@routes.Assets.at("js/jquery.chained.min.js")" charset="utf-8"></script>
+      <script>
+         if (jQuery().chained) {  
+              alert('jQuery is loaded!');  
+         }
+          else{   
+             alert('jQuery is not loaded!');  
+         }
+      </script>
+   </head>
+   <body>
+      <select id="platform" name="#platform">
+           <option value="Please select Platform">Please select Platform</option>
+			@for(plat <- Platform.getList) {
+           <option value=@plat.getName class = @plat.getName> @plat.getName</option>
+           }
+      </select>
+      <select id="format" name="#format">
+           <option value="Please select Format">Please select Format</option>
+           @for(form <- FileFormat.getList) {
+           <option value=@form.getName  class = @form.getName>@form.getName</option>
+           }
+      </select>
+      <select id="run" name="#run">
+           <option value="Available runs">Available runs</option>
+           @for(run <- Run.getList) {
+           <option value=@run.getName  class = @run.getPlatformFormat>@run.getName</option>
+           }
+      </select>
+       <p>
+       
+       <select id="platform2" name="#platform2">
+           <option value="Please select Platform">Please select Platform</option>
+			@for(plat <- Platform.getList) {
+           <option value=@plat.getName class = @plat.getName> @plat.getName</option>
+           }
+      </select>
+      <select id="version2" name="#version2">
+           <option value="Please select Version">Please select Version</option>
+           @for(vers <- Version.getList) {
+           <option value=@vers.getName  class = @vers.getName>@vers.getName</option>
+           }
+      </select>
+      <select id="run2" name="#run2">
+           <option value="Available runs">Available runs</option>
+           @for(run <- Run.getList) {
+           <option value=@run.getName  class = @run.getPlatformVersion>@run.getName</option>
+           }
+      </select>
+  </p>
+  <p>
+  	<select id="date" name="#date">
+           <option value="Choose from Dates">Choose from dates</option>
+           @for(da <- models.Date.getList) {
+           <option value=@da.getName  class = @da.getName>@da.getName</option>
+           }
+      </select>
+      <select id="run3" name="#run3">
+           <option value="Choose from runs">Choose from runs</option>
+           @for(run <- Run.getList) {
+           <option value=@run.getName  class = @run.getDate>@run.getName</option>
+           }
+      </select>
+  
+  </p>
+      
+
+      <script language="JavaScript" type="text/javascript">
+      $("#run").chained("#platform, #format"); 
+      $("#run2").chained("#platform2, #version2"); 
+      $("#run3").chained("#date"); 
+      </script>
+
+  </body>
+ 
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function decode(encodedString) {
+			var tmpElement = document.createElement('span');
+			tmpElement.innerHTML = encodedString;
+			return tmpElement.innerHTML;
+		  }
+      function drawChart() {
+        /*var data = google.visualization.arrayToDataTable([
+          ['Date', 'Native', 'Java'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);*/
+        var table="@{controllers.Application.createData()}"; //take data
+		var tableFormatted=decode(table); //take html enitites out (ex. &#x27 to ')
+		
+		//var obj = parseJSON(tableFormatted); // Add json library		
+		
+		var obj = eval("(" + tableFormatted + ")"); //convert it to an array
+		var data = google.visualization.arrayToDataTable(obj); //convert to data table
+
+        var options = {
+          title: 'Native versus Java'
+          
+          
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+  
+      
+      
+
+      
+
+  
+  
+  </html>
+  }

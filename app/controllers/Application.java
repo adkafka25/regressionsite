@@ -7,8 +7,18 @@ import play.mvc.*;
 
 //Get scala templates
 import views.html.*;
+//For forms
+import play.data.*;
+import play.data.Form.*;
 //Get objects
 import models.*;
+
+//for testing/file
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class Application extends Controller {
 	/**
@@ -104,17 +114,18 @@ public class Application extends Controller {
         );
     
     }
+
     /**
      * Creates data for the home page graph.     
      * @return a string that is formatted for google graphs.
      */
     public static String createData(){
-		List<Date> allDates = models.Date.getList();
+		List<models.Date> allDates = models.Date.getList();
 		//int[] frequency = models.Company.allFrequency();
 		
 		String data = "[['Date','Java','Native'],";
 		
-		for(Date date: allDates){
+		for(models.Date date: allDates){
 			String name=date.getName();
 			int occurences = models.Bug.frequency(date);
 			data+="['"+name+"', "+ 4 + "," +occurences+"],";
@@ -125,4 +136,20 @@ public class Application extends Controller {
 		
 		return data;
 	}
+
+	
+	
+	/**
+	 * This function creates the form for adding a new run
+	 */
+	public static Result createNewRun(){
+		Form<Run> runForm = Form.form(Run.class);
+        return ok(
+            createForm.render(runForm)
+        );
+	}
+	
+	
+	
+
 }

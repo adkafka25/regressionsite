@@ -49,6 +49,22 @@ public class Performance extends Model {
                 .getPage(page);
     }
 	
-    
+    /**
+	 * Returns the PerformanceID of given performance time
+	 * @param performanceTime Which subversion number to find ID for
+	 * @return id of Performance. Creates new one if no performanceTime already existed
+	 */
+	public static Long getPerformanceID(String performanceTime){ //Used in saveRun
+		Performance performance=find.where()
+			.eq("time",performanceTime)
+			.findUnique();
+		if( performance == null ){ //If no Performance was found... add it and return that id
+			Performance newPerformance = new Performance();
+			newPerformance.time=performanceTime;
+			newPerformance.save();
+			return newPerformance.id;
+		}
+		return performance.id;
+	}
 }
 

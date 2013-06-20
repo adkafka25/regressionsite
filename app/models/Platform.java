@@ -64,6 +64,27 @@ public class Platform extends Model {
     	return name;
     }
 	
+	//Used for creating a list of all companies. Implemented in createForm.scala.html in @select
+    public static Map<String,String> options() {
+        LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
+        for(Platform c: Platform.find.orderBy("name").findList()) {
+            options.put(c.id.toString(), c.name);
+        }
+        return options;
+    }
+	/**
+	 * This method takes a pltform ID and returns the platform
+	 * 
+	 * @param platformID ID to find platform
+	 *
+	 * @return Platform
+	 */
+	public static Platform getByID(Long platformID){
+		Platform platform=find.where()
+			.eq("id",platformID)
+			.findUnique();
+		return platform;
+	}
     
 }
 

@@ -48,6 +48,23 @@ public class SVN extends Model {
                 .getPage(page);
     }
 	
+	/**
+	 * Returns the svnID of given svn.num
+	 * @param svnNum Which subversion number to find ID for
+	 * @return id of svn. Creates new one if no svnNum already existed
+	 */
+	public static Long getSvnID(Long svnNum){ //Used in saveRun
+		SVN svn=find.where()
+			.eq("num",svnNum)
+			.findUnique();
+		if( svn == null ){ //If no svn was found... add it and return that id
+			SVN newSvn = new SVN();
+			newSvn.num=svnNum;
+			newSvn.save();
+			return newSvn.id;
+		}
+		return svn.id;
+	}
     
 }
 

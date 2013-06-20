@@ -49,6 +49,30 @@ public class DiffType extends Model {
                 .getPage(page);
     }
 	
-    
+	/**
+	 *
+	 *
+	 */
+	public static DiffType getDiffTypeByID(Long diffTypeID){
+		DiffType difftype=find.where()
+			.eq("id",diffTypeID)
+			.findUnique();
+		return difftype;
+	}
+	
+    /**
+	 * Returns the DiffTypeID of given difftype
+	 * @param diffType Which difftype name to find ID for (better, worse, neutral...)
+	 * @return id of difftype. Does not creates new one if no diffType previously existed. Returns -1
+	 */
+	public static Long getDiffTypeID(String diffType){ //Used in AddToDB
+		DiffType difftype=find.where()
+			.eq("name",diffType)
+			.findUnique();
+		if( diffType == null ){ //If no difftype was found... return default one (id=4)
+			return 4L; //difftype of None
+		}
+		return difftype.id;
+	}
 }
 
