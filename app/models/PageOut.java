@@ -134,7 +134,58 @@ public class PageOut extends Model {
                 .getPage(page);
     }
 	
+	/**
+	 * Returns the pageID of given page and runID
+	 * @param page Which page name to find ID for
+	 * @param runID The ID corresponding to which run created the row
+	 * @return id of page. Creates new one if no page with that run previously existed
+	 */
+	public static Long getPageID(String page, Long runID){ //Used in AddToDB
+		PageOut pageOut=find.where()
+			.eq("name",page)
+			.eq("run.id",runID)
+			.findUnique();
+		if( pageOut == null ){ //If no page was found... add it and return that id
+			PageOut newPage = new PageOut();
+			newPage.name=page;
+			newPage.run=Run.getRunByID(runID);
+			newPage.save();
+			return newPage.id;
+		}
+		return pageOut.id;
+	}
 	
+	/**
+	 * Check if page already exists
+	 * @param page Name of page
+	 * @param runID ID of run corresponding to this page
+	 * @return boolean True for already exists. False for no
+	 */
+	public static boolean testPageExists(String page, Long runID){
+		PageOut pageOut=find.where()
+			.eq("name",page)
+			.eq("run.id",runID)
+			.findUnique();
+		if( pageOut == null ){//Didn't find anything in previous search
+			return false; //page doesn't exist
+		}
+		else{
+			return true; //page does already exist
+		}
+	}
     
+	/**
+	 * This method calculates how many differences of diffType occured in given run
+	 * @param run Which run to calculate
+	 * @param diffType Which difftpye of run to calculate
+	 * @return Number of differences of diffType in run
+	 */
+	public static int calculateDifferences(Run run, DiffType difftype){
+		return
+			find.where()
+                .eq("run.id", run.id)
+				.eq("difference.difftype.id",difftype.id)
+                .findRowCount();
+	}
 }
 

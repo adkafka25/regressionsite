@@ -27,7 +27,7 @@ import java.util.regex.*;
 public class AddToDB extends Controller{
 	
 	/**
-	 * This function lists all files in startFolder and its subdirectories recursively
+	 * This function lists all files (not folders) in startFolder and its subdirectories recursively
 	 * @param startFolder A File object that signifies where to start
 	 * @param files The list to append all files to
 	 * Adds all files to supplied List. Does not return it, but list will be altered
@@ -88,10 +88,10 @@ public class AddToDB extends Controller{
 			}
 			else{
 				if(diffType==null){
-					log.add("Error: Unknown difftype in "+filePath);
+					log.add("ERROR: Unknown difftype in "+filePath+" ---- Not added");
 				}
 				else{
-					log.add("Error: Can't find file name in file: "+filePath);
+					log.add("ERROR: Can't find file name in file: "+filePath+" ---- Not added");
 				}
 			}
 		}
@@ -99,90 +99,26 @@ public class AddToDB extends Controller{
 	}
 	
 	/**
-	 * This method takes file info as input, inputs them into the DB, and returns a string with ther results
-	 * @param fileName Name of file to enter into DB
-	 * @param diffType The kind of difference
-	 * @param runID The runID that corresponds to this run
-	 * @param difference String describing the difference
-	 * @param bugNum The bug number corresponding to 
+	 * This method executes a mySQL UPDATE statement
+	 * @param SQLStatement The statemnt as a string that should be run
+	 * @return nothing
 	 */
-	public static String enterFileInfo(String fileName, String diffType, Long runID, String difference, Long bugNum){
-		String returnInfo="";
-		
+	public static void sqlUpdate(String SQLStatement){
 		//Start connection
 		Connection connection = DB.getConnection();
-		
-		String SQLpage = "INSERT INTO Page (Page_Name,Run_ID) VALUES ('"+fileName+"','"+runID+"')";
-		long pageID=-1L; //will store ID for page here.
 		
 		try{
 			//Create new statement
 			Statement stmt = connection.createStatement();
 			//Run query
-			int affectedRows = stmt.executeUpdate(SQLpage, Statement.RETURN_GENERATED_KEYS);
-			if(affectedRows == 0){
-				throw new SQLException("Creating page failed, no rows affected.");
-				//connection.close();
-				//return "ERROR: "+fileName+" could not be created";
-			}
-			//Get ID
-			ResultSet generatedKeys = null;
-			generatedKeys = stmt.getGeneratedKeys();
-			if (generatedKeys.next()) {
-				pageID=(generatedKeys.getLong(1)); //store genereated ID for run as pageID
-				returnInfo+="INFO: "+fileName+" added to DB";
-			} else {
-				throw new SQLException("Creating page failed, no generated key obtained.");
-				//connection.close();
-				//return "ERROR: Could not find generated key for"+fileName;
-			}
-			//Close statement and result set
-			generatedKeys.close();
+			stmt.executeUpdate(SQLStatement);
+			//Close statement
 			stmt.close();
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		//Deal with difference and pagetodifference
-		if(diffType!=null){ //
-			if(difference==null){//If difference is not set, set it to this default value
-				difference="No description";
-			}
-			//get ID of difference
-			long diffID = Difference.getDifferenceID(difference,diffType);
-			String SQLpagetodiff="INSERT INTO pagetodifference (Page_ID,Difference_ID) VALUES ('"+pageID+"','"+diffID+"')";
-			try{
-				//Create new statement
-				Statement stmt = connection.createStatement();
-				//Run query
-				stmt.executeUpdate(SQLpagetodiff);
-				returnInfo+=" INFO: "+fileName+" linked with difference: "+difference+" of difference type"+diffType;
-				//Close statement
-				stmt.close();
-			}
-			catch (SQLException e){
-				e.printStackTrace();
-			}
-		}
-		//Deal with bug and pagetobug
-		if(bugNum!=null){
-			//Get id of bug Num
-			long bugID = Bug.getBugID(bugNum);
-			String SQLpagetobug="INSERT INTO pagetobug (Page_ID,Bug_ID) VALUES ('"+pageID+"','"+bugID+"')";
-			try{
-				//Create new statement
-				Statement stmt = connection.createStatement();
-				//Run query
-				stmt.executeUpdate(SQLpagetobug);
-				returnInfo+=" INFO: "+fileName+" linked with bug: "+bugNum;
-				//Close statement
-				stmt.close();
-			}
-			catch (SQLException e){
-				e.printStackTrace();
-			}
-			//insert into pagetobug pageId and bugId
-		}
+		
 		//Close connection
 		try{
 			connection.close();
@@ -190,7 +126,60 @@ public class AddToDB extends Controller{
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		return "INFO: Added "+fileName+"---"+diffType+"---"+runID+"---"+difference+"---"+bugNum;
+	}
+	 
+	/**
+	 * This method takes file info as input, inputs them into the DB, and returns a string with ther results
+	 * @param fileName Name of file to enter into DB
+	 * @param diffType The kind of difference
+	 * @param runID The runID that corresponds to this run
+	 * @param difference String describing the difference
+	 * @param bugNum The bug number corresponding to 
+	 * @return Log messege if there was no error
+	 */
+	public static String enterFileInfo(String fileName, String diffType, Long runID, String difference, Long bugNum){
+		//For log info
+		String returnInfo="";
+		
+		if(!PageOut.testPageExists(fileName,runID)){//if page has not been added before
+			//Begin log info for this file
+			returnInfo+="---Log Info for "+fileName+"---";
+			
+			long pageID=-1L; //will store ID for page here.
+			
+			//Get page_ID, create one if deosn't already exist
+			pageID=PageOut.getPageID(fileName,runID);
+			returnInfo+="INFO: "+fileName+" added to DB with runID="+runID;
+		
+			//Deal with difference and pagetodifference
+			if(diffType!=null){ //
+				if(difference==null){//If difference is not set, set it to this default value
+					difference="No description";
+				}
+				//get ID of difference
+				long diffID = Difference.getDifferenceID(difference,diffType);
+				//Prepare SQL statement
+				String SQLpagetodiff="INSERT INTO pagetodifference (Page_ID,Difference_ID) VALUES ('"+pageID+"','"+diffID+"')";
+				//Run SQL statement
+				sqlUpdate(SQLpagetodiff);
+				//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
+				returnInfo+=" INFO: "+fileName+" linked with difference: "+difference+" of difference type"+diffType;
+
+			}
+			//Deal with bug and pagetobug
+			if(bugNum!=null){
+				//Get id of bug Num
+				long bugID = Bug.getBugID(bugNum);
+				//Prepare SQL statement
+				String SQLpagetobug="INSERT INTO pagetobug (Page_ID,Bug_ID) VALUES ('"+pageID+"','"+bugID+"')";
+				//Run SQL statement
+				sqlUpdate(SQLpagetobug);
+				//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
+				returnInfo+=" INFO: "+fileName+" linked with bug: "+bugNum;
+				
+			}
+		}
+		return returnInfo; //return log
 	}
 	
 	/**
@@ -201,6 +190,8 @@ public class AddToDB extends Controller{
 	public static String getFileName(String filePath){
 		String[] fileAsArray = filePath.split("\\\\");//had to escape the backslash
 		String fileName=fileAsArray[fileAsArray.length-1];
+		
+		fileName=fileName.replaceAll(".(ref|new|dif).",""); //Take out .1ref,.2new,.3dif....
 		
 		if(fileName.contains(".")){
 			return fileName;
@@ -276,7 +267,7 @@ public class AddToDB extends Controller{
 		
 		return ok(
 			test.render(
-				enterIntoDB(allFiles, dirname, runID)
+				enterIntoDB(allFiles, dirname, runID), runID
 			)
 		);
 	}
@@ -297,10 +288,10 @@ public class AddToDB extends Controller{
 		//if path is invalid, log it and don't create run
 		if(folderPath==null || !folder.exists()){
 			List<String> log = new ArrayList<String>();
-			log.add("Error: Invalid please set Path to Issues Folder");
+			log.add("ERROR: Invalid please set Path to Issues Folder");
 			log.add("Path = "+folderPath+" is invalid or non-existant");
 			return badRequest(
-				test.render(log)
+				test.render(log, 0L)
 			);
 		}
 		
@@ -346,13 +337,13 @@ public class AddToDB extends Controller{
 		else{//For errors
 			List<String> log = new ArrayList<String>();
 			if(runID==-1L){
-				log.add("Error: Error creating run and getting its ID");
+				log.add("ERROR: Error creating run and getting its ID");
 			}
 			else{
-				log.add("Error: Unknown error occured before files could be added");
+				log.add("ERROR: Unknown error occured before files could be added");
 			}
 			return ok(
-				test.render(log)
+				test.render(log,runID)
 				);
 		}
 		
