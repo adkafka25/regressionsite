@@ -63,7 +63,6 @@ public class Bug extends Model {
 		joinColumns=@JoinColumn(name="Bug_ID", referencedColumnName="Bug_ID"),
 		inverseJoinColumns=@JoinColumn(name="Page_ID", referencedColumnName="Page_ID")
 	)
-	//public Set<PageOut> pagesoutbug = new HashSet<PageOut>();
 	public Map<Bug,PageOut> pagesoutbug = new HashMap<Bug,PageOut>();
     
     /**
@@ -106,6 +105,18 @@ public class Bug extends Model {
 			return newBug.id;
 		}
 		return bug.id;
+	}
+	
+	/**
+	 * This method calculates how many Bugs occured in given run
+	 * @param run Which run to calculate
+	 * @return Number of bugs in run
+	 */
+	public static int calculateBugs(Run run){
+		Set<Bug> bugSet = find.where() //create a list of pagetobug with only pages from this run
+			.eq("pagesoutbug.run.id", run.id) //make sure page is from run
+			.findSet();
+		return bugSet.size();
 	}
 }
 

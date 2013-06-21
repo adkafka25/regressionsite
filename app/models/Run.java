@@ -139,4 +139,13 @@ public class Run extends Model {
 	public static int calculateDifferences(Run run, DiffType difftype){
 		return PageOut.calculateDifferences(run,difftype);
 	}
+	
+	/**
+	 * This method calculates how many bugs appeared in a given run
+	 * @param run Which run to calculate
+	 * @return Number of bugs from that run
+	 */
+	public static int calculateBugs(Run run){
+		return Bug.calculateBugs(run);
+	}
 }
