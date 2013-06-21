@@ -1,6 +1,24 @@
-@(text: List[String])
+@(text: List[String], runID: Long = 0)
+
+@****************************
+* Generate Log From sting   *
+****************************@
+@log(logInfo:String) = @{
+    
+	def replace = logInfo.replaceAll(_, _)
+	
+	var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") replace("ERROR:","<br/><font color=\"red\">ERROR:</font>")
+	
+    // Output
+    logInfoFixed
+    
+}
+
 @main {
-	@for(file <- text){
-		@file <br/>
+	@if(runID!=0){
+		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"")'>View Run</a><br/></H2>
+	}
+	@for(line <- text){
+		 <br/> @Html(log(line))
 	}
 }

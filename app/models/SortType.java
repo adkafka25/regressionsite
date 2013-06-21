@@ -26,7 +26,7 @@ public class SortType {
 	public SortType(String v, String h) {
 		value = v;
 		header = h;
-					}
+	}
 	/**
 	 * Returns header.
 	 * @return header.

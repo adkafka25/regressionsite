@@ -57,7 +57,7 @@ public class Run extends Model {
 	public String path;
 	
 	/**
-     * Generic query helper for entity Computer with id Long
+     * Generic query helper for entity Run with id Long
      */
     public static Finder<Long,Run> find = new Finder<Long,Run>(Long.class, Run.class); 
     
@@ -67,7 +67,7 @@ public class Run extends Model {
      *
      * @param page Page to display
      * @param pageSize Number of computers per page
-     * @param sortBy Computer property used for sorting
+     * @param sortBy Run property used for sorting
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
@@ -100,6 +100,7 @@ public class Run extends Model {
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * This method returns the a run given a run id
 	 * 
 	 * @param runID The run ID to search for
@@ -113,6 +114,18 @@ public class Run extends Model {
 		List<Run> runs = new ArrayList<Run>();
 		runs.add(run);
 		return runs;
+=======
+	 * This method returns the run for the run given a run id
+	 * @param runID The run ID to search for
+	 * 
+	 * @return Corresponding run to given runID
+	 */
+	public static Run getRunByID(Long runID){
+		Run run=find.where()
+			.eq("id",runID)
+			.findUnique();
+		return run;
+>>>>>>> ff2d823f66c77ac7c4b8e475818a1cb08ad7be22
 	}
 	
 	
@@ -133,6 +146,7 @@ public class Run extends Model {
 		return sortFields;
 	}
 	
+<<<<<<< HEAD
 	public static List<Run> searchRuns(String platformSearch, String formatSearch) {
 		
 		List<Run> list =find.where()
@@ -185,4 +199,15 @@ public class Run extends Model {
 	}
 	
 	
+=======
+    /**
+	 * This method calculates how many differences of diffType occured in given run
+	 * @param run Which run to calculate
+	 * @param diffType Which difftpye of run to calculate
+	 * @return Number of differences of diffType in run
+	 */
+	public static int calculateDifferences(Run run, DiffType difftype){
+		return PageOut.calculateDifferences(run,difftype);
+	}
+>>>>>>> ff2d823f66c77ac7c4b8e475818a1cb08ad7be22
 }
