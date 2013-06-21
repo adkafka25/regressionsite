@@ -60,7 +60,7 @@ public class FileFormat extends Model {
      * 
      * @return name of File Format.
      */
-    public String getName() {
+    public String getFileFormatName() {
     	return name;
     }
 	

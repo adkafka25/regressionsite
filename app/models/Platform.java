@@ -60,7 +60,7 @@ public class Platform extends Model {
      * 
      * @return name of the platform.
      */
-    public String getName() {
+    public String getPlatformName() {
     	return name;
     }
 	
@@ -73,7 +73,7 @@ public class Platform extends Model {
         return options;
     }
 	/**
-	 * This method takes a pltform ID and returns the platform
+	 * This method takes a platform ID and returns the platform
 	 * 
 	 * @param platformID ID to find platform
 	 *

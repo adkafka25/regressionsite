@@ -102,11 +102,11 @@ public class Bug extends Model {
 	 * @param platform which you are searching for
 	 * @return frequency
 	 */
-	public static int frequency(Date date) {
+	public static int frequency(Date date, String platform) {
 		int frequency = 0;
 		List<Bug> list = getList();
-		for (Bug error: list) {
-			if (getDate(error).equals(date.getName())) {
+		for (Bug bug: list) {
+			if (getDate(bug).equals(date) && getVersion(bug).getThePlatform().getPlatformName().equals(platform) ) {
 				frequency++;
 			}
 		}

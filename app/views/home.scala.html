@@ -20,55 +20,68 @@
       <select id="platform" name="#platform">
            <option value="Please select Platform">Please select Platform</option>
 			@for(plat <- Platform.getList) {
-           <option value=@plat.getName class = @plat.getName> @plat.getName</option>
+           <option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
            }
       </select>
       <select id="format" name="#format">
            <option value="Please select Format">Please select Format</option>
            @for(form <- FileFormat.getList) {
-           <option value=@form.getName  class = @form.getName>@form.getName</option>
+           <option value=@form.getFileFormatName  class =@form.getFileFormatName>@form.getFileFormatName</option>
            }
       </select>
       <select id="run" name="#run">
            <option value="Available runs">Available runs</option>
            @for(run <- Run.getList) {
-           <option value=@run.getName  class = @run.getPlatformFormat>@run.getName</option>
+           <option value=@run.getRunID   class = @run.getPlatformFormat>@run.getRunName</option>
            }
       </select>
+      <input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite('run')"/>
        <p>
        
        <select id="platform2" name="#platform2">
            <option value="Please select Platform">Please select Platform</option>
 			@for(plat <- Platform.getList) {
-           <option value=@plat.getName class = @plat.getName> @plat.getName</option>
+           <option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
            }
       </select>
       <select id="version2" name="#version2">
            <option value="Please select Version">Please select Version</option>
            @for(vers <- Version.getList) {
-           <option value=@vers.getName  class = @vers.getName>@vers.getName</option>
+           <option value=@vers.getVersionName  class = @vers.getVersionName>@vers.getVersionName</option>
            }
       </select>
       <select id="run2" name="#run2">
            <option value="Available runs">Available runs</option>
            @for(run <- Run.getList) {
-           <option value=@run.getName  class = @run.getPlatformVersion>@run.getName</option>
+           <option value=@run.getRunID   class = @run.getPlatformVersion>@run.getRunName</option>
            }
       </select>
+      <input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite('run2')"/>
   </p>
   <p>
   	<select id="date" name="#date">
            <option value="Choose from Dates">Choose from dates</option>
            @for(da <- models.Date.getList) {
-           <option value=@da.getName  class = @da.getName>@da.getName</option>
+           <option value=@da.getDateName  class = @da.getDateName>@da.getDateName</option>
            }
       </select>
       <select id="run3" name="#run3">
            <option value="Choose from runs">Choose from runs</option>
            @for(run <- Run.getList) {
-           <option value=@run.getName  class = @run.getDate>@run.getName</option>
+           <option value=@run.getRunID  class = @run.getDateName>@run.getRunName</option>
            }
       </select>
+      <input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite('run3')"/>
+
+<script>
+/**
+ * Redirects to proper run data
+ */
+function NavigateToSite(id) {
+	var value = document.getElementById(id).value;
+	window.location = "runData/" + value;
+}
+</script>
   
   </p>
       

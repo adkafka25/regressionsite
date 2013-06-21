@@ -99,6 +99,22 @@ public class Run extends Model {
 		return run.name;
 	}
 	
+	/**
+	 * This method returns the a run given a run id
+	 * 
+	 * @param runID The run ID to search for
+	 * 
+	 * @return The run corresponding to runID
+	 */
+	public static List<Run> runByID(Long runID){
+		Run run=find.where()
+			.eq("id",runID)
+			.findUnique();
+		List<Run> runs = new ArrayList<Run>();
+		runs.add(run);
+		return runs;
+	}
+	
 	
 	/**
 	 * This method returns the sortable fields of Run class
@@ -130,8 +146,11 @@ public class Run extends Model {
 	 * 
 	 * @return name of the run.
 	 */
-	public String getName(){
+	public String getRunName(){
 		return name;
+	}
+	public Long getRunID() {
+		return id;
 	}
 	/**
 	 * 
@@ -146,7 +165,7 @@ public class Run extends Model {
 	 * @return a string with the platform name and the format name.
 	 */
 	public String getPlatformFormat(){
-		return version.platform.getName() + "\\" + format.getName();
+		return version.platform.getPlatformName() + "\\" + format.getFileFormatName();
 	
 	}
 	/**
@@ -154,14 +173,16 @@ public class Run extends Model {
 	 * @return a string with the platform name and the version name.
 	 */
 	public String getPlatformVersion(){
-		return version.platform.getName() + "\\" + version.getName();
+		return version.platform.getPlatformName() + "\\" + version.getVersionName();
 	
 	}
 	/**
 	 * 
 	 * @return a string with the date name.
 	 */
-	public String getDate() {
-		return date.getName();
+	public String getDateName() {
+		return date.getDateName();
 	}
+	
+	
 }

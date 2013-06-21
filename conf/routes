@@ -11,6 +11,7 @@ GET		/runs/:filterBy             controllers.Application.listRun(p:Int ?= 0, s ?
 GET		/pages						controllers.Application.listPage(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
 GET		/bugs						controllers.Application.listBug(p:Int ?= 0, s ?= "number", o ?= "asc", f ?= "")
 GET 	/home						controllers.Application.home
+GET		/runData/:id				controllers.Application.getData(id:Long)
 
 # page by run
 GET		/pagesbyrun/:id				controllers.Application.listPageByRun(p:Int ?= 0, s ?= "name", o ?= "asc", id:Long, f ?="")

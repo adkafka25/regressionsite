@@ -27,8 +27,14 @@ public class Application extends Controller {
     public static Result GO_HOME = redirect(
         routes.Application.home()
     );
+    public static Result RUN_INDEX = redirect( 
+    	routes.Application.listRun(0, "name", "asc", "","name")
+    );
   
-  
+    public static Result runIndex() {
+    	return RUN_INDEX;
+    }
+    
     public static Result index() {
         return GO_HOME;
     }
@@ -55,12 +61,6 @@ public class Application extends Controller {
         );
     }
 	
-	/**
-     * This result directly redirect to run index view.
-     */
-    public static Result runIndex(){
-		return GO_HOME;
-	}
 	
 	
 	/**
@@ -126,9 +126,10 @@ public class Application extends Controller {
 		String data = "[['Date','Java','Native'],";
 		
 		for(models.Date date: allDates){
-			String name=date.getName();
-			int occurences = models.Bug.frequency(date);
-			data+="['"+name+"', "+ 4 + "," +occurences+"],";
+			String name=date.getDateName();
+			int javaOc = models.Bug.frequency(date, "SnowBatch" );
+			int nativeOc = models.Bug.frequency(date, "Native");
+			data+="['"+name+"', "+ javaOc + "," + nativeOc +"],";
 		}
 		data = data.substring(0,data.length()-1);
 		
@@ -142,11 +143,23 @@ public class Application extends Controller {
 	/**
 	 * This function creates the form for adding a new run
 	 */
-	public static Result createNewRun(){
+	public static Result createNewRun() {
 		Form<Run> runForm = Form.form(Run.class);
         return ok(
             createForm.render(runForm)
         );
+	}
+	/**
+	 * This function creates the form for loading data from a 
+	 * specific run.
+	 * @return the page runData.
+	 */
+	public static Result getData(Long id) {
+		Form<Run> data = Form.form(Run.class);
+		return ok(
+			runData.render(id, data)
+		
+		);
 	}
 	
 	

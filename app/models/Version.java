@@ -64,8 +64,11 @@ public class Version extends Model {
      * 
      * @return name of version.
      */
-	public String getName() {
+	public String getVersionName() {
 		return name;
+	}
+	public Platform getThePlatform() {
+		return platform;
 	}
 	
 	/**

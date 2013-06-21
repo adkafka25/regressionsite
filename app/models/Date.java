@@ -55,7 +55,7 @@ public class Date extends Model {
      * returns name, which is essentially the date.
      * @return date.
      */
-    public String getName() {
+    public String getDateName() {
     	return name;
     }
 	
