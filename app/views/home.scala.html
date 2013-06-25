@@ -6,7 +6,19 @@
     routes.Application.dataList(f1, f2, p1, p2)
     
 }
+html, body {
+    height: 100%;
+}
 
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
 
 @homeMain{
 <!DOCTYPE html>
@@ -63,13 +75,13 @@
       <select id="version2" name="#version2">
            <option value="Please select Version">Please select Version</option>
            @for(vers <- Version.getList) {
-           <option value=@vers.getVersionName  class = @vers.getVersionName>@vers.getVersionName</option>
+           <option value=@vers.getVersionName  class = @vers.getThePlatform.getPlatformName>@vers.getVersionName</option>
            }
       </select>
       <select id="run2" name="#run2">
            
            @for(run <- Run.getList) {
-           <option value=@run.getRunID   class = @run.getPlatformVersion>@run.getRunName</option>
+           <option value=@run.getRunID   class = @run.version.getVersionName>@run.getRunName</option>
            }
            <option value="">All Runs</option> 
       </select>
@@ -132,7 +144,8 @@ function NavigateToSite(list1,list2,p1,p2,id) {
 
       <script language="JavaScript" type="text/javascript">
       $("#run").chained("#platform, #format"); 
-      $("#run2").chained("#platform2, #version2"); 
+      $("#version2").chained("#platform2");
+      $("#run2").chained("#version2"); 
       $("#run3").chained("#date"); 
       
       $('form').submit(function(){
