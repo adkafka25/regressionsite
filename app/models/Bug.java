@@ -30,6 +30,11 @@ public class Bug extends Model {
 	@JoinColumn(name="Bug_Status_ID")
 	public BugStatus bugstatus;
 	
+	@Column(name="Difference_ID")
+	@OneToOne
+	@JoinColumn(name="Difference_ID")
+	public Difference difference;
+	
 	/**
      * Get file format of bug by going to bug->page->run->Format
      */
@@ -54,6 +59,13 @@ public class Bug extends Model {
 	public static Date getDate( Bug bug ){
 		PageOut pageout = PageOut.pageFromBug(bug);
 		return pageout.run.date;
+	}
+	
+	/**
+	 * Get difference associated with that bug through page
+	 */
+	public static List<Difference> getDifferences(Bug bug){
+		return Difference.listDifferences(PageOut.pageFromBug(bug));
 	}
 	
 	//PageToBug
@@ -94,13 +106,14 @@ public class Bug extends Model {
 	 * @param bug Which bug name to find ID for
 	 * @return id of bug. Creates new one if no bug previously existed
 	 */
-	public static Long getBugID(Long bugNum){ //Used in AddToDB
+	public static Long getBugID(Long bugNum, Difference difference){ //Used in AddToDB
 		Bug bug=find.where()
 			.eq("number",bugNum)
 			.findUnique();
 		if( bug == null ){ //If no bug was found... add it and return that id
 			Bug newBug = new Bug();
 			newBug.number=bugNum;
+			newBug.difference=difference;
 			newBug.save();
 			return newBug.id;
 		}
@@ -118,5 +131,7 @@ public class Bug extends Model {
 			.findSet();
 		return bugSet.size();
 	}
+	
+	
 }
 
