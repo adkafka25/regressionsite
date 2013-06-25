@@ -53,6 +53,23 @@ public class Version extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
+
+    /**
+     * @return all versions.
+     */
+    public static List<Version> getList() {
+    	return find.all();
+    }
+    /**
+     * 
+     * @return name of version.
+     */
+	public String getVersionName() {
+		return name;
+	}
+	public Platform getThePlatform() {
+		return platform;
+	}
 	
 	/**
 	 * Returns the versionID of given version.name
@@ -71,6 +88,7 @@ public class Version extends Model {
 			return newVersion.id;
 		}
 		return version.id;
+
 	}
     
 }

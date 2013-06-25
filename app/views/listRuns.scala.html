@@ -54,11 +54,12 @@
     } 
 
 <form>
-	<select name="myList" id="ddlMyList">
+	<select name="carey" id="ddlMyList">
 			<option value="">- Please Select -</option>
 		@for(field <- Run.getSortFields ) {
 			<option value= @field.getValue >@field.getHeader</option>
 			}
+	</select>
 	 <input type="search" id="searchbox" value="@currentFilter" placeholder="Search for...">
 	<input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite()"/>
 
@@ -69,7 +70,7 @@ function NavigateToSite() {
 	var ddl = document.getElementById("ddlMyList");
 	var textInput = document.getElementById("searchbox").value;
 	var selectedVal = ddl.options[ddl.selectedIndex].value;
-	window.location = selectedVal + "?f=" + textInput ;
+	window.location = selectedVal + "?f=" + textInput;
 }
 function VerifyDelete(id){
 	var del=confirm("Are you sure you would liek to delete this run AND all pages associated with it (run id="+id+")?");
@@ -80,13 +81,14 @@ function VerifyDelete(id){
 </script>
 
 
-</select>
+
 </form> 
 	
     <div id="actions">
         
         <form action="@link(0, "format.name", "format.name")" method="GET">
 			<select name="f">
+				<option value="" >Please Select by File Format </option>option>
 			@for(file <- FileFormat.getList ) {
 				<option value= @file.name >@file.name</option>
 				}

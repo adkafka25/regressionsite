@@ -6,6 +6,7 @@ import javax.persistence.*;
 import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
+import play.mvc.Result;
 
 import com.avaje.ebean.*;
 
@@ -100,6 +101,22 @@ public class Run extends Model {
 	}
 	
 	/**
+
+	 * This method returns the a run given a run id
+	 * 
+	 * @param runID The run ID to search for
+	 * 
+	 * @return The run corresponding to runID
+	 */
+	public static List<Run> runByID(Long runID){
+		Run run=find.where()
+			.eq("id",runID)
+			.findUnique();
+		List<Run> runs = new ArrayList<Run>();
+		runs.add(run);
+		return runs;
+	}
+  /*
 	 * This method returns the run for the run given a run id
 	 * @param runID The run ID to search for
 	 * 
@@ -130,6 +147,52 @@ public class Run extends Model {
 		return sortFields;
 	}
 	
+
+	
+	/**
+	 * 
+	 * @return name of the run.
+	 */
+	public String getRunName(){
+		return name;
+	}
+	public Long getRunID() {
+		return id;
+	}
+	/**
+	 * 
+	 * @return all runs.
+	 */
+	public static List<Run> getList(){
+		return find.all();
+	}
+
+	/**
+	 * 
+	 * @return a string with the platform name and the format name.
+	 */
+	public String getPlatformFormat(){
+		return version.platform.getPlatformName() + "\\" + format.getFileFormatName();
+	
+	}
+	/**
+	 * 
+	 * @return a string with the platform name and the version name.
+	 */
+	public String getPlatformVersion(){
+		return version.platform.getPlatformName() + "\\" + version.getVersionName();
+	
+	}
+	/**
+	 * 
+	 * @return a string with the date name.
+	 */
+	public String getDateName() {
+		return date.getDateName();
+	}
+	
+	
+
     /**
 	 * This method calculates how many differences of diffType occured in given run
 	 * @param run Which run to calculate
@@ -139,6 +202,24 @@ public class Run extends Model {
 	public static int calculateDifferences(Run run, DiffType difftype){
 		return PageOut.calculateDifferences(run,difftype);
 	}
+
+
+	/**
+	 * This method is used to generate a list of runs which share similar characteristics.
+	 * Param1 and Param2 are the data types you are looking for (example: Format or Date)
+	 * Filter1 and Filter2, respectively, are what you are searching for (example: PDF or 12/12/2000)
+	 * @return list generated. 
+	 */
+	public static List<Run> dataSet(String filter1, String filter2, String param1, String param2) {
+		List<Run> list =find.where()
+				.eq(param1, filter1)
+				.eq(param2, filter2)
+				.findList();
+				return list;
+	}
+
+
+
 	
 	/**
 	 * This method calculates how many bugs appeared in a given run
@@ -148,4 +229,5 @@ public class Run extends Model {
 	public static int calculateBugs(Run run){
 		return Bug.calculateBugs(run);
 	}
+
 }

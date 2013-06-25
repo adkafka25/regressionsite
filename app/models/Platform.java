@@ -1,6 +1,7 @@
 package models;
 
 import java.util.*;
+
 import javax.persistence.*;
 
 import play.db.ebean.*;
@@ -47,6 +48,21 @@ public class Platform extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
+    /**
+     * Creates a list of Platforms
+     * @return a list of all the Platforms
+     */
+    public static List<Platform> getList() {
+    	return find.all();
+    }
+    
+    /**
+     * 
+     * @return name of the platform.
+     */
+    public String getPlatformName() {
+    	return name;
+    }
 	
 	//Used for creating a list of all companies. Implemented in createForm.scala.html in @select
     public static Map<String,String> options() {
@@ -57,7 +73,7 @@ public class Platform extends Model {
         return options;
     }
 	/**
-	 * This method takes a pltform ID and returns the platform
+	 * This method takes a platform ID and returns the platform
 	 * 
 	 * @param platformID ID to find platform
 	 *

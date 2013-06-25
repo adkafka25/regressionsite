@@ -38,14 +38,8 @@ public class Application extends Controller {
     public static Result index() {
         return GO_HOME;
     }
-    public static Result home() {
-        return ok(
-            home.render()
-        );
-    }
- 
-
-  	//For javascript routes
+<<<<<<< HEAD
+	//For javascript routes
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(
@@ -55,6 +49,16 @@ public class Application extends Controller {
 			)
 		);
 	}
+  
+  
+=======
+    public static Result home() {
+        return ok(
+            home.render()
+        );
+    }
+    
+>>>>>>> 9a64af67761cde676ead0ad9108f6160699ffa2e
 	/**
      * Display the paginated list of runs.
      *

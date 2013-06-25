@@ -47,6 +47,17 @@ public class Date extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
+    
+    public static List<Date> getList() {
+    	return find.all();
+    }
+    /**
+     * returns name, which is essentially the date.
+     * @return date.
+     */
+    public String getDateName() {
+    	return name;
+    }
 	
 	/**
 	 * Returns the dateID of given date.name

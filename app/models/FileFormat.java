@@ -55,6 +55,14 @@ public class FileFormat extends Model {
     public static List<FileFormat> getList() {
     	return find.all();
     }
+    
+    /**
+     * 
+     * @return name of File Format.
+     */
+    public String getFileFormatName() {
+    	return name;
+    }
 	
 	//Used for creating a list of all companies. Implemented in createForm.scala.html in @select
     public static Map<String,String> options() {
