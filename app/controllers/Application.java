@@ -30,6 +30,17 @@ public class Application extends Controller {
     public static Result index() {
         return GO_HOME;
     }
+	//For javascript routes
+	public static Result javascriptRoutes() {
+		response().setContentType("text/javascript");
+		return ok(
+			Routes.javascriptRouter("jsRoutes",
+				//Routes
+				controllers.routes.javascript.Application.deleteRun()
+			)
+		);
+	}
+  
   
 	/**
      * Display the paginated list of runs.
@@ -118,6 +129,13 @@ public class Application extends Controller {
         );
 	}
 	
-	
+	/**
+     * Handle run deletion
+     */
+    public static Result deleteRun(Long id) {
+        Run.find.ref(id).delete();
+        flash("success", "Run has been deleted");
+        return GO_HOME;
+    }
 	
 }
