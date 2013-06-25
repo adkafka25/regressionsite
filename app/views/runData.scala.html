@@ -1,0 +1,144 @@
+@(id: Long, dataForm: Form[Run])
+
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header "headerSortUp"">
+        <a href= >@title</a>
+    </th>
+}
+
+@main {
+       
+        
+        <table class="run zebra-striped">
+            <thead>
+                <tr>
+                    @header("name", "Run Name")
+                    @header("version.name", "Version")
+                    @header("format.name", "Format")
+					@header("date.name", "Date")
+                    @header("svn.num", "SVN")
+                    @header("performance.time", "Performance Time")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(fun <- Run.runByID(id)) {
+                    <tr>
+                        <td>
+                            @if(fun.name == null) {
+                                <em>-</em>
+                            } else {
+                                @fun.name
+                            }
+                        </td>
+						<td>
+                            @if(fun.version == null) {
+                                <em>-</em>
+                            } else {
+                                @fun.version.name of @fun.version.platform.name
+                            }
+                        </td>
+                        <td>
+                            @if(fun.format == null) {
+                                <em>-</em>
+                            } else {
+                                @fun.format.name
+                            }
+                        </td>
+						<td>
+                            @if(fun.date == null) {
+                                <em>-</em>
+                            } else {
+                                @fun.date.name.format("dd MMM yyyy")
+                            }
+                        </td>
+						<td>
+                            @if(fun.svn == null) {
+                                <em>-</em>
+                            } else {
+                                @fun.svn.num
+                            }
+                        </td>
+						<td>
+                            @if(fun.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @fun.performance.time.format("hh:mm:ss")
+                            }
+                        </td>
+                    </tr>
+                
+
+            </tbody>
+        </table>
+	<p>
+	</p>
+      <table class="run zebra-striped">
+            <thead>
+                <tr>
+                    @header("format", "Format")
+                    @header("better", "# Better")
+                    @header("worse", "# Worse")
+					@header("neutral", "# Neutral")
+                    @header("bugs", "# Bugs")
+                    @header("notdecompressed", "# Not Decompressed")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(run <- Run.runByID(id)) {
+                    <tr>
+                        <td>
+                            @if(run.format.name == null) {
+                                <em>-</em>
+                            } else {
+                                @run.format.name
+                            }
+                        </td>
+						<td>
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))) == null) {
+                                <em>-</em>
+                            } else {
+                                @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))))
+                            }
+                        </td>
+                        <td>
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))) == null) {
+                                <em>-</em>
+                            } else {
+                                @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))))
+                            }
+                        </td>
+						<td>
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))) == null) {
+                                <em>-</em>
+                            } else {
+                                @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))))
+                            }
+                        </td>
+						<td>
+                            @if(run.svn == null) {
+                                <em>-</em>
+                            } else {
+                                @run.svn.num
+                            }
+                        </td>
+						<td>
+                            @if(run.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @run.performance.time.format("hh:mm:ss")
+                            }
+                        </td>
+                    </tr>
+                
+
+            </tbody>
+        </table>
+        }
+        
+    }
+        
+}
+
+            

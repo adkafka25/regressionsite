@@ -6,6 +6,7 @@ import javax.persistence.*;
 import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
+import play.mvc.Result;
 
 import com.avaje.ebean.*;
 
@@ -100,7 +101,7 @@ public class Run extends Model {
 	}
 	
 	/**
-<<<<<<< HEAD
+
 	 * This method returns the a run given a run id
 	 * 
 	 * @param runID The run ID to search for
@@ -114,7 +115,8 @@ public class Run extends Model {
 		List<Run> runs = new ArrayList<Run>();
 		runs.add(run);
 		return runs;
-=======
+	}
+  /*
 	 * This method returns the run for the run given a run id
 	 * @param runID The run ID to search for
 	 * 
@@ -125,7 +127,6 @@ public class Run extends Model {
 			.eq("id",runID)
 			.findUnique();
 		return run;
->>>>>>> ff2d823f66c77ac7c4b8e475818a1cb08ad7be22
 	}
 	
 	
@@ -146,16 +147,8 @@ public class Run extends Model {
 		return sortFields;
 	}
 	
-<<<<<<< HEAD
-	public static List<Run> searchRuns(String platformSearch, String formatSearch) {
-		
-		List<Run> list =find.where()
-		.eq("version.platform.name", platformSearch)
-		.eq("format.name", formatSearch)
-		.findList();
-		
-		return list;
-	}
+
+	
 	/**
 	 * 
 	 * @return name of the run.
@@ -199,7 +192,7 @@ public class Run extends Model {
 	}
 	
 	
-=======
+
     /**
 	 * This method calculates how many differences of diffType occured in given run
 	 * @param run Which run to calculate
@@ -209,5 +202,18 @@ public class Run extends Model {
 	public static int calculateDifferences(Run run, DiffType difftype){
 		return PageOut.calculateDifferences(run,difftype);
 	}
->>>>>>> ff2d823f66c77ac7c4b8e475818a1cb08ad7be22
+	/**
+	 * This method is used to generate a list of runs which share similar characteristics.
+	 * Param1 and Param2 are the data types you are looking for (example: Format or Date)
+	 * Filter1 and Filter2, respectively, are what you are searching for (example: PDF or 12/12/2000)
+	 * @return list generated. 
+	 */
+	public static List<Run> dataSet(String filter1, String filter2, String param1, String param2) {
+		List<Run> list =find.where()
+				.eq(param1, filter1)
+				.eq(param2, filter2)
+				.findList();
+				return list;
+	}
+
 }

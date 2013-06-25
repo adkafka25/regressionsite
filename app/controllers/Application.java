@@ -154,12 +154,18 @@ public class Application extends Controller {
 	 * specific run.
 	 * @return the page runData.
 	 */
-	public static Result getData(Long id) {
+	public static Result getData(long id) {
 		Form<Run> data = Form.form(Run.class);
 		return ok(
 			runData.render(id, data)
 		
 		);
+	}
+   public static Result dataList(String filter1, String filter2, String param1, String param2) {
+		Form<Run> data = Form.form(Run.class);
+		return ok(
+			dataList.render( filter1, filter2, param1,  param2, data)	
+				);
 	}
 	
 	

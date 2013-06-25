@@ -1,5 +1,14 @@
+@link(f1:String, f2:String, p1:String, p2:String ) = @{
+    
+    
+    
+    // Generate the link
+    routes.Application.dataList(f1, f2, p1, p2)
+    
+}
 
-@main{
+
+@homeMain{
 <!DOCTYPE html>
   <html>
   <head>
@@ -8,12 +17,13 @@
       </script>
       <script type="text/javascript" src="@routes.Assets.at("js/jquery.chained.min.js")" charset="utf-8"></script>
       <script>
-         if (jQuery().chained) {  
+        /* if (jQuery().chained) {  
               alert('jQuery is loaded!');  
          }
           else{   
              alert('jQuery is not loaded!');  
          }
+        */
       </script>
    </head>
    <body>
@@ -30,13 +40,19 @@
            }
       </select>
       <select id="run" name="#run">
-           <option value="Available runs">Available runs</option>
+             
            @for(run <- Run.getList) {
            <option value=@run.getRunID   class = @run.getPlatformFormat>@run.getRunName</option>
            }
+           <option value="">All Runs</option> 
+           
       </select>
-      <input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite('run')"/>
-       <p>
+      <input type = "button" value= "Search" class="btn primary" 
+      	onclick = "NavigateToSite('platform','format','version.platform.name', 'format.name','run')"/>
+       
+      <p>
+      OR
+      </p>
        
        <select id="platform2" name="#platform2">
            <option value="Please select Platform">Please select Platform</option>
@@ -51,14 +67,19 @@
            }
       </select>
       <select id="run2" name="#run2">
-           <option value="Available runs">Available runs</option>
+           
            @for(run <- Run.getList) {
            <option value=@run.getRunID   class = @run.getPlatformVersion>@run.getRunName</option>
            }
+           <option value="">All Runs</option> 
       </select>
-      <input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite('run2')"/>
-  </p>
-  <p>
+      <input type = "button" value= "Search" class="btn primary"
+       onclick = "NavigateToSite('platform2','version2','version.platform.name', 'version.name','run2')"/>
+      
+     <p>
+     OR
+      </p>  
+  
   	<select id="date" name="#date">
            <option value="Choose from Dates">Choose from dates</option>
            @for(da <- models.Date.getList) {
@@ -66,33 +87,66 @@
            }
       </select>
       <select id="run3" name="#run3">
-           <option value="Choose from runs">Choose from runs</option>
+           
            @for(run <- Run.getList) {
            <option value=@run.getRunID  class = @run.getDateName>@run.getRunName</option>
            }
+           <option value="">All Runs</option> 
       </select>
-      <input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite('run3')"/>
+      <input type = "button" value= "Search" class="btn primary" 
+      onclick = "NavigateToSite('','','','','run3')"/>
+ <p>
+      </p>
 
 <script>
 /**
  * Redirects to proper run data
+ *  p1: param one (format.name, etc)
+ *  p2: param two
+ *	list1: The first list you're pulling a value from
+ *	list2: The second list you're pulling a value from
  */
-function NavigateToSite(id) {
+function NavigateToSite(list1,list2,p1,p2,id) {
+	
 	var value = document.getElementById(id).value;
-	window.location = "runData/" + value;
+	if (value == ""){
+		var f1 = document.getElementById(list1).value
+		var f2 = document.getElementById(list2).value
+		window.location = "dataList" + "/" + 
+		f1+ "/" + f2 + "/" +
+		p1 + "/" + p2;
+	}
+	else {
+		
+		window.location = "runData/" + value;
+		
+	}
+	
+	
+	
 }
 </script>
   
-  </p>
+ 
       
 
       <script language="JavaScript" type="text/javascript">
       $("#run").chained("#platform, #format"); 
       $("#run2").chained("#platform2, #version2"); 
       $("#run3").chained("#date"); 
+      
+      $('form').submit(function(){
+    	    if($('#platform').val() == "" || $('#format').val() == ""){
+    	        return false;
+    	    }
+    	    });
+      
+      
       </script>
 
   </body>
+ 
+
  
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -119,9 +173,12 @@ function NavigateToSite(id) {
 		
 		var obj = eval("(" + tableFormatted + ")"); //convert it to an array
 		var data = google.visualization.arrayToDataTable(obj); //convert to data table
-
+		
+		
         var options = {
-          title: 'Native versus Java'
+          title: 'Regressions Found: Native Vs. Java',
+          vAxis: {title: '# of Regressions',  titleTextStyle: {color: '#000001'}},
+          hAxis: {title: 'Date of Regression Test',  titleTextStyle: {color: '#000001'}}
           
           
         };
@@ -135,7 +192,7 @@ function NavigateToSite(id) {
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
   </body>
   
-      
+ 
       
 
       
