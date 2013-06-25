@@ -150,32 +150,36 @@ public class AddToDB extends Controller{
 			//Get page_ID, create one if deosn't already exist
 			pageID=PageOut.getPageID(fileName,runID);
 			returnInfo+="INFO: "+fileName+" added to DB with runID="+runID;
-		
+		//End if?
 			//Deal with difference and pagetodifference
+			long diffID=0;
 			if(diffType!=null){ //
 				if(difference==null){//If difference is not set, set it to this default value
 					difference="No description";
 				}
 				//get ID of difference
-				long diffID = Difference.getDifferenceID(difference,diffType);
+				diffID = Difference.getDifferenceID(difference,diffType);
 				//Prepare SQL statement
 				String SQLpagetodiff="INSERT INTO pagetodifference (Page_ID,Difference_ID) VALUES ('"+pageID+"','"+diffID+"')";
 				//Run SQL statement
 				sqlUpdate(SQLpagetodiff);
 				//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
-				returnInfo+=" INFO: "+fileName+" linked with difference: "+difference+" of difference type"+diffType;
+				returnInfo+=" INFO: "+fileName+" linked with difference: "+difference+" of difference type "+diffType;
 
 			}
 			//Deal with bug and pagetobug
+			long bugID=0;
 			if(bugNum!=null){
 				//Get id of bug Num
-				long bugID = Bug.getBugID(bugNum);
+				bugID = Bug.getBugID(bugNum,Difference.getByID(diffID));
 				//Prepare SQL statement
 				String SQLpagetobug="INSERT INTO pagetobug (Page_ID,Bug_ID) VALUES ('"+pageID+"','"+bugID+"')";
 				//Run SQL statement
 				sqlUpdate(SQLpagetobug);
 				//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
-				returnInfo+=" INFO: "+fileName+" linked with bug: "+bugNum;
+				returnInfo+=" INFO: "+fileName+" linked with bug: "+bugNum+" and difference: "+difference;
+			
+				//Associate bug with that difference
 				
 			}
 		}

@@ -202,6 +202,7 @@ public class Run extends Model {
 	public static int calculateDifferences(Run run, DiffType difftype){
 		return PageOut.calculateDifferences(run,difftype);
 	}
+
 	/**
 	 * This method is used to generate a list of runs which share similar characteristics.
 	 * Param1 and Param2 are the data types you are looking for (example: Format or Date)
@@ -214,6 +215,17 @@ public class Run extends Model {
 				.eq(param2, filter2)
 				.findList();
 				return list;
+	}
+
+
+	
+	/**
+	 * This method calculates how many bugs appeared in a given run
+	 * @param run Which run to calculate
+	 * @return Number of bugs from that run
+	 */
+	public static int calculateBugs(Run run){
+		return Bug.calculateBugs(run);
 	}
 
 }

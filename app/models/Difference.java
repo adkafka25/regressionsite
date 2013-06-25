@@ -98,5 +98,15 @@ public class Difference extends Model {
 		}
 		return diff.id;
 	}
+	
+	/**
+	 * Returns Difference of given id
+	 */
+	public static Difference getByID(Long diffID){
+		Difference difference=find.where()
+			.eq("id",diffID)
+			.findUnique();
+		return difference;
+	}
 }
 

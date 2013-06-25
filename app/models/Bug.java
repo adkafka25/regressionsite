@@ -30,6 +30,11 @@ public class Bug extends Model {
 	@JoinColumn(name="Bug_Status_ID")
 	public BugStatus bugstatus;
 	
+	@Column(name="Difference_ID")
+	@OneToOne
+	@JoinColumn(name="Difference_ID")
+	public Difference difference;
+	
 	/**
      * Get file format of bug by going to bug->page->run->Format
      */
@@ -56,6 +61,13 @@ public class Bug extends Model {
 		return pageout.run.date;
 	}
 	
+	/**
+	 * Get difference associated with that bug through page
+	 */
+	public static List<Difference> getDifferences(Bug bug){
+		return Difference.listDifferences(PageOut.pageFromBug(bug));
+	}
+	
 	//PageToBug
 	@ManyToMany
 	@JoinTable(
@@ -63,7 +75,6 @@ public class Bug extends Model {
 		joinColumns=@JoinColumn(name="Bug_ID", referencedColumnName="Bug_ID"),
 		inverseJoinColumns=@JoinColumn(name="Page_ID", referencedColumnName="Page_ID")
 	)
-	//public Set<PageOut> pagesoutbug = new HashSet<PageOut>();
 	public Map<Bug,PageOut> pagesoutbug = new HashMap<Bug,PageOut>();
     
     /**
@@ -120,18 +131,34 @@ public class Bug extends Model {
 	 * @param bug Which bug name to find ID for
 	 * @return id of bug. Creates new one if no bug previously existed
 	 */
-	public static Long getBugID(Long bugNum){ //Used in AddToDB
+	public static Long getBugID(Long bugNum, Difference difference){ //Used in AddToDB
 		Bug bug=find.where()
 			.eq("number",bugNum)
 			.findUnique();
 		if( bug == null ){ //If no bug was found... add it and return that id
 			Bug newBug = new Bug();
 			newBug.number=bugNum;
+			newBug.difference=difference;
 			newBug.save();
 			return newBug.id;
 		}
 		return bug.id;
 	}
+
+	
+	/**
+	 * This method calculates how many Bugs occured in given run
+	 * @param run Which run to calculate
+	 * @return Number of bugs in run
+	 */
+	public static int calculateBugs(Run run){
+		Set<Bug> bugSet = find.where() //create a list of pagetobug with only pages from this run
+			.eq("pagesoutbug.run.id", run.id) //make sure page is from run
+			.findSet();
+		return bugSet.size();
+	}
+	
+	
 
 }
 
