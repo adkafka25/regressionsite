@@ -203,6 +203,7 @@ public class Run extends Model {
 		return PageOut.calculateDifferences(run,difftype);
 	}
 
+
 	/**
 	 * This method is used to generate a list of runs which share similar characteristics.
 	 * Param1 and Param2 are the data types you are looking for (example: Format or Date)
@@ -216,6 +217,7 @@ public class Run extends Model {
 				.findList();
 				return list;
 	}
+
 
 
 	
