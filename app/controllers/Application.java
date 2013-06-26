@@ -183,10 +183,13 @@ public class Application extends Controller {
      * Handle run deletion
      */
     public static Result deleteRun(Long id) {
-        Run.find.ref(id).delete();
-        flash("success", "Run has been deleted");
-        return GO_HOME;
-    }
-	
-
+		if(Run.getRunByID(id)!=null){//if run exists...
+			Run.find.ref(id).delete();
+			flash("success", "Run has been deleted");
+			return listRun(0, "name", "asc", "", "name");
+		}
+		else{ //Run doesn't exist
+			return runIndex();
+		}
+	}
 }
