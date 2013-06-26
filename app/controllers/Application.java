@@ -123,13 +123,13 @@ public class Application extends Controller {
 		List<models.Date> allDates = models.Date.getList();
 		//int[] frequency = models.Company.allFrequency();
 		
-		String data = "[['Date','Java','Native'],";
+		String data = "[['Date','Java','Native', 'Test'],";
 		
 		for(models.Date date: allDates){
-			String name=date.getDateName();
+			String name=date.convertDate();
 			int javaOc = models.Bug.frequency(date, "Java" );
 			int nativeOc = models.Bug.frequency(date, "Native");
-			data+="['"+name+"', "+ javaOc + "," + nativeOc +"],";
+			data+="['"+name+"', "+ javaOc + "," + nativeOc + ", 3 ],";
 		}
 		data = data.substring(0,data.length()-1);
 		
