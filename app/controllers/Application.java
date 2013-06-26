@@ -138,7 +138,7 @@ public class Application extends Controller {
 		
 		for(models.Date date: allDates){
 			String name=date.getDateName();
-			int javaOc = models.Bug.frequency(date, "SnowBatch" );
+			int javaOc = models.Bug.frequency(date, "Java" );
 			int nativeOc = models.Bug.frequency(date, "Native");
 			data+="['"+name+"', "+ javaOc + "," + nativeOc +"],";
 		}
