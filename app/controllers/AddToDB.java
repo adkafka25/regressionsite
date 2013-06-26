@@ -84,7 +84,7 @@ public class AddToDB extends Controller{
 			}
 			
 			if(diffType!=null && fileName!=null){ //Mandatroy to be inserted
-				log.add(enterFileInfo(fileName, diffType, runID, difference, bugNum)); //Avtually insert the data into DB
+				log.add(enterFileInfo(fileName, diffType, runID, difference, bugNum)); //Actually insert the data into DB
 			}
 			else{
 				if(diffType==null){
@@ -95,8 +95,49 @@ public class AddToDB extends Controller{
 				}
 			}
 		}
+		
+		//Check and add any files that were not decompressed
+		addFilesWithErrors(dirname, runID, log);
+		
 		return log;
 	}
+	
+	/**
+	 * This method adds any files in the IMAGES NOT DECOMPRESSED directory to the files database and their corresponding error
+	 * @param dirname The Issues to directory to begin at. The search is actually below this folder
+	 * @param runID The run that these files correspond to
+	 * @param log The log to add information to
+	 * @return void
+	 */
+	public static void addFilesWithErrors(String dirname, Long runID, List<String> log){
+		String appendFolder="/IMAGES NOT DECOMPRESSED"; 
+		dirname=dirname.substring(0,dirname.lastIndexOf('/'))+appendFolder;
+		 
+		File startFile = new File(dirname);
+		
+		List<String> errorFiles = new ArrayList<String>();
+		
+		listFilesRecursively(startFile, errorFiles); //allFiles is now a List<String> of all files paths
+		
+		for(String errorFile : errorFiles){//for each file in errorFiles
+			//Get file name
+			String fileName=getFileName(errorFile);
+				//Should i remove .txt?
+			//Get ErrorNum
+			long errorNum = getErrorNum(errorFile,appendFolder);
+			//Get error description
+			String errorDesc = getErrorDesc(errorFile,appendFolder);
+			//Get ID of error Num
+			long errorID = models.Error.getIDByNum(errorNum,errorDesc);
+			//Prepare SQL statement
+			String SQLerrorPage="INSERT INTO page (Page_Name, Run_ID, Error_ID) VALUES ('"+fileName+"','"+runID+"','"+errorID+"')";
+			//Run SQL statement
+			sqlUpdate(SQLerrorPage);
+			//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
+			log.add("INFO: Page '"+fileName+"' added with error number="+errorNum+" and description: "+errorDesc);
+		}
+	}
+	
 	
 	/**
 	 * This method executes a mySQL UPDATE statement
@@ -261,6 +302,58 @@ public class AddToDB extends Controller{
 		}
 	}
 	
+	/**
+	 * This method gets the errorNum of errorFile
+	 * @param errorFile The file to get the error number of
+	 * @param appendFolder Name of folder that the errors are in (ex. IMAGES NOT DECOMPRESSED)
+	 * @return Long for that error
+	 */
+	public static Long getErrorNum(String errorFile, String appendFolder){
+		//Change \ to /
+		appendFolder = appendFolder.replace("/","\\");
+		//Subtract everything before end of appendFolder
+		//use lastindex of appendFolder and add the length of append folder
+		String file = errorFile.substring(errorFile.lastIndexOf(appendFolder)+appendFolder.length()+1);
+		//Expand name through .
+		String errorNum = file.substring(0,file.indexOf("."));
+		//if error num is present...
+		if(file.indexOf(".") < file.indexOf("\\")){
+			if(errorNum.matches("\\d*")){//to prevent any errors
+				return Long.valueOf(errorNum);
+			}
+			else{
+				return Long.valueOf(errorNum);
+			}
+		}
+		else{
+			return 0L;
+		}
+	}
+	 /**
+	 * This method gets the error description of errorFile
+	 * @param errorFile The file to get the error description of
+	 * @param appendFolder Name of folder that the errors are in (ex. IMAGES NOT DECOMPRESSED)
+	 * @return String describing that error
+	 */
+	public static String getErrorDesc(String errorFile, String appendFolder){
+		//Change \ to /
+		appendFolder = appendFolder.replace("/","\\");
+		//Subtract everything before end of appendFolder
+		//use lastindex of appendFolder and add the length of append folder
+		String file = errorFile.substring(errorFile.lastIndexOf(appendFolder)+appendFolder.length()+1);
+		//if error num is present...
+		if(file.indexOf(".") < file.indexOf("\\")){
+			//Get whats between "." and "/"
+			return file.substring(file.indexOf(".")+1,file.indexOf("\\"));
+		}
+		else{
+			//Get file name
+			return file.substring(0,file.indexOf("\\"));
+		}
+	}
+	
+	
+	
 	//send List to /test
 	public static Result addFilesFromRun(String dirname, Long runID){
 		File startFile = new File(dirname);
@@ -305,6 +398,7 @@ public class AddToDB extends Controller{
 		
 		ResultSet generatedKeys = null;
 		
+		//Add run into DB
 		try{
 			//Start connection
 			Connection connection = DB.getConnection();
@@ -336,6 +430,12 @@ public class AddToDB extends Controller{
 		if(runID!=-1L){//Path to issues folder given
 			//Change path to / slashes. Run method
 			String dirname = runForm.get().path.replace("\\","/");
+			
+			if(dirname.charAt(dirname.length()-1)=='/'){//folder path ends in /
+				//Remove "/"
+				dirname=dirname.substring(0,dirname.length()-1);
+			}
+			
 			return addFilesFromRun(dirname, runID); //Run method to add pages toDB from run info
 		}
 		else{//For errors

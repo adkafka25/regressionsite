@@ -24,6 +24,9 @@ public class Error extends Model {
     @Constraints.Required
     public Long num;
     
+	@Column(name="Error_Desc")
+	public String description;
+	
     /**
      * Generic query helper for entity Computer with id Long
      */
@@ -47,7 +50,26 @@ public class Error extends Model {
                 .findPagingList(pageSize)
                 .getPage(page);
     }
-	
+	/**
+	 * Returns the errorID of given error.num
+	 * @param errorNum Which subversion number to find ID for
+	 * @param description The description of the error
+	 * @return id of error. Creates new one if no errorNum already existed
+	 */
+	public static Long getIDByNum(Long errorNum, String description){ //Used in saveRun
+		Error error=find.where()
+			.eq("num",errorNum)
+			.eq("description",description)
+			.findUnique();
+		if( error == null ){ //If no Error was found... add it and return that id
+			Error newError = new Error();
+			newError.num=errorNum;
+			newError.description=description;
+			newError.save();
+			return newError.id;
+		}
+		return error.id;
+	}
     
 }
 

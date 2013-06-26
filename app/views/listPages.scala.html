@@ -71,7 +71,7 @@
                     @header("run.name", "Run")
                     @header("format.name", "Format")
                     @header("performance.time", "Performance Time")
-					@header("error.name", "Error")
+					@header("error.num", "Error")
 					@header("difference.name", "Difference Desc")
                 </tr>
             </thead>
@@ -105,7 +105,7 @@
                             @if(page.error == null) {
                                 <em>-</em>
                             } else {
-                                @page.error.num
+                                @page.error.num -> @page.error.description
                             }
                         </td>
 						<td>

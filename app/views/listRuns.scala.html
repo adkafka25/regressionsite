@@ -1,5 +1,7 @@
 @(currentPage: com.avaje.ebean.Page[Run], currentSortBy: String, currentOrder: String, currentFilter: String, filterBy:String)
 
+@import controllers.routes.javascript._
+
 @****************************************
 * Helper generating navigation links    *
 ****************************************@
@@ -41,7 +43,8 @@
 }
 
 @main {
-    
+    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+		
     <h1 id="homeTitle">@currentPage.getTotalRowCount Runs Found</h1>
 
     @if(flash.containsKey("success")) {
@@ -60,12 +63,20 @@
 	 <input type="search" id="searchbox" value="@currentFilter" placeholder="Search for...">
 	<input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite()"/>
 
+
+	
 <script>
 function NavigateToSite() {
 	var ddl = document.getElementById("ddlMyList");
 	var textInput = document.getElementById("searchbox").value;
 	var selectedVal = ddl.options[ddl.selectedIndex].value;
 	window.location = selectedVal + "?f=" + textInput;
+}
+function VerifyDelete(id){
+	var del=confirm("Are you sure you would liek to delete this run AND all pages associated with it (run id="+id+")?");
+	if(del==true){
+		window.location = jsRoutes.controllers.Application.deleteRun(id).url ;
+	} 
 }
 </script>
 
@@ -110,7 +121,9 @@ function NavigateToSite() {
 
                 @for(run <- currentPage.getList) {
                     <tr>
-                        <td><a href="@linkByRun(run.id)" title="View all pages from Run @run.name">@run.name</a></td>
+                        <td><a href="@linkByRun(run.id)" title="View all pages from Run @run.name">@run.name</a> 
+							<span style="float: right"><img onclick="VerifyDelete(@run.id)" src="@routes.Assets.at("images/delete.png")" alt="Delete"></span>
+						</td>
 						<td>
                             @if(run.version == null) {
                                 <em>-</em>
