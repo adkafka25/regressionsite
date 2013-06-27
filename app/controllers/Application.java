@@ -51,10 +51,12 @@ public class Application extends Controller {
 		return ok(
 			Routes.javascriptRouter("jsRoutes",
 				//Routes
-				controllers.routes.javascript.Application.deleteRun()
+				controllers.routes.javascript.Application.deleteRun(),
+				controllers.routes.javascript.Application.addBugNum()
 			)
 		);
 	}
+	
 	/**
      * Display the paginated list of runs.
      *
@@ -191,5 +193,17 @@ public class Application extends Controller {
 		else{ //Run doesn't exist
 			return runIndex();
 		}
+	}
+	
+	/**
+	 * Handle sumbitting bug number manually
+	 */
+	public static Result addBugNum (){
+		Form<Bug> bugForm = Form.form(Bug.class).bindFromRequest();//Get from info from POST
+		
+		Bug bug = Bug.getBugFromID(bugForm.get().id);
+		bug.number=bugForm.get().number;
+		bug.save();
+		return ok();
 	}
 }

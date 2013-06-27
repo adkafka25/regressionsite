@@ -29,6 +29,9 @@ public class Difference extends Model {
 	@JoinColumn(name="DiffType_ID")
 	public DiffType difftype;
 	
+	//@OneToOne(mappedBy="difference")
+	//public Bug bug;
+	
 	@ManyToMany
 	@JoinTable(
 		name="pagetodifference",
@@ -57,6 +60,7 @@ public class Difference extends Model {
                 .ilike("name", "%" + filter + "%")
                 .orderBy(sortBy + " " + order)
                 .fetch("difftype")
+				.fetch("bug")
                 .findPagingList(pageSize)
                 .getPage(page);
     }
@@ -108,5 +112,23 @@ public class Difference extends Model {
 			.findUnique();
 		return difference;
 	}
+	
+	/**
+	 * This method returns a list of all differences from a given run that are missing a difference description
+	 * @param runID ID of the run in which to perform this search
+	 * @return List of PageOut that fit the query
+	 */
+	public static List<Difference> getMissingDiffDesc(long runID){ //UNTESTED!
+		return
+			find.where()
+				.eq("pagesoutdifference.run.id", runID)
+				.or(
+					Expr.eq("difftype.name","Worse"),
+					Expr.eq("difftype.name","Better")
+				)
+				.isNull("name")
+				.findList();
+	}
+	
 }
 

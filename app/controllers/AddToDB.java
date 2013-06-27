@@ -210,7 +210,7 @@ public class AddToDB extends Controller{
 			}
 			//Deal with bug and pagetobug
 			long bugID=0;
-			if(bugNum!=null){
+			if(diffType.equals("Worse")){
 				//Get id of bug Num
 				bugID = Bug.getBugID(bugNum,Difference.getByID(diffID));
 				//Prepare SQL statement

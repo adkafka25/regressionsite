@@ -134,6 +134,7 @@ public class Bug extends Model {
 	public static Long getBugID(Long bugNum, Difference difference){ //Used in AddToDB
 		Bug bug=find.where()
 			.eq("number",bugNum)
+			.eq("difference",difference)
 			.findUnique();
 		if( bug == null ){ //If no bug was found... add it and return that id
 			Bug newBug = new Bug();
@@ -158,7 +159,29 @@ public class Bug extends Model {
 		return bugSet.size();
 	}
 	
-	
-
+	/**
+	 * This method returns a list of all pages from a given run that are missing a bugNum
+	 * @param runID ID of the run in which to perform this search
+	 * @return List of PageOut that fit the query
+	 */
+	public static List<Bug> getMissingBugNum(long runID){ //Fixed and working!!
+		return
+			find.where()
+				.eq("pagesoutbug.run.id", runID)
+				.eq("difference.difftype.name","Worse")
+				.isNull("number")
+				.findList();
+	}
+	/**
+	 * Returns the bug object of given bugid
+	 * @param bug Which bug id to return
+	 * @return bug with supplied id
+	 */
+	public static Bug getBugFromID(Long bugID){ //Used in Application to save data from form
+		Bug bug=find.where()
+			.eq("id",bugID)
+			.findUnique();
+		return bug;
+	}
 }
 

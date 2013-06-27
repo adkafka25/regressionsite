@@ -25,6 +25,9 @@ GET		/pagesbyrun/:id				controllers.Application.listPageByRun(p:Int ?= 0, s ?= "
 GET		/newrun						controllers.Application.createNewRun()
 POST	/newrun						controllers.AddToDB.saveRun()
 
+# Manual data entry after run submission
+POST	/saveBugNum					controllers.Application.addBugNum()
+
 # Deletions
 GET		/runs/delete/:runID			controllers.Application.deleteRun(runID:Long)
 

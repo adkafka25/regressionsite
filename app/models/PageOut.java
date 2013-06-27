@@ -187,5 +187,35 @@ public class PageOut extends Model {
 				.eq("difference.difftype.id",difftype.id)
                 .findRowCount();
 	}
+	
+	/**
+	 * This method returns a list of all pages from a given run that are missing a difference description
+	 * @param runID ID of the run in which to perform this search
+	 * @return List of PageOut that fit the query
+	 */
+	public static List<PageOut> getPagesMissingDiffDesc(long runID){
+		return
+			find.where()
+				.eq("run.id", runID)
+				.or(
+					Expr.eq("difference.difftype.id",DiffType.getDiffTypeID("Worse")),
+					Expr.eq("difference.difftype.id",DiffType.getDiffTypeID("Better"))
+				)
+				.findList();
+	}
+	
+	
+	/**
+	 * This method returns a list of all pages from a given run that are missing a bugNum
+	 * @param runID ID of the run in which to perform this search
+	 * @return List of PageOut that fit the query
+	 */
+	public static List<PageOut> getPagesMissingBugNum(long runID){
+		return
+			find.where()
+				.eq("run.id", runID)
+				.eq("difference.difftype.id",DiffType.getDiffTypeID("Worse"))
+				.isNull("difference.bug")
+				.findList();
+	}
 }
-
