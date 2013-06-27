@@ -18,47 +18,48 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 ***************************************@
 @promptBug(bug: Bug, index: Int) = @{
 	var id : String = "addBugNum_" + index
-	var funcName = "setBugNum" + index
+	var funcName = "submitBugNum" + index
     var jscript : String = """<script>
-	function """ + funcName + """(){
-		$('#""" + id + """').submit(function (){
+	function """+funcName+"""(){
+		$('#"""+id+"""').submit(function (){
+			//Doesn't make it here????
 			var formdata = $(this).serialize();
-			$.ajax({
-				type: "POST",
-				url: jsRoutes.controllers.Application.addBugNum().url,
-				data: formdata,
-				success: function(data){
-					alert('Submitted');
-				}
-			});
+				$.ajax({
+					type: "POST",
+					url: jsRoutes.controllers.Application.addBugNum().url,
+					data: formdata,
+					success: function(data){
+						alert('Submitted');
+					}
+				});
 			return false;
 		});
 	}
 	</script>"""
 	
-	var form : String = """<form id='""" + id + """' name='""" + id + """' method="POST">
-		<fieldset>
-			<div class="clearfix ">
-				<label for="bugNum">Bug Number for difference: <b>""" + bug.difference.name + """</b></label>
-				<div class="input">
-					<input type="text" id="number" name="number" value="" required pattern="\d*">
-					<span class="help-inline">Required (Numbers only)</span>
-				</div>
-				<input type="hidden" id="id" name="id" value='""" + bug.id + """'>
-			</div>
-		</fieldset>
-		
-		<div class="actions">
-			<input type="submit" value="Save this Bug Number" class="btn primary" onclick="return """ + funcName + """()"> 
+	var form : String = """<form id=""""+id+"""" name=""""+id+"""" method="POST">
+	<fieldset>
+	<div class="clearfix ">
+		<label for="bugNum">Bug Number for difference: <b>"""+bug.difference.name+"""</b></label>
+		<div class="input">
+			<input type="text" id="number" name="number" value="" required pattern="\d*">
+			<span class="help-inline">Required (Numbers only)</span>
 		</div>
-	 
-	 </form>
-	 <p style="display: none;" id="notification">Data submitted!</p>
-	 </br>"""
+			<input type="hidden" id="id" name="id" value=""""+bug.id+"""">
+		</div>
+	</fieldset>
+
+		<div class="actions">
+			<input type="submit" value="Save this Bug Number" class="btn primary" onclick="return """+funcName+"""()">
+	</div>
+
+</form>"""
     
 	Html(jscript+" \n "+form)
 }
 @main {
+	<script type="text/javascript" src="/assets/javascripts/routes"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	@if(runID!=0){
 		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"")'>View Run</a><br/></H2>
 	}
