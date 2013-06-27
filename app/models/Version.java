@@ -58,7 +58,7 @@ public class Version extends Model {
      * @return all versions.
      */
     public static List<Version> getList() {
-    	return find.all();
+    	return find.where().orderBy("name").findList();
     }
     /**
      * 

@@ -53,6 +53,7 @@ public class Application extends Controller {
 				//Routes
 				controllers.routes.javascript.Application.deleteRun(),
 				controllers.routes.javascript.Application.addBugNum()
+				
 			)
 		);
 	}
@@ -132,22 +133,32 @@ public class Application extends Controller {
      * Creates data for the home page graph.     
      * @return a string that is formatted for google graphs.
      */
-    public static String createData(){
+
+public static String createData(){
 		List<models.Date> allDates = models.Date.getList();
 		//int[] frequency = models.Company.allFrequency();
 		
-		String data = "[['Date','Java','Native'],";
+		String data = "[ ";
 		
 		for(models.Date date: allDates){
-			String name=date.getDateName();
-			int javaOc = models.Bug.frequency(date, "Java" );
-			int nativeOc = models.Bug.frequency(date, "Native");
-			data+="['"+name+"', "+ javaOc + "," + nativeOc +"],";
+			String name = date.jsDate();
+			int jBugs= models.Bug.frequency(date, "Java" );
+			String jMes = null;
+			String jTitle = null;
+			int nBugs = models.Bug.frequency(date, "Native");
+			String nMes = null;
+			String nTitle = null;
+			
+			data+= name + jBugs + ","+ jMes + "," + jTitle + ", " + nBugs + "," + nMes 
+					+ "," + nTitle +"],";
 		}
-		data = data.substring(0,data.length()-1);
+		data = data.substring(0,data.length()-1); // cut off the comma at the end
 		
 		data+="]";
 		
+		/*String data = "[[new Date(2008, 1 ,7), 30000, null, null, 40645, null, null],";
+		data+= "[new Date(2008, 1 ,8), 30000, null, null, 40645, null, null]]";
+		*/
 		return data;
 	}
 

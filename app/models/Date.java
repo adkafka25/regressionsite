@@ -58,6 +58,21 @@ public class Date extends Model {
     public String getDateName() {
     	return name;
     }
+    /**
+     * Converts date into MM.DD.YYYY format
+     * @return
+     */
+    public String convertDate() {
+    	
+    	String date = name.substring(5, 7) + "." +name.substring(8,10) + "." + name.substring(0,4);
+    	return date;
+    }
+    
+    public String jsDate() {
+    	String date = "[new Date(" + name.substring(0,4) + "," + name.substring(8,10) + "," + name.substring(5,7) + "), ";
+    	return date;
+    }
+    
 	
 	/**
 	 * Returns the dateID of given date.name
