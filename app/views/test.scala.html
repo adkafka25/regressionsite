@@ -1,41 +1,27 @@
 @(text: List[String], runID: Long = 0)
 
-@import controllers.routes.javascript._
-
-@**************************************
-* Prompt user to fill out page info   *
-***************************************@
-@promptBug(bug: Bug) = @{
-    
-	bug.id
-	<br/>
-	bug.number
-	<br/>
-	bug.difference.name
-    
-}
-
-
 @****************************
-* Generate Log From sting   *
+* Generate Log From sting *
 ****************************@
 @log(logInfo:String) = @{
     
-	def replace = logInfo.replaceAll(_, _)
-	
-	var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") replace("ERROR:","<br/><font color=\"red\">ERROR:</font>")
-	
+def replace = logInfo.replaceAll(_, _)
+
+var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") replace("ERROR:","<br/><font color=\"red\">ERROR:</font>")
+
     //Output
     logInfoFixed
     
 }
-
-@main {
-	<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script>
-	function submitBugNum(){
-		$('#addBugNum').submit(function (){
+@**************************************
+* Prompt user to fill out page info   *
+***************************************@
+@promptBug(bug: Bug, index: Int) = @{
+	var id : String = "addBugNum_" + index
+	var funcName = "setBugNum" + index
+    var jscript : String = """<script>
+	function """ + funcName + """(){
+		$('#""" + id + """').submit(function (){
 			var formdata = $(this).serialize();
 			$.ajax({
 				type: "POST",
@@ -48,35 +34,38 @@
 			return false;
 		});
 	}
-	</script>
+	</script>"""
 	
+	var form : String = """<form id='""" + id + """' name='""" + id + """' method="POST">
+		<fieldset>
+			<div class="clearfix ">
+				<label for="bugNum">Bug Number for difference: <b>""" + bug.difference.name + """</b></label>
+				<div class="input">
+					<input type="text" id="number" name="number" value="" required pattern="\d*">
+					<span class="help-inline">Required (Numbers only)</span>
+				</div>
+				<input type="hidden" id="id" name="id" value='""" + bug.id + """'>
+			</div>
+		</fieldset>
+		
+		<div class="actions">
+			<input type="submit" value="Save this Bug Number" class="btn primary" onclick="return """ + funcName + """()"> 
+		</div>
+	 
+	 </form>
+	 <p style="display: none;" id="notification">Data submitted!</p>
+	 </br>"""
+    
+	Html(jscript+" \n "+form)
+}
+@main {
 	@if(runID!=0){
 		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"")'>View Run</a><br/></H2>
 	}
-	<H2>Missing Information</H2>
-	@for(bug <- Bug.getMissingBugNum(runID)){
-		 <form id="addBugNum" name="addBugNum" method="POST">
-			<fieldset>
-				<div class="clearfix ">
-					<label for="bugNum">Bug Number for difference: <b>@bug.difference.name</b></label>
-					<div class="input">
-						<input type="text" id="number" name="number" value="" required pattern="\d*">
-						<span class="help-inline">Required (Numbers only)</span>
-					</div>
-					<input type="hidden" id="id" name="id" value="@bug.id">
-				</div>
-			</fieldset>
-			
-			<div class="actions">
-				<input type="submit" value="Save this Bug Number" class="btn primary" onclick="return submitBugNum()"> 
-			</div>
-		 
-		 </form>
-		 <p style="display: none;" id="notification">Data submitted!</p>
-		 </br>
+	@for((bug,index) <- Bug.getMissingBugNum(runID).zipWithIndex){
+		@(promptBug(bug,index))
 	}
-	<H2>Log</H2>
 	@for(line <- text){
-		 <br/> @Html(log(line))
+		<br/> @Html(log(line))
 	}
 }
