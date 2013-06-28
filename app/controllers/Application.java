@@ -120,7 +120,10 @@ public class Application extends Controller {
      * @param runID Filter applied on page names
      */
     public static Result listPageByRun(int page, String sortBy, String order, Long runID, String filter) {
-        return ok(
+        if(Run.getRunByID(runID)==null){//if runID does not exist...
+			return RUN_INDEX;
+		}
+		return ok(
             listPagesByRun.render(
                 PageOut.pageFromRun(page, 10, sortBy, order, runID, filter),
                 sortBy, order, runID, filter
