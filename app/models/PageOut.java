@@ -176,7 +176,49 @@ public class PageOut extends Model {
 			return true; //page does already exist
 		}
 	}
+	
+	/**
+	 * Check if page to difference relationship already exists
+	 * @param page Name of page
+	 * @param runID ID of run corresponding to this page
+	 * @param diffID the ID of the difference to test for
+	 * @return boolean True for already exists. False for no
+	 */
+	public static boolean testPageDiffExists(String page, Long runID, Long diffID){
+		PageOut pageOut=find.where()
+			.eq("name",page)
+			.eq("run.id",runID)
+			.eq("difference.id",diffID)
+			.findUnique();
+		if( pageOut == null ){//Didn't find anything in previous search
+			return false; //page doesn't exist
+		}
+		else{
+			return true; //page does already exist
+		}
+	}
     
+	/**
+	 * Check if page to bug relationship already exists
+	 * @param page Name of page
+	 * @param runID ID of run corresponding to this page
+	 * @param bugID the ID of the bug to test for
+	 * @return boolean True for already exists. False for no
+	 */
+	public static boolean testPageBugExists(String page, Long runID, Long bugID){
+		PageOut pageOut=find.where()
+			.eq("name",page)
+			.eq("run.id",runID)
+			.eq("bug.id",bugID)
+			.findUnique();
+		if( pageOut == null ){//Didn't find anything in previous search
+			return false; //page doesn't exist
+		}
+		else{
+			return true; //page does already exist
+		}
+	}
+	
 	/**
 	 * This method calculates how many differences of diffType occured in given run
 	 * @param run Which run to calculate

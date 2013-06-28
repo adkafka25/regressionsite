@@ -190,24 +190,25 @@ public class AddToDB extends Controller{
 		//For log info
 		String returnInfo="";
 		
+		long pageID=-1L; //will store ID for page here.
 		if(!PageOut.testPageExists(fileName,runID)){//if page has not been added before
 			//Begin log info for this file
 			returnInfo+="---Log Info for "+fileName+"---";
 			
-			long pageID=-1L; //will store ID for page here.
-			
 			//Get page_ID, create one if deosn't already exist
 			pageID=PageOut.getPageID(fileName,runID);
 			returnInfo+="INFO: "+fileName+" added to DB with runID="+runID;
-		//End if?
-			//Deal with difference and pagetodifference
-			long diffID=0;
-			if(diffType!=null){ //
-				if(difference==null){//If difference is not set, set it to this default value
-					difference="No description";
-				}
-				//get ID of difference
-				diffID = Difference.getDifferenceID(difference,diffType);
+		}//End if?
+		
+		//Deal with difference and pagetodifference
+		long diffID=0;
+		if(diffType!=null){ //
+			if(difference==null){//If difference is not set, set it to this default value
+				difference="No description";
+			}
+			//get ID of difference
+			diffID = Difference.getDifferenceID(difference,diffType);		
+			if(!PageOut.testPageDiffExists(fileName,runID,diffID)){ //if pagetodifference does not already exist...
 				//Prepare SQL statement
 				String SQLpagetodiff="INSERT INTO pagetodifference (Page_ID,Difference_ID) VALUES (?,?)";
 				//Run SQL statement
@@ -216,20 +217,20 @@ public class AddToDB extends Controller{
 				returnInfo+=" INFO: "+fileName+" linked with difference: "+difference+" of difference type "+diffType;
 
 			}
-			//Deal with bug and pagetobug
-			long bugID=0;
-			if(diffType.equals("Worse")){
-				//Get id of bug Num
-				bugID = Bug.getBugID(bugNum,Difference.getByID(diffID));
+		}
+		
+		//Deal with bug and pagetobug
+		long bugID=0;
+		if(diffType.equals("Worse")){
+			//Get id of bug Num
+			bugID = Bug.getBugID(bugNum,Difference.getByID(diffID));
+			if(!PageOut.testPageBugExists(fileName,runID,diffID)){ //if page to bug does not already exist....
 				//Prepare SQL statement
 				String SQLpagetobug="INSERT INTO pagetobug (Page_ID,Bug_ID) VALUES (?,?)";
 				//Run SQL statement
 				sqlUpdate(SQLpagetobug, pageID, bugID);
 				//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
 				returnInfo+=" INFO: "+fileName+" linked with bug: "+bugNum+" and difference: "+difference;
-			
-				//Associate bug with that difference
-				
 			}
 		}
 		return returnInfo; //return log
