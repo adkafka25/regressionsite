@@ -42,6 +42,9 @@ public class Bug extends Model {
 	@Column
 	public static FileFormat getFileFormat( Bug bug ){
 		PageOut pageout = PageOut.pageFromBug(bug);
+		if(pageout == null){
+			return null;
+		}
 		return pageout.run.format;
 	}
 	
@@ -50,6 +53,9 @@ public class Bug extends Model {
      */
 	public static Version getVersion( Bug bug ){
 		PageOut pageout = PageOut.pageFromBug(bug);
+		if(pageout == null){
+			return null;
+		}
 		return pageout.run.version;
 	}
 	
@@ -58,6 +64,9 @@ public class Bug extends Model {
      */
 	public static Date getDate( Bug bug ){
 		PageOut pageout = PageOut.pageFromBug(bug);
+		if(pageout == null){
+			return null;
+		}
 		return pageout.run.date;
 	}
 	

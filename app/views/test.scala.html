@@ -22,7 +22,6 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
     var jscript : String = """<script>
 	function """+funcName+"""(){
 		$('#"""+id+"""').submit(function (){
-			//Doesn't make it here????
 			var formdata = $(this).serialize();
 				$.ajax({
 					type: "POST",
@@ -32,6 +31,7 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 						alert('Submitted');
 					}
 				});
+			document.getElementById(""""+id+"""").style.visibility = "hidden";
 			return false;
 		});
 	}
@@ -60,13 +60,22 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 @main {
 	<script type="text/javascript" src="/assets/javascripts/routes"></script>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	
 	@if(runID!=0){
 		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"")'>View Run</a><br/></H2>
 	}
-	@for((bug,index) <- Bug.getMissingBugNum(runID).zipWithIndex){
-		@(promptBug(bug,index))
-	}
-	@for(line <- text){
-		<br/> @Html(log(line))
-	}
+	
+	<div class="addBugNames">
+		<H1>Missing information...</H1>
+		@for((bug,index) <- Bug.getMissingBugNum(runID).zipWithIndex){
+			@(promptBug(bug,index))
+		}
+	</div>
+	
+	<div class="Log">
+		<H1>Log</H1>
+		@for(line <- text){
+			<br/> @Html(log(line))
+		}
+	</div>
 }

@@ -109,7 +109,10 @@ public class PageOut extends Model {
 	 */
 	public static PageOut pageFromBug( Bug bug ){
 		List<PageOut> listPages = listPageFromBug(bug);
-		return listPages.get(0);
+		if(listPages.size()>0){
+			return listPages.get(0);
+		}
+		return null;
 	}
 	
 	/**
