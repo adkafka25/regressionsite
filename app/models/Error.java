@@ -70,6 +70,17 @@ public class Error extends Model {
 		}
 		return error.id;
 	}
-    
+    /**
+	 * This method returns the error for the given error id
+	 * @param errorID The error ID to search for
+	 * 
+	 * @return Corresponding error to given errorID
+	 */
+	public static Error getErrorByID(Long errorID){
+		Error error=find.where()
+			.eq("id",errorID)
+			.findUnique();
+		return error;
+	}
 }
 

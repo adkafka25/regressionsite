@@ -116,7 +116,7 @@ public class Run extends Model {
 		runs.add(run);
 		return runs;
 	}
-  /*
+    /**
 	 * This method returns the run for the run given a run id
 	 * @param runID The run ID to search for
 	 * 
