@@ -52,7 +52,8 @@ public class Application extends Controller {
 			Routes.javascriptRouter("jsRoutes",
 				//Routes
 				controllers.routes.javascript.Application.deleteRun(),
-				controllers.routes.javascript.Application.addBugNum()
+				controllers.routes.javascript.Application.addBugNum(),
+				controllers.routes.javascript.Application.addDiffDesc()
 				
 			)
 		);
@@ -218,6 +219,18 @@ public static String createData(){
 		Bug bug = Bug.getBugFromID(bugForm.get().id);
 		bug.number=bugForm.get().number;
 		bug.save();
+		return ok();
+	}
+	
+	/**
+	 * Handle sumbitting difference description manually
+	 */
+	public static Result addDiffDesc (){
+		Form<Difference> diffForm = Form.form(Difference.class).bindFromRequest();//Get from info from POST
+		
+		Difference difference = Difference.getByID(diffForm.get().id);
+		difference.name=diffForm.get().name;
+		difference.save();
 		return ok();
 	}
 }

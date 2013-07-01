@@ -118,7 +118,7 @@ public class Difference extends Model {
 	 * @param runID ID of the run in which to perform this search
 	 * @return List of PageOut that fit the query
 	 */
-	public static List<Difference> getMissingDiffDesc(long runID){ //UNTESTED!
+	public static List<Difference> getMissingDiffDesc(long runID){ //tested and seems to be working
 		return
 			find.where()
 				.eq("pagesoutdifference.run.id", runID)
@@ -129,6 +129,5 @@ public class Difference extends Model {
 				.isNull("name")
 				.findList();
 	}
-	
 }
 

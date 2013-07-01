@@ -27,6 +27,7 @@ POST	/newrun						controllers.AddToDB.saveRun()
 
 # Manual data entry after run submission
 POST	/saveBugNum					controllers.Application.addBugNum()
+POST	/saveDiffDesc				controllers.Application.addDiffDesc()
 
 # Deletions
 GET		/runs/delete/:runID			controllers.Application.deleteRun(runID:Long)

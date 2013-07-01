@@ -263,4 +263,22 @@ public class PageOut extends Model {
 				.isNull("difference.bug")
 				.findList();
 	}
+	
+	/**
+	 * This method returns a string that is a comma seperated list of all files with given difference from given run
+	 * @param runID The ID of the run to check
+	 * @param difference The difference to check
+	 * @return String of pages formatted like file1,file2,file3.....
+	 */
+	public static String listFilesFromDiff(Long runID, Difference difference){
+		List<PageOut> pages = find.where()
+			.eq("run.id", runID)
+			.eq("difference",difference)
+			.findList();
+		String listPages="";
+		for(PageOut page : pages){
+			listPages+=page.name+", ";
+		}
+		return listPages.substring(0,(listPages.lastIndexOf(",")));
+	}
 }
