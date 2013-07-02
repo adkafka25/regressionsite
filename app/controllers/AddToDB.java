@@ -372,7 +372,7 @@ public class AddToDB extends Controller{
 		listFilesRecursively(startFile, allFiles); //allFiles is now a List<String> of all files paths
 		
 		return ok(
-			test.render(
+			logInfo.render(
 				enterIntoDB(allFiles, dirname, runID), runID
 			)
 		);
@@ -397,7 +397,7 @@ public class AddToDB extends Controller{
 			log.add("ERROR: Invalid please set Path to Issues Folder");
 			log.add("Path = "+folderPath+" is invalid or non-existant");
 			return badRequest(
-				test.render(log, -1L)
+				logInfo.render(log, -1L)
 			);
 		}
 		
@@ -470,7 +470,7 @@ public class AddToDB extends Controller{
 				log.add("ERROR: Unknown error occured before files could be added");
 			}
 			return ok(
-				test.render(log,runID)
+				logInfo.render(log,runID)
 				);
 		}
     }
