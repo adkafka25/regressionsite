@@ -25,7 +25,7 @@ public class Application extends Controller {
      * This result directly redirect to application home.
      */
     public static Result GO_HOME = redirect(
-        routes.Application.home()
+        routes.Application.overview()
     );
     public static Result RUN_INDEX = redirect( 
     	routes.Application.listRun(0, "name", "asc", "","name")
@@ -38,9 +38,14 @@ public class Application extends Controller {
     public static Result index() {
         return GO_HOME;
     }
+    public static Result overview() {
+        return ok(
+            overview.render()
+        );
+    }
     public static Result home() {
         return ok(
-            home.render()
+            homePage.render()
         );
     }
  
@@ -53,13 +58,20 @@ public class Application extends Controller {
 			Routes.javascriptRouter("jsRoutes",
 				//Routes
 				controllers.routes.javascript.Application.deleteRun(),
+				controllers.routes.javascript.Application.overview(),
 				controllers.routes.javascript.Application.dataList(),
 				controllers.routes.javascript.Application.getData(),
-				controllers.routes.javascript.Application.listRun()
+				controllers.routes.javascript.Application.listRun(),
+				controllers.routes.javascript.Application.createNewRun(),
+
+				controllers.routes.javascript.Application.addBugNum(),
+				controllers.routes.javascript.Application.addDiffDesc()
+
 				
 			)
 		);
 	}
+	
 	/**
      * Display the paginated list of runs.
      *
@@ -122,7 +134,10 @@ public class Application extends Controller {
      * @param runID Filter applied on page names
      */
     public static Result listPageByRun(int page, String sortBy, String order, Long runID, String filter) {
-        return ok(
+        if(Run.getRunByID(runID)==null){//if runID does not exist...
+			return RUN_INDEX;
+		}
+		return ok(
             listPagesByRun.render(
                 PageOut.pageFromRun(page, 10, sortBy, order, runID, filter),
                 sortBy, order, runID, filter
@@ -209,5 +224,29 @@ public static String createData(){
 		else{ //Run doesn't exist
 			return runIndex();
 		}
+	}
+	
+	/**
+	 * Handle sumbitting bug number manually
+	 */
+	public static Result addBugNum (){
+		Form<Bug> bugForm = Form.form(Bug.class).bindFromRequest();//Get from info from POST
+		
+		Bug bug = Bug.getBugFromID(bugForm.get().id);
+		bug.number=bugForm.get().number;
+		bug.save();
+		return ok();
+	}
+	
+	/**
+	 * Handle sumbitting difference description manually
+	 */
+	public static Result addDiffDesc (){
+		Form<Difference> diffForm = Form.form(Difference.class).bindFromRequest();//Get from info from POST
+		
+		Difference difference = Difference.getByID(diffForm.get().id);
+		difference.name=diffForm.get().name;
+		difference.save();
+		return ok();
 	}
 }

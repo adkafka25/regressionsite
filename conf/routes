@@ -9,11 +9,12 @@ GET     /                           controllers.Application.index()
 GET     /assets/javascripts/routes	controllers.Application.javascriptRoutes()
 
 # List views
+GET		/home						controllers.Application.home
 GET		/runs						controllers.Application.runIndex
 GET		/runs/:filterBy             controllers.Application.listRun(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "", filterBy )
 GET		/pages						controllers.Application.listPage(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
 GET		/bugs						controllers.Application.listBug(p:Int ?= 0, s ?= "number", o ?= "asc", f ?= "")
-GET 	/home						controllers.Application.home
+GET 	/overview					controllers.Application.overview
 GET		/runData/:id				controllers.Application.getData(id:Long)
 GET		/dataList/:filter1/:filter2/:param1/:param2					controllers.Application.dataList(filter1: String , filter2: String, param1: String , param2: String )
 
@@ -24,6 +25,10 @@ GET		/pagesbyrun/:id				controllers.Application.listPageByRun(p:Int ?= 0, s ?= "
 # Edit pages
 GET		/newrun						controllers.Application.createNewRun()
 POST	/newrun						controllers.AddToDB.saveRun()
+
+# Manual data entry after run submission
+POST	/saveBugNum					controllers.Application.addBugNum()
+POST	/saveDiffDesc				controllers.Application.addDiffDesc()
 
 # Deletions
 GET		/runs/delete/:runID			controllers.Application.deleteRun(runID:Long)

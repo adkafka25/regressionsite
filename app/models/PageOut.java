@@ -109,7 +109,10 @@ public class PageOut extends Model {
 	 */
 	public static PageOut pageFromBug( Bug bug ){
 		List<PageOut> listPages = listPageFromBug(bug);
-		return listPages.get(0);
+		if(listPages.size()>0){
+			return listPages.get(0);
+		}
+		return null;
 	}
 	
 	/**
@@ -173,7 +176,49 @@ public class PageOut extends Model {
 			return true; //page does already exist
 		}
 	}
+	
+	/**
+	 * Check if page to difference relationship already exists
+	 * @param page Name of page
+	 * @param runID ID of run corresponding to this page
+	 * @param diffID the ID of the difference to test for
+	 * @return boolean True for already exists. False for no
+	 */
+	public static boolean testPageDiffExists(String page, Long runID, Long diffID){
+		PageOut pageOut=find.where()
+			.eq("name",page)
+			.eq("run.id",runID)
+			.eq("difference.id",diffID)
+			.findUnique();
+		if( pageOut == null ){//Didn't find anything in previous search
+			return false; //page doesn't exist
+		}
+		else{
+			return true; //page does already exist
+		}
+	}
     
+	/**
+	 * Check if page to bug relationship already exists
+	 * @param page Name of page
+	 * @param runID ID of run corresponding to this page
+	 * @param bugID the ID of the bug to test for
+	 * @return boolean True for already exists. False for no
+	 */
+	public static boolean testPageBugExists(String page, Long runID, Long bugID){
+		PageOut pageOut=find.where()
+			.eq("name",page)
+			.eq("run.id",runID)
+			.eq("bug.id",bugID)
+			.findUnique();
+		if( pageOut == null ){//Didn't find anything in previous search
+			return false; //page doesn't exist
+		}
+		else{
+			return true; //page does already exist
+		}
+	}
+	
 	/**
 	 * This method calculates how many differences of diffType occured in given run
 	 * @param run Which run to calculate
@@ -187,5 +232,53 @@ public class PageOut extends Model {
 				.eq("difference.difftype.id",difftype.id)
                 .findRowCount();
 	}
+	
+	/**
+	 * This method returns a list of all pages from a given run that are missing a difference description
+	 * @param runID ID of the run in which to perform this search
+	 * @return List of PageOut that fit the query
+	 */
+	public static List<PageOut> getPagesMissingDiffDesc(long runID){
+		return
+			find.where()
+				.eq("run.id", runID)
+				.or(
+					Expr.eq("difference.difftype.id",DiffType.getDiffTypeID("Worse")),
+					Expr.eq("difference.difftype.id",DiffType.getDiffTypeID("Better"))
+				)
+				.findList();
+	}
+	
+	
+	/**
+	 * This method returns a list of all pages from a given run that are missing a bugNum
+	 * @param runID ID of the run in which to perform this search
+	 * @return List of PageOut that fit the query
+	 */
+	public static List<PageOut> getPagesMissingBugNum(long runID){
+		return
+			find.where()
+				.eq("run.id", runID)
+				.eq("difference.difftype.id",DiffType.getDiffTypeID("Worse"))
+				.isNull("difference.bug")
+				.findList();
+	}
+	
+	/**
+	 * This method returns a string that is a comma seperated list of all files with given difference from given run
+	 * @param runID The ID of the run to check
+	 * @param difference The difference to check
+	 * @return String of pages formatted like file1,file2,file3.....
+	 */
+	public static String listFilesFromDiff(Long runID, Difference difference){
+		List<PageOut> pages = find.where()
+			.eq("run.id", runID)
+			.eq("difference",difference)
+			.findList();
+		String listPages="";
+		for(PageOut page : pages){
+			listPages+=page.name+", ";
+		}
+		return listPages.substring(0,(listPages.lastIndexOf(",")));
+	}
 }
-

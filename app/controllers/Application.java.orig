@@ -38,27 +38,34 @@ public class Application extends Controller {
     public static Result index() {
         return GO_HOME;
     }
-<<<<<<< HEAD
-	//For javascript routes
-	public static Result javascriptRoutes() {
-		response().setContentType("text/javascript");
-		return ok(
-			Routes.javascriptRouter("jsRoutes",
-				//Routes
-				controllers.routes.javascript.Application.deleteRun()
-			)
-		);
-	}
-  
-  
-=======
     public static Result home() {
         return ok(
             home.render()
         );
     }
-    
->>>>>>> 9a64af67761cde676ead0ad9108f6160699ffa2e
+ 
+
+  	
+	
+	public static Result javascriptRoutes() {
+		response().setContentType("text/javascript");
+		return ok(
+			Routes.javascriptRouter("jsRoutes",
+				//Routes
+				controllers.routes.javascript.Application.deleteRun(),
+<<<<<<< HEAD
+				controllers.routes.javascript.Application.dataList(),
+				controllers.routes.javascript.Application.getData(),
+				controllers.routes.javascript.Application.listRun()
+=======
+				controllers.routes.javascript.Application.addBugNum(),
+				controllers.routes.javascript.Application.addDiffDesc()
+>>>>>>> 24207637a3880b8456e5bc4a80866f1c798aa584
+				
+			)
+		);
+	}
+	
 	/**
      * Display the paginated list of runs.
      *
@@ -121,7 +128,10 @@ public class Application extends Controller {
      * @param runID Filter applied on page names
      */
     public static Result listPageByRun(int page, String sortBy, String order, Long runID, String filter) {
-        return ok(
+        if(Run.getRunByID(runID)==null){//if runID does not exist...
+			return RUN_INDEX;
+		}
+		return ok(
             listPagesByRun.render(
                 PageOut.pageFromRun(page, 10, sortBy, order, runID, filter),
                 sortBy, order, runID, filter
@@ -134,21 +144,34 @@ public class Application extends Controller {
      * Creates data for the home page graph.     
      * @return a string that is formatted for google graphs.
      */
-    public static String createData(){
+
+public static String createData(){
+	
 		List<models.Date> allDates = models.Date.getList();
 		//int[] frequency = models.Company.allFrequency();
 		
-		String data = "[['Date','Java','Native'],";
+		String data = "[ ";
 		
 		for(models.Date date: allDates){
-			String name=date.getDateName();
-			int javaOc = models.Bug.frequency(date, "SnowBatch" );
-			int nativeOc = models.Bug.frequency(date, "Native");
-			data+="['"+name+"', "+ javaOc + "," + nativeOc +"],";
+			String name = date.jsDate();
+			int jBugs= models.Bug.frequency(date, "Java" );
+			int seventy = 70;
+			String jMes = null;
+			String jTitle = null;
+			int nBugs = models.Bug.frequency(date, "Native");
+			String nMes = null;
+			String nTitle = null;
+			
+			data += name + jBugs + "," + nBugs + "], ";
 		}
-		data = data.substring(0,data.length()-1);
+		data = data.substring(0,data.length()-1); // cut off the comma at the end
 		
 		data+="]";
+		
+		
+		String datsa = "[ [new Date(2012, 8 , 2), 300, 800] ]";
+		
+		//data+= "[new Date(2008, 1 ,8), 30000, null, null, 40645, null, null]]";
 		
 		return data;
 	}
@@ -187,10 +210,37 @@ public class Application extends Controller {
      * Handle run deletion
      */
     public static Result deleteRun(Long id) {
-        Run.find.ref(id).delete();
-        flash("success", "Run has been deleted");
-        return GO_HOME;
-    }
+		if(Run.getRunByID(id)!=null){//if run exists...
+			Run.find.ref(id).delete();
+			flash("success", "Run has been deleted");
+			return listRun(0, "name", "asc", "", "name");
+		}
+		else{ //Run doesn't exist
+			return runIndex();
+		}
+	}
 	
-
+	/**
+	 * Handle sumbitting bug number manually
+	 */
+	public static Result addBugNum (){
+		Form<Bug> bugForm = Form.form(Bug.class).bindFromRequest();//Get from info from POST
+		
+		Bug bug = Bug.getBugFromID(bugForm.get().id);
+		bug.number=bugForm.get().number;
+		bug.save();
+		return ok();
+	}
+	
+	/**
+	 * Handle sumbitting difference description manually
+	 */
+	public static Result addDiffDesc (){
+		Form<Difference> diffForm = Form.form(Difference.class).bindFromRequest();//Get from info from POST
+		
+		Difference difference = Difference.getByID(diffForm.get().id);
+		difference.name=diffForm.get().name;
+		difference.save();
+		return ok();
+	}
 }

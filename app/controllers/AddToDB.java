@@ -46,9 +46,10 @@ public class AddToDB extends Controller{
 	/**
 	 * This function takes a list of file names and inserts it into the database
 	 * @param allFiles is a list of file-name strings that should be added into the DB 
+	 * @return List of strings that corresponds to a log of what happened
 	 */
 	public static List<String> enterIntoDB(List<String> allFiles, String dirname, Long runID){
-		String[] ignoreList = {"Thumbs.db" };
+		String[] ignoreList = {"Thumbs.db" };//comma seperated list of file names to ignore in the directory
 				
 		List<String> log = new ArrayList<String>();
 		
@@ -72,17 +73,17 @@ public class AddToDB extends Controller{
 			}
 			
 			String diffType = getDiffType(fileAsArray[0]);//Store what kind of difference (Better, Neutral, or Worse)
-			
+			//get difference description
 			String difference=null;
 			if(fileAsArray.length>2){
 				difference = getDifference(fileAsArray);//Stores description of difference
 			}
-			
+			//get bug Number
 			Long bugNum=null;
 			if(fileAsArray.length>2){
 				bugNum = getBugNum(fileAsArray);//Stores description of difference
 			}
-			
+			//Insert these values into the database
 			if(diffType!=null && fileName!=null){ //Mandatroy to be inserted
 				log.add(enterFileInfo(fileName, diffType, runID, difference, bugNum)); //Actually insert the data into DB
 			}
@@ -96,7 +97,7 @@ public class AddToDB extends Controller{
 			}
 		}
 		
-		//Check and add any files that were not decompressed
+		//Check and add any files that were not decompressed (files with errors)
 		addFilesWithErrors(dirname, runID, log);
 		
 		return log;
@@ -129,10 +130,12 @@ public class AddToDB extends Controller{
 			String errorDesc = getErrorDesc(errorFile,appendFolder);
 			//Get ID of error Num
 			long errorID = models.Error.getIDByNum(errorNum,errorDesc);
-			//Prepare SQL statement
-			String SQLerrorPage="INSERT INTO page (Page_Name, Run_ID, Error_ID) VALUES ('"+fileName+"','"+runID+"','"+errorID+"')";
-			//Run SQL statement
-			sqlUpdate(SQLerrorPage);
+			//Save this page
+			PageOut newpage = new PageOut();
+			newpage.name=fileName;
+			newpage.run=Run.getRunByID(runID);
+			newpage.error=models.Error.getErrorByID(errorID);
+			newpage.save();
 			//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
 			log.add("INFO: Page '"+fileName+"' added with error number="+errorNum+" and description: "+errorDesc);
 		}
@@ -142,17 +145,22 @@ public class AddToDB extends Controller{
 	/**
 	 * This method executes a mySQL UPDATE statement
 	 * @param SQLStatement The statemnt as a string that should be run
+	 * @param A first id to insert
+	 * @param B second id to insert
 	 * @return nothing
 	 */
-	public static void sqlUpdate(String SQLStatement){
+	public static void sqlUpdate(String SQLStatement, long A, long B){
 		//Start connection
 		Connection connection = DB.getConnection();
 		
 		try{
-			//Create new statement
-			Statement stmt = connection.createStatement();
+			//Create new statement			
+			PreparedStatement stmt = connection.prepareStatement(SQLStatement,Statement.RETURN_GENERATED_KEYS);
+			//Add ids to query
+			stmt.setLong(1,A);
+			stmt.setLong(2,B);
 			//Run query
-			stmt.executeUpdate(SQLStatement);
+			stmt.executeUpdate();
 			//Close statement
 			stmt.close();
 		}
@@ -182,46 +190,47 @@ public class AddToDB extends Controller{
 		//For log info
 		String returnInfo="";
 		
+		long pageID=-1L; //will store ID for page here.
+		//Get page_ID, create one if deosn't already exist
+		pageID=PageOut.getPageID(fileName,runID);
 		if(!PageOut.testPageExists(fileName,runID)){//if page has not been added before
 			//Begin log info for this file
 			returnInfo+="---Log Info for "+fileName+"---";
 			
-			long pageID=-1L; //will store ID for page here.
-			
-			//Get page_ID, create one if deosn't already exist
-			pageID=PageOut.getPageID(fileName,runID);
 			returnInfo+="INFO: "+fileName+" added to DB with runID="+runID;
-		//End if?
-			//Deal with difference and pagetodifference
-			long diffID=0;
-			if(diffType!=null){ //
-				if(difference==null){//If difference is not set, set it to this default value
-					difference="No description";
-				}
-				//get ID of difference
-				diffID = Difference.getDifferenceID(difference,diffType);
+		}//End if?
+		
+		//Deal with difference and pagetodifference
+		long diffID=0;
+		//get ID of difference
+		diffID = Difference.getDifferenceID(difference,diffType);
+		if(diffType!=null){ //
+			if(difference==null){//If difference is not set, set it to this default value
+				difference="No description";
+			}		
+			if(!PageOut.testPageDiffExists(fileName,runID,diffID)){ //if pagetodifference does not already exist...
 				//Prepare SQL statement
-				String SQLpagetodiff="INSERT INTO pagetodifference (Page_ID,Difference_ID) VALUES ('"+pageID+"','"+diffID+"')";
+				String SQLpagetodiff="INSERT INTO pagetodifference (Page_ID,Difference_ID) VALUES (?,?)";
 				//Run SQL statement
-				sqlUpdate(SQLpagetodiff);
+				sqlUpdate(SQLpagetodiff, pageID, diffID);
 				//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
 				returnInfo+=" INFO: "+fileName+" linked with difference: "+difference+" of difference type "+diffType;
 
 			}
-			//Deal with bug and pagetobug
-			long bugID=0;
-			if(bugNum!=null){
-				//Get id of bug Num
-				bugID = Bug.getBugID(bugNum,Difference.getByID(diffID));
+		}
+		
+		//Deal with bug and pagetobug
+		long bugID=0;
+		if(diffType.equals("Worse")){
+			//Get id of bug Num
+			bugID = Bug.getBugID(bugNum,Difference.getByID(diffID));
+			if(!PageOut.testPageBugExists(fileName,runID,bugID)){ //if page to bug does not already exist....
 				//Prepare SQL statement
-				String SQLpagetobug="INSERT INTO pagetobug (Page_ID,Bug_ID) VALUES ('"+pageID+"','"+bugID+"')";
+				String SQLpagetobug="INSERT INTO pagetobug (Page_ID,Bug_ID) VALUES (?,?)";
 				//Run SQL statement
-				sqlUpdate(SQLpagetobug);
+				sqlUpdate(SQLpagetobug, pageID, bugID);
 				//Add log info (if no error) - If error occured, dealt with in sqlUpdate method
 				returnInfo+=" INFO: "+fileName+" linked with bug: "+bugNum+" and difference: "+difference;
-			
-				//Associate bug with that difference
-				
 			}
 		}
 		return returnInfo; //return log
@@ -388,12 +397,12 @@ public class AddToDB extends Controller{
 			log.add("ERROR: Invalid please set Path to Issues Folder");
 			log.add("Path = "+folderPath+" is invalid or non-existant");
 			return badRequest(
-				test.render(log, 0L)
+				test.render(log, -1L)
 			);
 		}
 		
 		//Get foreign keys for all necessary fields
-		String query = "INSERT INTO Run (Run_Name,Version_ID,Format_ID,Date_ID,SVN_ID,Performance_ID) VALUES (\'"+runForm.get().name+"\',\'"+Version.getVersionID(runForm.get().version.name, runForm.get().version.platform.id)+"\',\'"+runForm.get().format.id+"\',\'"+models.Date.getDateID(runForm.get().date.name)+"\',\'"+SVN.getSvnID(runForm.get().svn.num)+"\',\'"+Performance.getPerformanceID(runForm.get().performance.time)+"\')";
+		String query = "INSERT INTO Run (Run_Name,Version_ID,Format_ID,Date_ID,SVN_ID,Performance_ID) VALUES (?,?,?,?,?,?)";
 		long runID=-1L;
 		
 		ResultSet generatedKeys = null;
@@ -402,11 +411,17 @@ public class AddToDB extends Controller{
 		try{
 			//Start connection
 			Connection connection = DB.getConnection();
-			//Create new statement
-			Statement stmt = connection.createStatement();
+			//Create new prepared statement
+			PreparedStatement stmt = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+			//Add data to prepared statement
+			stmt.setString(1,runForm.get().name);
+			stmt.setLong(2,Version.getVersionID(runForm.get().version.name, runForm.get().version.platform.id));
+			stmt.setLong(3,runForm.get().format.id);
+			stmt.setLong(4,models.Date.getDateID(runForm.get().date.name));
+			stmt.setLong(5,SVN.getSvnID(runForm.get().svn.num));
+			stmt.setLong(6,Performance.getPerformanceID(runForm.get().performance.time));
 			//Run query
-			int affectedRows = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-			
+			int affectedRows = stmt.executeUpdate();
 			if(affectedRows == 0){
 				throw new SQLException("Creating page failed, no rows affected.");
 			}
@@ -450,9 +465,5 @@ public class AddToDB extends Controller{
 				test.render(log,runID)
 				);
 		}
-		
-        //runForm.get().save();
-        //flash("success", "Run " + runForm.get().name + " has been created");
-        //return Application.GO_HOME;
     }
 }

@@ -1,0 +1,45 @@
+@homeSkeleton {
+
+
+<!DOCTYPE html>
+<html>
+<body>
+<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+<center>
+
+<p><b>Navigate The Site: Go to...</b></p>
+<p>
+<button type="button" class="btn primary" onclick="NavigateToOverview()">Regression Testing Overview</button>
+</p>
+<p>
+OR
+</p>
+<p>
+<button type="button" class="btn primary" onclick="NavigateToImport()">Import Regression Data</button> 
+</p>
+<p>
+OR
+</p>
+<p>
+<button type="button" class="btn primary" onclick="NavigateToRun()">Add a New Regression Run</button> 
+</p>
+</center>
+<script>
+function NavigateToOverview() {
+	window.location = jsRoutes.controllers.Application.overview().url;
+}
+
+function NavigateToImport() {
+	window.location = jsRoutes.controllers.Application.createNewRun().url;
+}
+
+function NavigateToRun() {
+	window.location = jsRoutes.controllers.Application.createNewRun().url;
+}
+
+</script> 
+</body>
+</html>
+
+
+}
