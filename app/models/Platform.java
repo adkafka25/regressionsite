@@ -94,15 +94,15 @@ public class Platform extends Model {
 	public static Platform getPlatformFromPath(String folderPath){
 		int indexOfPlatform = 4; //Which slot in the filepath the platform is specified in (0\1\2\3\4...)
 		
-		String[] platform = folderPath.split("\\\\");
+		String[] platform = folderPath.split("\\\\"); //Expand as an array with "\" as the delimiter
 		
 		Platform plat = find.where()
 				.ilike("name",platform[indexOfPlatform])
 				.findUnique();
 		if(plat==null){
-			Platform newPlat = new Platform();
-			newPlat.name=platform[indexOfPlatform];
-			newPlat.save();
+			Platform newPlat = find.where()
+				.ilike("name","Unknown Platform")
+				.findUnique();
 			return newPlat;
 		}
 		return plat;
