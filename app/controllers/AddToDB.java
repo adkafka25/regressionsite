@@ -426,7 +426,7 @@ public class AddToDB extends Controller{
 			else{
 				stmt.setLong(5,SVN.getSvnID(runForm.get().svn.num));
 			}
-			stmt.setNull(6, java.sql.Types.INTEGER);
+			stmt.setNull(6, java.sql.Types.INTEGER); //set performance to null for now
 			//stmt.setLong(6,Performance.getPerformanceID(runForm.get().performance.time));
 			//Run query
 			int affectedRows = stmt.executeUpdate();

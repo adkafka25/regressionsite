@@ -54,6 +54,15 @@ public class Version extends Model {
                 .getPage(page);
     }
 
+	//Used for creating a list of all versions. Implemented in createForm.scala.html in @select
+    public static Map<String,String> options() {
+        LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
+        for(Version ver: Version.find.orderBy("name").findList()) {
+            options.put(ver.id.toString(), ver.name+" of "+ver.platform.name);
+        }
+        return options;
+    }
+	
     /**
      * @return all versions.
      */
