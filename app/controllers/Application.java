@@ -45,13 +45,17 @@ public class Application extends Controller {
     }
  
 
-  	//For javascript routes
+  	
+	
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(
 			Routes.javascriptRouter("jsRoutes",
 				//Routes
-				controllers.routes.javascript.Application.deleteRun()
+				controllers.routes.javascript.Application.deleteRun(),
+				controllers.routes.javascript.Application.dataList(),
+				controllers.routes.javascript.Application.getData(),
+				controllers.routes.javascript.Application.listRun()
 				
 			)
 		);
@@ -133,6 +137,7 @@ public class Application extends Controller {
      */
 
 public static String createData(){
+	
 		List<models.Date> allDates = models.Date.getList();
 		//int[] frequency = models.Company.allFrequency();
 		
@@ -141,22 +146,24 @@ public static String createData(){
 		for(models.Date date: allDates){
 			String name = date.jsDate();
 			int jBugs= models.Bug.frequency(date, "Java" );
+			int seventy = 70;
 			String jMes = null;
 			String jTitle = null;
 			int nBugs = models.Bug.frequency(date, "Native");
 			String nMes = null;
 			String nTitle = null;
 			
-			data+= name + jBugs + ","+ jMes + "," + jTitle + ", " + nBugs + "," + nMes 
-					+ "," + nTitle +"],";
+			data += name + jBugs + "," + nBugs + "], ";
 		}
 		data = data.substring(0,data.length()-1); // cut off the comma at the end
 		
 		data+="]";
 		
-		/*String data = "[[new Date(2008, 1 ,7), 30000, null, null, 40645, null, null],";
-		data+= "[new Date(2008, 1 ,8), 30000, null, null, 40645, null, null]]";
-		*/
+		
+		String datsa = "[ [new Date(2012, 8 , 2), 300, 800] ]";
+		
+		//data+= "[new Date(2008, 1 ,8), 30000, null, null, 40645, null, null]]";
+		
 		return data;
 	}
 
