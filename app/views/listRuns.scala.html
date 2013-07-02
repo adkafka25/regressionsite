@@ -55,7 +55,7 @@
 
 <form>
 	<select name="carey" id="ddlMyList">
-			<option value="">- Please Select -</option>
+			<option value="name">- Please Select -</option>
 		@for(field <- Run.getSortFields ) {
 			<option value= @field.getValue >@field.getHeader</option>
 			}
@@ -70,10 +70,11 @@ function NavigateToSite() {
 	var ddl = document.getElementById("ddlMyList");
 	var textInput = document.getElementById("searchbox").value;
 	var selectedVal = ddl.options[ddl.selectedIndex].value;
-	window.location = selectedVal + "?f=" + textInput;
+//	window.location = selectedVal + "?f=" + textInput;
+	window.location = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, selectedVal).url;
 }
 function VerifyDelete(id){
-	var del=confirm("Are you sure you would liek to delete this run AND all pages associated with it (run id="+id+")?");
+	var del=confirm("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?");
 	if(del==true){
 		window.location = jsRoutes.controllers.Application.deleteRun(id).url ;
 	} 

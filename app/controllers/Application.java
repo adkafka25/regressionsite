@@ -25,7 +25,7 @@ public class Application extends Controller {
      * This result directly redirect to application home.
      */
     public static Result GO_HOME = redirect(
-        routes.Application.home()
+        routes.Application.overview()
     );
     public static Result RUN_INDEX = redirect( 
     	routes.Application.listRun(0, "name", "asc", "","name")
@@ -38,22 +38,35 @@ public class Application extends Controller {
     public static Result index() {
         return GO_HOME;
     }
+    public static Result overview() {
+        return ok(
+            overview.render()
+        );
+    }
     public static Result home() {
         return ok(
-            home.render()
+            homePage.render()
         );
     }
  
 
-  	//For javascript routes
+  	
+	
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(
 			Routes.javascriptRouter("jsRoutes",
 				//Routes
 				controllers.routes.javascript.Application.deleteRun(),
+				controllers.routes.javascript.Application.overview(),
+				controllers.routes.javascript.Application.dataList(),
+				controllers.routes.javascript.Application.getData(),
+				controllers.routes.javascript.Application.listRun(),
+				controllers.routes.javascript.Application.createNewRun(),
+
 				controllers.routes.javascript.Application.addBugNum(),
 				controllers.routes.javascript.Application.addDiffDesc()
+
 				
 			)
 		);
@@ -139,6 +152,7 @@ public class Application extends Controller {
      */
 
 public static String createData(){
+	
 		List<models.Date> allDates = models.Date.getList();
 		//int[] frequency = models.Company.allFrequency();
 		
@@ -147,22 +161,24 @@ public static String createData(){
 		for(models.Date date: allDates){
 			String name = date.jsDate();
 			int jBugs= models.Bug.frequency(date, "Java" );
+			int seventy = 70;
 			String jMes = null;
 			String jTitle = null;
 			int nBugs = models.Bug.frequency(date, "Native");
 			String nMes = null;
 			String nTitle = null;
 			
-			data+= name + jBugs + ","+ jMes + "," + jTitle + ", " + nBugs + "," + nMes 
-					+ "," + nTitle +"],";
+			data += name + jBugs + "," + nBugs + "], ";
 		}
 		data = data.substring(0,data.length()-1); // cut off the comma at the end
 		
 		data+="]";
 		
-		/*String data = "[[new Date(2008, 1 ,7), 30000, null, null, 40645, null, null],";
-		data+= "[new Date(2008, 1 ,8), 30000, null, null, 40645, null, null]]";
-		*/
+		
+		String datsa = "[ [new Date(2012, 8 , 2), 300, 800] ]";
+		
+		//data+= "[new Date(2008, 1 ,8), 30000, null, null, 40645, null, null]]";
+		
 		return data;
 	}
 
