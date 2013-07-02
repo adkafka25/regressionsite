@@ -34,10 +34,6 @@ POST	/saveDiffDesc				controllers.Application.addDiffDesc()
 GET		/runs/delete/:runID			controllers.Application.deleteRun(runID:Long)
 
 
-#test
-#GET		/test						controllers.AddToDB.test()
-
-
 
 
 

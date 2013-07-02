@@ -418,8 +418,14 @@ public class AddToDB extends Controller{
 			stmt.setLong(2,Version.getVersionID(runForm.get().version.name, runForm.get().version.platform.id));
 			stmt.setLong(3,runForm.get().format.id);
 			stmt.setLong(4,models.Date.getDateID(runForm.get().date.name));
-			stmt.setLong(5,SVN.getSvnID(runForm.get().svn.num));
-			stmt.setLong(6,Performance.getPerformanceID(runForm.get().performance.time));
+			if(runForm.get().svn.num == null){
+				stmt.setNull(5, java.sql.Types.INTEGER);
+			}
+			else{
+				stmt.setLong(5,SVN.getSvnID(runForm.get().svn.num));
+			}
+			stmt.setNull(6, java.sql.Types.INTEGER);
+			//stmt.setLong(6,Performance.getPerformanceID(runForm.get().performance.time));
 			//Run query
 			int affectedRows = stmt.executeUpdate();
 			if(affectedRows == 0){
