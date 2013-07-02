@@ -407,6 +407,8 @@ public class AddToDB extends Controller{
 		
 		ResultSet generatedKeys = null;
 		
+		Platform platform = Platform.getPlatformFromPath(folderPath);
+		
 		//Add run into DB
 		try{
 			//Start connection
@@ -415,7 +417,7 @@ public class AddToDB extends Controller{
 			PreparedStatement stmt = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 			//Add data to prepared statement
 			stmt.setString(1,runForm.get().name);
-			stmt.setLong(2,Version.getVersionID(runForm.get().version.name, runForm.get().version.platform.id));
+			stmt.setLong(2,Version.getVersionID(runForm.get().version.name, platform));
 			stmt.setLong(3,runForm.get().format.id);
 			stmt.setLong(4,models.Date.getDateID(runForm.get().date.name));
 			if(runForm.get().svn.num == null){

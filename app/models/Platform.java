@@ -86,5 +86,26 @@ public class Platform extends Model {
 		return platform;
 	}
     
+	/**
+	 * This method takes a string that is a file path and extracts the platform of the run from it
+	 * @param folderPath A path like "\\snowtest\Regression\java\13.5-Build2.1-MSOffice\Issues.13.5-Build2-MSOffice"
+	 * @return Platform corresponding to that folder path. In this example, would be java platform
+	 */
+	public static Platform getPlatformFromPath(String folderPath){
+		int indexOfPlatform = 4; //Which slot in the filepath the platform is specified in (0\1\2\3\4...)
+		
+		String[] platform = folderPath.split("\\\\");
+		
+		Platform plat = find.where()
+				.ilike("name",platform[indexOfPlatform])
+				.findUnique();
+		if(plat==null){
+			Platform newPlat = new Platform();
+			newPlat.name=platform[indexOfPlatform];
+			newPlat.save();
+			return newPlat;
+		}
+		return plat;
+	}
 }
 

@@ -75,15 +75,15 @@ public class Version extends Model {
 	 * Returns the versionID of given version.name
 	 * @param versionName Which version name to find ID for
 	 */
-	public static Long getVersionID(String versionName, Long platformID){
+	public static Long getVersionID(String versionName, Platform platform){
 		Version version=find.where()
 			.eq("name",versionName)
-			.eq("platform.id",platformID)
+			.eq("platform",platform)
 			.findUnique();
 		if( version == null ){ //If no version was found... add it and return that id
 			Version newVersion = new Version();
 			newVersion.name=versionName;
-			newVersion.platform=Platform.getByID(platformID);
+			newVersion.platform=platform;
 			newVersion.save();
 			return newVersion.id;
 		}
