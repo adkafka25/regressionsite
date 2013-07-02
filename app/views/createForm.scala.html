@@ -69,37 +69,36 @@
                 '_label -> "Format", '_default -> "-- Choose a Format --",
                 '_showConstraints -> false
             )
+			
+			
+			@**********************************@
+			<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
+			<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+			<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
+			
+			<script type="text/javascript">
+			$(function(){
+				$('#dp1').datepicker({
+					format: 'yyyy-mm-dd'
+				});
+			});
+			</script>
+			
 			<div class="clearfix ">
 				<label for="date_name">Date</label>
-				<div class="input">
-					
-				<input type="text" id="date_name" name="date.name" value="" required pattern="\d{4}-\d{2}-\d{2}" >
-
-					<span class="help-inline">Required, Date (&#x27;yyyy-mm-dd&#x27;)</span> 
+				<div class="datepicker input">
+					<input type="date" class="datepicker" id="dp1" data-date-format="yyyy-mm-dd" name="date.name" value="" required pattern="\d{4}-\d{2}-\d{2}" >
 				</div>
 			</div>
 			
 			<div class="clearfix ">
 				<label for="svn_num">SVN</label>
 				<div class="input">
-					
-				<input type="text" id="svn_num" name="svn.num" value="" required pattern="\d*">
-
-					<span class="help-inline">Required (Numbers only)</span> 
+				<input type="text" id="svn_num" name="svn.num" value="" pattern="\d*">
+					<span class="help-inline">Not Required (Numbers only)</span> 
 				</div>
 			</div>
 			
-            <div class="clearfix ">
-				<label for="performance_time">Performance</label>
-				<div class="input">
-					
-				<input type="text" id="performance_time" name="performance.time" value="" required pattern="\d{2}:\d{2}:\d{2}">
-
-					<span class="help-inline">Required, Date (&#x27;hh:mm:ss&#x27;)</span> 
-				</div>
-			</div>
-			
-
         </fieldset>
         
         <div class="actions">
