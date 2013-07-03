@@ -22,48 +22,48 @@
             </thead>
             <tbody>
 
-                @for(fun <- Run.runByID(id)) {
+                @for(run <- Run.runByID(id)) {
                     <tr>
                         <td>
-                            @if(fun.name == null) {
+                            @if(run.name == null) {
                                 <em>-</em>
                             } else {
-                                @fun.name
+                                @run.name
                             }
                         </td>
 						<td>
-                            @if(fun.version == null) {
+                            @if(run.version == null) {
                                 <em>-</em>
                             } else {
-                                @fun.version.name of @fun.version.platform.name
+                                @run.version.name of @run.version.platform.name
                             }
                         </td>
                         <td>
-                            @if(fun.format == null) {
+                            @if(run.format == null) {
                                 <em>-</em>
                             } else {
-                                @fun.format.name
+                                @run.format.name
                             }
                         </td>
 						<td>
-                            @if(fun.date == null) {
+                            @if(run.date == null) {
                                 <em>-</em>
                             } else {
-                                @fun.date.name.format("dd MMM yyyy")
+                                @run.date.name.format("dd MMM yyyy")
                             }
                         </td>
 						<td>
-                            @if(fun.svn == null) {
+                            @if(run.svn == null) {
                                 <em>-</em>
                             } else {
-                                @fun.svn.num
+                                @run.svn.num
                             }
                         </td>
 						<td>
-                            @if(fun.performance == null) {
+                            @if(run.performance == null) {
                                 <em>-</em>
                             } else {
-                                @fun.performance.time.format("hh:mm:ss")
+                                @run.performance.time.format("hh:mm:ss")
                             }
                         </td>
                     </tr>
@@ -117,10 +117,10 @@
                             }
                         </td>
 						<td>
-                            @if(run.svn == null) {
+                            @if(Bug.calculateBugs(run) == null) {
                                 <em>-</em>
                             } else {
-                                @run.svn.num
+                                @Bug.calculateBugs(run)
                             }
                         </td>
 						<td>
