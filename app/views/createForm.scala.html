@@ -5,11 +5,14 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
 @main {
-    
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
+	
 	<script type="text/javascript">
 	function checkForm(){
-		if ( document.newRun.version_platform_id.value == ""){
-			alert("Please select a platform!");
+		if (document.newRun.version_name.value == ""){
+			alert("Please select a version");
 			return false;
 		}
 		else if ( document.newRun.format_id.value == ""){
@@ -17,72 +20,114 @@
 			return false;
 		}
 		else{
-			document.newRun.submit();
+			return verifySubmit();
 		}
 	}
-	
+	function getSelectedValue(elementId){
+		return document.getElementById(elementId).options[document.getElementById(elementId).selectedIndex].text;
+	}
+	function getPlatform(path){
+		pathArray=path.split("\\");
+		var platformIndex=4; //this is in which spot the platform comes up in file name \\1\2\3...
+		return pathArray[platformIndex];
+	}
+	function verifySubmit(){
+		//Get all current values at this time
+		var runName=document.newRun.name.value;
+		var runPath=document.newRun.path.value;
+		var platform=getPlatform(runPath);
+		var version=getSelectedValue("version_name");
+		var format=getSelectedValue("format_id");
+		var date=document.newRun.dp1.value;
+		var svn=document.newRun.svn_num.value;
+		
+		var message="Are you sure you would like to submit this run?";
+		//Prompt for confirmation
+		var x=confirm("Run Name = "+runName+"\n"+
+			"Run Path = "+runPath+"\n"+
+			"Platform = "+platform+"\n"+
+			"Version = "+version+"\n"+
+			"Format = "+format+"\n"+
+			"Date = "+date+"\n"+
+			"SVN = "+svn+"\n"+
+			message);
+		if (x==true){		
+			document.newRun.submit();
+		}
+		else{
+			return false;
+		}
+	}
+	function addVersion(){
+		var versionName = prompt("What is the new version?");
+		
+		var x=document.getElementById("version_name");
+		var option=document.createElement("option");
+		option.text=versionName;
+		try{// for IE earlier than version 8
+			x.add(option,x.options[null]);
+		}
+		catch (e){
+			x.add(option,null);
+		}
+		x.selectedIndex=x.length-1; //select new version
+		return false;
+	}
+	$(function(){//for picking a date
+		$('#dp1').datepicker({
+			format: 'yyyy-mm-dd'
+		});
+	});
 	</script>
 	
 	
-    <h1>Add a new Run</h1>
+    <h1>Import an existing regression run</h1>
     
     <form name=newRun action="@routes.AddToDB.saveRun()" method="POST" >    
         <fieldset>
         
-            <div class="clearfix ">
+            <div class="clearfix">
 				<label for="name">Run Name</label>
-					<div class="input">
-						<input id="name" type="text" value="" name="name" required pattern="(\w|\s|\.|-)+">
-						<span class="help-inline">Required, only word characters</span>
-					</div>
+				<div class="input">
+					<input id="name" type="text" value="" name="name" required pattern="(\w|\s|\.|-)+">
+					<span class="help-inline">Required, only word characters</span>
 				</div>
+			</div>
+			
 			<div class="clearfix ">
 				<label for="path">Path to Issues folder</label>
 				<div class="input">
-					
-				<input type="text" id="path" name="path" value="" required @*pattern="..(S|s)nowtest.(R|r)egression.(java|native).*(I|i)ssues.*"*@>
-
+					<input type="text" id="path" name="path" value="" required @*pattern="..(S|s)nowtest.(R|r)egression.(java|native).*(I|i)ssues.*"*@>
 					<span class="help-inline">Required. ex: "\\snowtest\Regression\java\13.5-Build2.1-AFP\Issues.13.5-Build2-AFP" <br /> Must begin with \\snowtest\Regression\(java or native)\....\Issues*"</span> 
 				</div>
 			</div>
-
-			@select(
-                runForm("version.platform.id"), 
-                options(Platform.options()), 
-                '_label -> "Platform", '_default -> "-- Choose a Platform --",
-                '_showConstraints -> true
-            )
 			
 			<div class="clearfix ">
 				<label for="version_name">Version</label>
 				<div class="input">
-					
-				<input type="text" id="version_name" name="version.name" value="" required pattern="(\w|\s|\.|-)+">
-
-					<span class="help-inline">Required, only word characters</span> 
+				<select id="version_name" name="version.name" >
+					<option class="blank" value="">-- Choose a Version --</option>
+					@for((key, value) <- Version.options()){
+						<option value="@key">@value</option>
+					}
+				</select>
+				<button class="btn" onclick="return addVersion()">Add new version...</button>
+				<span class="help-inline">Required</span>
 				</div>
 			</div>
 			
-			@select(
-                runForm("format.id"), 
-                options(FileFormat.options()), 
-                '_label -> "Format", '_default -> "-- Choose a Format --",
-                '_showConstraints -> false
-            )
-			
-			
-			@**********************************@
-			<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
-			<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-			<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
-			
-			<script type="text/javascript">
-			$(function(){
-				$('#dp1').datepicker({
-					format: 'yyyy-mm-dd'
-				});
-			});
-			</script>
+			<div class="clearfix ">
+				<label for="format_id">Format</label>
+				<div class="input">
+				<select id="format_id" name="format.id" >
+					<option class="blank" value="">-- Choose a Format --</option>
+					@for((key, value) <- FileFormat.options()){
+						<option value="@key">@value</option>
+					}
+				</select>
+					<span class="help-inline">Required</span> 
+				</div>
+			</div>
 			
 			<div class="clearfix ">
 				<label for="date_name">Date</label>

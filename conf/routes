@@ -23,8 +23,8 @@ GET		/dataList/:filter1/:filter2/:param1/:param2					controllers.Application.dat
 GET		/pagesbyrun/:id				controllers.Application.listPageByRun(p:Int ?= 0, s ?= "name", o ?= "asc", id:Long, f ?="")
 
 # Edit pages
-GET		/newrun						controllers.Application.createNewRun()
-POST	/newrun						controllers.AddToDB.saveRun()
+GET		/importrun						controllers.Application.createNewRun()
+POST	/importrun						controllers.AddToDB.saveRun()
 
 # Manual data entry after run submission
 POST	/saveBugNum					controllers.Application.addBugNum()

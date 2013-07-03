@@ -372,7 +372,7 @@ public class AddToDB extends Controller{
 		listFilesRecursively(startFile, allFiles); //allFiles is now a List<String> of all files paths
 		
 		return ok(
-			test.render(
+			logInfo.render(
 				enterIntoDB(allFiles, dirname, runID), runID
 			)
 		);
@@ -397,7 +397,7 @@ public class AddToDB extends Controller{
 			log.add("ERROR: Invalid please set Path to Issues Folder");
 			log.add("Path = "+folderPath+" is invalid or non-existant");
 			return badRequest(
-				test.render(log, -1L)
+				logInfo.render(log, -1L)
 			);
 		}
 		
@@ -407,6 +407,8 @@ public class AddToDB extends Controller{
 		
 		ResultSet generatedKeys = null;
 		
+		Platform platform = Platform.getPlatformFromPath(folderPath);
+		
 		//Add run into DB
 		try{
 			//Start connection
@@ -415,7 +417,7 @@ public class AddToDB extends Controller{
 			PreparedStatement stmt = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 			//Add data to prepared statement
 			stmt.setString(1,runForm.get().name);
-			stmt.setLong(2,Version.getVersionID(runForm.get().version.name, runForm.get().version.platform.id));
+			stmt.setLong(2,Version.getVersionID(runForm.get().version.name, platform));
 			stmt.setLong(3,runForm.get().format.id);
 			stmt.setLong(4,models.Date.getDateID(runForm.get().date.name));
 			if(runForm.get().svn.num == null){
@@ -424,7 +426,7 @@ public class AddToDB extends Controller{
 			else{
 				stmt.setLong(5,SVN.getSvnID(runForm.get().svn.num));
 			}
-			stmt.setNull(6, java.sql.Types.INTEGER);
+			stmt.setNull(6, java.sql.Types.INTEGER); //set performance to null for now
 			//stmt.setLong(6,Performance.getPerformanceID(runForm.get().performance.time));
 			//Run query
 			int affectedRows = stmt.executeUpdate();
@@ -468,7 +470,7 @@ public class AddToDB extends Controller{
 				log.add("ERROR: Unknown error occured before files could be added");
 			}
 			return ok(
-				test.render(log,runID)
+				logInfo.render(log,runID)
 				);
 		}
     }
