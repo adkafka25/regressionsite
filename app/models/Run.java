@@ -53,9 +53,18 @@ public class Run extends Model {
 	@Formats.DateTime(pattern="hh:mm:ss")
 	public Performance performance;
 	
+	
+	/** Transient values for form submission*/
 	//Path to issues folder
 	@Transient
 	public String path;
+	
+	//Path to comparison directory
+	@Transient
+	public String compDir;
+	//Path to input directory
+	@Transient
+	public String inputDir;
 	
 	/**
      * Generic query helper for entity Run with id Long

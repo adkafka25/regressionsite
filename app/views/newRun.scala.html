@@ -1,0 +1,139 @@
+@(runForm: Form[Run])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main {
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
+	
+	<script type="text/javascript">
+	function checkForm(){
+		return verifySubmit();
+	}
+	function getCheckedBoxes(){
+		var checked = "";
+		$("input:checkbox[name=format]:checked").each(function(){ //for each checked box....
+			checked=checked+$(this).val()+"," // add $(this).val() to your array
+		});
+		checked=checked.substring(0,checked.lastIndexOf(","));
+		return checked;
+	}
+	function verifySubmit(){
+		//Get all current values at this time
+		var runName=document.newRun.name.value;
+		var selectedFormats=getCheckedBoxes();
+		
+		var message="Are you sure you would like to submit this run?";
+		//Prompt for confirmation
+		var x=confirm("Run Name = "+runName+"\n"+
+			"Formats = "+selectedFormats+"\n"+
+			message);
+		if (x==true){		
+			document.newRun.submit();
+		}
+		else{
+			return false;
+		}
+	}
+	function addVersion(){
+		var versionName = prompt("What is the new version?");
+		
+		var x=document.getElementById("version_name");
+		var option=document.createElement("option");
+		option.text=versionName;
+		try{// for IE earlier than version 8
+			x.add(option,x.options[null]);
+		}
+		catch (e){
+			x.add(option,null);
+		}
+		x.selectedIndex=x.length-1; //select new version
+		return false;
+	}
+	</script>
+	
+	
+    <h1>Create a new Regression Test</h1>
+    
+    <form name=newRun action="@routes.NewRun.addNewRun()" method="POST" >    
+        <fieldset>
+        
+            <div class="clearfix">
+				<label for="name">Run Name</label>
+				<div class="input">
+					<input id="name" type="text" value="" name="name" required pattern="(\w|\s|\.|-)+">
+					<span class="help-inline">Required, only word characters</span>
+				</div>
+			</div>
+			
+			@select(
+                runForm("version.platform.id"),
+                options(Platform.options()),
+                '_label -> "Platform", '_default -> "-- Choose a Platform --",
+                '_showConstraints -> true
+            )
+			
+			<div class="clearfix ">
+				<label for="version_name">Version</label>
+				<div class="input">
+
+					<input type="text" id="version_name" name="version.name" value="" required pattern="(\w|\s|\.|-)+">
+
+					<span class="help-inline">Required, only word characters</span>
+				</div>
+			</div>
+			
+			<div class="clearfix ">
+				<label for="format_id">Format</label>
+				<div class="input">
+				<select id="format_id" name="format.id" >
+					<option class="blank" value="">-- Choose a Format --</option>
+					@for((key, value) <- FileFormat.options()){
+						<option value="@key">@value</option>
+					}
+				</select>
+					<span class="help-inline">Required</span> 
+				</div>
+			</div>
+			
+			@*
+			<div class="clearfix">
+				<label for="formats">Formats</label>
+				<div class="input">
+					@for((file,index) <- FileFormat.getList.zipWithIndex){
+						<input type="checkbox" name="format" id="format_@index" value="@file.name">
+						<span>@file.name<span>
+						<br/>
+					}
+				</div>
+			</div>*@
+			
+			<div class="clearfix">
+				<label for="compDir">Comparison Directory</label>
+				<div class="input">
+					<input id="compDir" type="text" value="" name="compDir" required>
+					<span class="help-inline">Required</span>
+				</div>
+			</div>
+			
+			<div class="clearfix">
+				<label for="inputDir">Input Directory</label>
+				<div class="input">
+					<input id="inputDir" type="text" value="" name="inputDir" required>
+					<span class="help-inline">Required</span>
+				</div>
+			</div>
+			
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this run" class="btn primary" onclick="return checkForm()"> or 
+            <a href="@routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+        
+    </form>
+    
+}
