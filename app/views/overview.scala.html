@@ -8,9 +8,22 @@
 }
 
 
-@overviewHeader{
+@homeSkeleton{
 <!DOCTYPE html>
   <html>
+  <style>
+p
+{
+
+}
+p.padding
+{
+padding-top:25px;
+padding-bottom:25px;
+padding-right:50px;
+padding-left:50px;
+}
+</style>
   <head>
       <meta charset="utf-8">
       <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
@@ -29,6 +42,7 @@
       <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
    </head>
    <center>
+   <p class="padding"></p>
    <body>
       <select id="platform" name="#platform">
            <option value="Please select Platform">Please select Platform</option>

@@ -1,26 +1,67 @@
+
+
 @(content: Html)
 
+
+@link( route: String ) = @{
+	if(route == "New") {
+		routes.Application.createNewRun()
+	}
+	else if(route == "Overview") {
+		routes.Application.overview()
+		}
+	else if(route == "Home") {
+		routes.Application.home()
+		}
+	else {
+		routes.Application.home()
+	}
+ 
+}
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Snowbound Software Regression Testing Home Page</title>
-        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
-        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
-    
-	</head>
-    <body>
-        
-        <header class="topbar">
-            <h1 class="fill">
-                <a href="@routes.Application.index()">
-                    Snowbound Software Regression Testing Home Page
-                </a>
-            </h1>
-        </header>
-        
-        <section id="main">
+
+<head>
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
+    <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
+	<link type = "text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.css")" >
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-inverse">
+ <div class="navbar-inner">
+	<a class="brand" href="@link("Home") ">Regression Database</a>
+   <ul class = nav nav-tabs>
+  	    <li class="divider-vertical"></li>
+   		<li><a href = "@link("New") " >Import Regression Data</a></li>
+   		<li class="divider-vertical"></li>
+   		<li><a href = "@link("New") " >New Regression Run</a></li>
+   		<li class="divider-vertical"></li>
+   		<li><a href = "@link("Overview") ">Regression Testing Overview</a></li>
+   	
+       
+   		
+   </ul>
+ <form class="navbar-search pull-left">  
+  <input type="text" class="search-query" placeholder="Search">  
+</form> 
+ 
+
+
+   </div>
+   </div>
+  </div>
+  
+  
+<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+<script src="@routes.Assets.at("js/jquery.js")"></script>
+<script src="@routes.Assets.at("js/bootstrap.js")"></script>
+<script src="@routes.Assets.at("js/bootstrap-dropdown.js")"></script>
+
+		<section id="main">
             @content
         </section>
-        
-    </body>
+
+	</body>
 </html>
