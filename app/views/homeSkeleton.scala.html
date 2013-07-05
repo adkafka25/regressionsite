@@ -43,11 +43,11 @@
        
    		
    </ul>
- <form class="navbar-search pull-left">  
-   	<input type="text" id = "searchbox" class="search-query" placeholder="Search" />  
+ <form class="navbar-search pull-left" name ="filter" onsubmit ="return search()">  
+   	<input type="text" id = "searchbox" class="search-query" placeholder="Search by Run Name" />  
  	
  </form> 
-   <input type = "button" value= "Search" class="btn primary" onclick = "search()"/>
+   
 
    </div>
    </div>
@@ -56,9 +56,10 @@
 <script>
  function search() {
 	// <input type = "submit" style="visibility: hidden" onsubmit = "search()"/>
-	//var textInput = document.getElementById("searchbox").value;
-	
-	window.location.href = google.com;
+      var textInput = document.getElementById("searchbox").value;
+   //  alert("I am an alert box!");
+	  window.location.href = window.location = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, "name").url;
+	  return false;
 }
  </script>  
   

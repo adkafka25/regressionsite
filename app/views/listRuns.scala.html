@@ -43,7 +43,11 @@
 }
 
 @main {
+	<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
     <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    
 		
     <h1 id="homeTitle">@currentPage.getTotalRowCount Runs Found</h1>
 
@@ -63,8 +67,12 @@
 	 <input type="search" id="searchbox" value="@currentFilter" placeholder="Search for...">
 	<input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite()"/>
 
-
-	
+<!-- JS dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+ 
+<!-- bootbox code -->
+<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
 <script>
 function NavigateToSite() {
 	var ddl = document.getElementById("ddlMyList");
@@ -72,12 +80,32 @@ function NavigateToSite() {
 	var selectedVal = ddl.options[ddl.selectedIndex].value;
 //	window.location = selectedVal + "?f=" + textInput;
 	window.location = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, selectedVal).url;
+	
+	
 }
 function VerifyDelete(id){
-	var del=confirm("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?");
-	if(del==true){
-		window.location = jsRoutes.controllers.Application.deleteRun(id).url ;
-	} 
+	
+	bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
+		[
+		{
+		"label" : "Okay",
+		"class" : "primary",
+		"callback": function() {
+		window.location = jsRoutes.controllers.Application.deleteRun(id).url;
+		}
+		}, {
+		"label" : "Cancel",
+		"callback": function() {
+			return true;
+			}	
+		}
+		
+		]);
+	
+	
+}
+function deleteRun(id) {
+	window.location = jsRoutes.controllers.Application.deleteRun(id).url ;
 }
 </script>
 
@@ -98,6 +126,7 @@ function VerifyDelete(id){
         </form>
         
     </div>
+    
     
     @if(currentPage.getTotalRowCount == 0) {
         

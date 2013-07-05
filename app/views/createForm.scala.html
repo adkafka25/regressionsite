@@ -6,9 +6,13 @@
 
 @main {
 	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
+	<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
-	
+	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+ 
+	<!-- bootbox code -->
+	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
 	<script type="text/javascript">
 	function checkForm(){
 		if (document.newRun.version_name.value == ""){
@@ -43,23 +47,43 @@
 		
 		var message="Are you sure you would like to submit this run?";
 		//Prompt for confirmation
-		var x=confirm("Run Name = "+runName+"\n"+
-			"Run Path = "+runPath+"\n"+
-			"Platform = "+platform+"\n"+
-			"Version = "+version+"\n"+
-			"Format = "+format+"\n"+
-			"Date = "+date+"\n"+
-			"SVN = "+svn+"\n"+
-			message);
-		if (x==true){		
-			document.newRun.submit();
-		}
-		else{
-			return false;
-		}
+		bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
+				[
+				{
+				"label" : "Okay",
+				"class" : "primary",
+				"callback": function() {
+				window.location = jsRoutes.controllers.Application.deleteRun(id).url;
+				}
+				}, {
+				"label" : "Cancel",
+				"callback": function() {
+					window.location = jsRoutes.controllers.Application.home.url;
+					}	
+				}
+				
+				]);
 	}
 	function addVersion(){
-		var versionName = prompt("What is the new version?");
+		 bootbox.prompt("What is the new version?", function(result) {
+			if (result === null) {
+			return true;
+			} else {
+
+				var x=document.getElementById("version_name");
+				var option=document.createElement("option");
+				option.text=result;
+				try{// for IE earlier than version 8
+					x.add(option,x.options[null]);
+				}
+				catch (e){
+					x.add(option,null);
+				}
+				x.selectedIndex=x.length-1; //select new version
+				return true;
+			}
+			});
+		/*var versionName = prompt("What is the new version?");
 		
 		var x=document.getElementById("version_name");
 		var option=document.createElement("option");
@@ -72,6 +96,7 @@
 		}
 		x.selectedIndex=x.length-1; //select new version
 		return false;
+		*/
 	}
 	$(function(){//for picking a date
 		$('#dp1').datepicker({
