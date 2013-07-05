@@ -193,15 +193,6 @@ public static String createData(){
         );
 	}
 	/**
-	 * This function creates the form for adding a new run
-	 */
-	public static Result newRun() {
-		Form<Run> runForm = Form.form(Run.class);
-        return ok(
-            newRun.render(runForm)
-        );
-	}
-	/**
 	 * This function creates the form for loading data from a 
 	 * specific run.
 	 * @return the page runData.

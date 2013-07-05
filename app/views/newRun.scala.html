@@ -1,4 +1,4 @@
-@(runForm: Form[Run])
+@(runForm: Form[models.NewRun])
 
 @import helper._
 
@@ -10,6 +10,9 @@
 	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
 	
 	<script type="text/javascript">
+	function getSelectedValue(elementId){
+		return document.getElementById(elementId).options[document.getElementById(elementId).selectedIndex].text;
+	}
 	function checkForm(){
 		return verifySubmit();
 	}
@@ -19,17 +22,27 @@
 			checked=checked+$(this).val()+"," // add $(this).val() to your array
 		});
 		checked=checked.substring(0,checked.lastIndexOf(","));
+		//set hidden field formats to this value
+		document.getElementById("formats").value=checked;
+		
 		return checked;
 	}
 	function verifySubmit(){
 		//Get all current values at this time
 		var runName=document.newRun.name.value;
 		var selectedFormats=getCheckedBoxes();
+		var platform=getSelectedValue("platform_id");
+		var compDir=document.newRun.compDir.value;
+		var inputDir=document.newRun.inputDir.value;
 		
 		var message="Are you sure you would like to submit this run?";
 		//Prompt for confirmation
 		var x=confirm("Run Name = "+runName+"\n"+
+			"Platform = "+platform+"\n"+
 			"Formats = "+selectedFormats+"\n"+
+			"Comparison Directory = "+compDir+"\n"+
+			"Input Directory = "+inputDir+"\n"+
+			+"\n"+
 			message);
 		if (x==true){		
 			document.newRun.submit();
@@ -37,21 +50,6 @@
 		else{
 			return false;
 		}
-	}
-	function addVersion(){
-		var versionName = prompt("What is the new version?");
-		
-		var x=document.getElementById("version_name");
-		var option=document.createElement("option");
-		option.text=versionName;
-		try{// for IE earlier than version 8
-			x.add(option,x.options[null]);
-		}
-		catch (e){
-			x.add(option,null);
-		}
-		x.selectedIndex=x.length-1; //select new version
-		return false;
 	}
 	</script>
 	
@@ -70,22 +68,13 @@
 			</div>
 			
 			@select(
-                runForm("version.platform.id"),
+                runForm("platform.id"),
                 options(Platform.options()),
                 '_label -> "Platform", '_default -> "-- Choose a Platform --",
                 '_showConstraints -> true
             )
 			
-			<div class="clearfix ">
-				<label for="version_name">Version</label>
-				<div class="input">
-
-					<input type="text" id="version_name" name="version.name" value="" required pattern="(\w|\s|\.|-)+">
-
-					<span class="help-inline">Required, only word characters</span>
-				</div>
-			</div>
-			
+			@*
 			<div class="clearfix ">
 				<label for="format_id">Format</label>
 				<div class="input">
@@ -97,9 +86,9 @@
 				</select>
 					<span class="help-inline">Required</span> 
 				</div>
-			</div>
+			</div>*@
 			
-			@*
+			
 			<div class="clearfix">
 				<label for="formats">Formats</label>
 				<div class="input">
@@ -108,8 +97,10 @@
 						<span>@file.name<span>
 						<br/>
 					}
+					<input type="hidden" name="formats" id="formats" value="">
 				</div>
-			</div>*@
+			</div>
+			
 			
 			<div class="clearfix">
 				<label for="compDir">Comparison Directory</label>
@@ -130,7 +121,7 @@
         </fieldset>
         
         <div class="actions">
-            <input type="submit" value="Create this run" class="btn primary" onclick="return checkForm()"> or 
+            <input type="submit" value="Run..." class="btn primary" onclick="return checkForm()"> or 
             <a href="@routes.Application.index()" class="btn">Cancel</a> 
         </div>
         

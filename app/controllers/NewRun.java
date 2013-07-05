@@ -25,38 +25,50 @@ import java.util.regex.*;
 
 
 public class NewRun extends Controller{
+	/**
+	 * This function creates the form for adding a new run
+	 */
+	public static Result newRun() {
+		Form<models.NewRun> runForm = Form.form(models.NewRun.class);
+        return ok(
+            newRun.render(runForm)
+        );
+	}
+	
+	
 	public static Result addNewRun(){
-		Form<Run> runForm = Form.form(Run.class).bindFromRequest();//Get from info from POST
+		Form<models.NewRun> runForm = Form.form(models.NewRun.class).bindFromRequest();//Get from info from POST
 		
 		if(runForm.hasErrors()) { //doesn't do much...
+			System.out.println(runForm.errors());
             runForm.discardErrors();
 			System.out.println("Errors in addNewRun");
         }
 		
-		/*
-		runForm.get().name+"\n"+
-		Platform.getByID(runForm.get().version.platform.id).name+"\n"+
-		runForm.get().version.name+"\n"+
-		FileFormat.getByID(runForm.get().format.id).name+"\n"+
-		runForm.get().compDir+"\n"+
-		runForm.get().inputDir+"\n"
-		*/
+		String[] fileFormats = runForm.get().formats.split(",");
 		
+		String commands="";
+		
+		//If multiple fileFormats....
+		for(String format : fileFormats){
+			commands += generateCommand(
+				Platform.getByID(runForm.get().platform.id).name,
+				runForm.get().name,
+				runForm.get().compDir,
+				runForm.get().inputDir,
+				FileFormat.getByName(format).name
+			);
+		}
 		
 		return ok(
-			viewBatch.render(
-				generateBatchFile(
-					generateCommand(Platform.getByID(runForm.get().version.platform.id).name,
-						runForm.get().name,
-						runForm.get().compDir,
-						runForm.get().inputDir,
-						FileFormat.getByID(runForm.get().format.id).name
-						)
+				viewBatch.render(
+					generateBatchFile(commands)
 					)
-				)
-		);
+			);
+		
+		
 	}
-	/** This method takes a string command and enters it into the batch file template
+	/** This method takes a string command and generates a command
 	 * @param Dtype The platform of the run
 	 * @param Dname The name of the run
 	 * @param Dref Reference directory for output
@@ -75,7 +87,7 @@ public class NewRun extends Controller{
 		return "\n"+
 			"ECHO %time% "+format.toUpperCase()+
 			"\n"+
-			"call ant all -Dtype="+Dtype.toLowerCase()+" -Dname="+Dname+" -Dref="+Dref+" -Dinput.dir="+Dinputdir+
+			"call ant all -Dtype="+Dtype.toLowerCase()+" -Dname="+Dname+"-"+format+" -Dref="+Dref+" -Dinput.dir="+Dinputdir+
 			"\n"+
 			"rmdir D:\\\\Regression\\\\java\\\\Trunk\\\\"+Dname+
 			"\n";
@@ -100,9 +112,27 @@ public class NewRun extends Controller{
 		
 		return contents;
 	}
+	
 	//Set contents of file to a String
 	public static String readFile(String path, java.nio.charset.Charset encoding) throws java.io.IOException{
 		byte[] encoded = Files.readAllBytes(java.nio.file.Paths.get(path));
 		return encoding.decode(java.nio.ByteBuffer.wrap(encoded)).toString();
+	}
+	
+	public static List<String> listCompDirs(){
+		String pathToCompDirs = "";
+		File file = new File(pathToCompDirs);
+		
+		File[] files = file.listFiles();
+		
+		List<String> validDirs = new ArrayList();
+		
+		for(File folder : files){
+			if(folder.isDirectory()){//if it is a directory, add it to the list
+				validDirs.add(folder.toString());
+			}
+		}
+		
+		return validDirs;
 	}
 }

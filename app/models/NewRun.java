@@ -9,22 +9,23 @@ import play.data.validation.*;
 
 import com.avaje.ebean.*;
 
-
+//Not managed by ebeans
 public class NewRun extends Model {
     //Name
+	@Id
     @Constraints.Required
     public String name;
+	//Platform
+	@Constraints.Required
+	public Platform platform;
 	//Format
 	@Constraints.Required
-	public FileFormat[] format;
-	//Path to issues folder
-	@Transient
-	public String path;
+	public String formats; //comma seperated list of formats
 	//Path to comparison directory
-	@Transient
+	@Constraints.Required
 	public String compDir;
 	//Path to input directory
-	@Transient
+	@Constraints.Required
 	public String inputDir;
 	
 

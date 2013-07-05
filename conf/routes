@@ -25,7 +25,7 @@ GET		/pagesbyrun/:id				controllers.Application.listPageByRun(p:Int ?= 0, s ?= "
 # Edit pages
 GET		/importrun						controllers.Application.importRun()
 POST	/importrun						controllers.AddToDB.saveRun()
-GET		/newrun							controllers.Application.newRun()
+GET		/newrun							controllers.NewRun.newRun()
 POST	/newrun							controllers.NewRun.addNewRun()
 
 # Manual data entry after run submission

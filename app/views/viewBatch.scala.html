@@ -17,13 +17,16 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 @main {
 <script language="JavaScript">
 function CopyToClipboard() {
-    Copied = document.getElementById("code").value.createTextRange();
-    Copied.execCommand("Copy");
+    text=document.getElementById("code").innerHTML;
+	
+	window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
 }
 </script>
 
 	<H1>Code for run</H1>
-	<input type="button" value="Capacity Chart" onclick="CopyToClipboard();">
+	<div class="row">
+		<button class="btn" onclick="return CopyToClipboard()">Copy to Clipboard</button>
+	</div>
 	</br>
 	<div class="codebox">
 		<pre id="code">

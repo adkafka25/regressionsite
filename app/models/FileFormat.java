@@ -83,5 +83,11 @@ public class FileFormat extends Model {
 				.findUnique();
 	}
     
+	public static FileFormat getByName(String formatName){
+		return 
+			find.where()
+				.eq("name",formatName)
+				.findUnique();
+	}
 }
 
