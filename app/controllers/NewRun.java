@@ -119,6 +119,7 @@ public class NewRun extends Controller{
 		return encoding.decode(java.nio.ByteBuffer.wrap(encoded)).toString();
 	}
 	
+	//List all folders available to compare with
 	public static List<String> listCompDirs(){
 		String pathToCompDirs = "";
 		File file = new File(pathToCompDirs);

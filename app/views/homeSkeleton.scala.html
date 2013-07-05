@@ -5,6 +5,9 @@
 
 @link( route: String ) = @{
 	if(route == "New") {
+		routes.NewRun.newRun()
+	}
+	else if(route == "Import"){
 		routes.Application.importRun()
 	}
 	else if(route == "Overview") {
@@ -34,7 +37,7 @@
 	<a class="brand" href="@link("Home") ">Regression Database</a>
    <ul class = nav nav-tabs>
   	    <li class="divider-vertical"></li>
-   		<li><a href = "@link("New") " >Import Regression Data</a></li>
+   		<li><a href = "@link("Import") " >Import Regression Data</a></li>
    		<li class="divider-vertical"></li>
    		<li><a href = "@link("New") " >New Regression Run</a></li>
    		<li class="divider-vertical"></li>
