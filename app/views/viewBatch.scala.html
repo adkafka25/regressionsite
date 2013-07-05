@@ -1,0 +1,33 @@
+@(batchScript: String)
+
+@****************************
+* Generate Log From sting *
+****************************@
+@log(logInfo:String) = @{
+    
+def replace = logInfo.replaceAll(_, _)
+
+var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") replace("ERROR:","<br/><font color=\"red\">ERROR:</font>")
+
+    //Output
+    logInfoFixed
+    
+}
+
+@main {
+<script language="JavaScript">
+function CopyToClipboard() {
+    Copied = document.getElementById("code").value.createTextRange();
+    Copied.execCommand("Copy");
+}
+</script>
+
+	<H1>Code for run</H1>
+	<input type="button" value="Capacity Chart" onclick="CopyToClipboard();">
+	</br>
+	<div class="codebox">
+		<pre id="code">
+@batchScript
+		</pre>
+	</div>
+}
