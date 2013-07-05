@@ -25,7 +25,7 @@ public class Application extends Controller {
      * This result directly redirect to application home.
      */
     public static Result GO_HOME = redirect(
-        routes.Application.home()
+        routes.Application.overview()
     );
     public static Result RUN_INDEX = redirect( 
     	routes.Application.listRun(0, "name", "asc", "","name")
@@ -38,9 +38,14 @@ public class Application extends Controller {
     public static Result index() {
         return GO_HOME;
     }
+    public static Result overview() {
+        return ok(
+            overview.render()
+        );
+    }
     public static Result home() {
         return ok(
-            home.render()
+            homePage.render()
         );
     }
  
@@ -53,14 +58,19 @@ public class Application extends Controller {
 			Routes.javascriptRouter("jsRoutes",
 				//Routes
 				controllers.routes.javascript.Application.deleteRun(),
-<<<<<<< HEAD
+				controllers.routes.javascript.Application.overview(),
 				controllers.routes.javascript.Application.dataList(),
 				controllers.routes.javascript.Application.getData(),
-				controllers.routes.javascript.Application.listRun()
+				controllers.routes.javascript.Application.listRun(),
+<<<<<<< HEAD
+				controllers.routes.javascript.Application.createNewRun(),
+				controllers.routes.javascript.Application.home(),
 =======
+				controllers.routes.javascript.Application.importRun(),
+>>>>>>> db41ae7f79bc59d32ae80a4c8f3777c2c92ce9e7
 				controllers.routes.javascript.Application.addBugNum(),
 				controllers.routes.javascript.Application.addDiffDesc()
->>>>>>> 24207637a3880b8456e5bc4a80866f1c798aa584
+
 				
 			)
 		);
@@ -181,10 +191,10 @@ public static String createData(){
 	/**
 	 * This function creates the form for adding a new run
 	 */
-	public static Result createNewRun() {
+	public static Result importRun() {
 		Form<Run> runForm = Form.form(Run.class);
         return ok(
-            createForm.render(runForm)
+            importRun.render(runForm)
         );
 	}
 	/**

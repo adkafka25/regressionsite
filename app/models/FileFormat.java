@@ -53,7 +53,10 @@ public class FileFormat extends Model {
      * @return a list of all the File Formats.
      */
     public static List<FileFormat> getList() {
-    	return find.all();
+    	return 
+			find.where()
+				.orderBy("name asc")
+				.findList();
     }
     
     /**
@@ -73,6 +76,18 @@ public class FileFormat extends Model {
         return options;
     }
 	
+	public static FileFormat getByID(long formatID){
+		return 
+			find.where()
+				.eq("id",formatID)
+				.findUnique();
+	}
     
+	public static FileFormat getByName(String formatName){
+		return 
+			find.where()
+				.eq("name",formatName)
+				.findUnique();
+	}
 }
 

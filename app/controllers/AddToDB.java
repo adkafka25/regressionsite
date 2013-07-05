@@ -385,7 +385,7 @@ public class AddToDB extends Controller{
         Form<Run> runForm = Form.form(Run.class).bindFromRequest();//Get from info from POST
 		
 		 if(runForm.hasErrors()) { //doesn't do much...
-            return badRequest(createForm.render(runForm));
+            return badRequest(importRun.render(runForm));
         }
 		
 		String folderPath = runForm.get().path;

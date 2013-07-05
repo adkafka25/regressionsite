@@ -62,8 +62,12 @@ public class Application extends Controller {
 				controllers.routes.javascript.Application.dataList(),
 				controllers.routes.javascript.Application.getData(),
 				controllers.routes.javascript.Application.listRun(),
-				controllers.routes.javascript.Application.createNewRun(),
+
+			//	controllers.routes.javascript.Application.createNewRun(),
 				controllers.routes.javascript.Application.home(),
+
+			 controllers.routes.javascript.Application.importRun(),
+
 				controllers.routes.javascript.Application.addBugNum(),
 				controllers.routes.javascript.Application.addDiffDesc()
 
@@ -187,10 +191,10 @@ public static String createData(){
 	/**
 	 * This function creates the form for adding a new run
 	 */
-	public static Result createNewRun() {
+	public static Result importRun() {
 		Form<Run> runForm = Form.form(Run.class);
         return ok(
-            createForm.render(runForm)
+            importRun.render(runForm)
         );
 	}
 	/**
