@@ -5,8 +5,7 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
 @homeSkeleton {
-	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
-	<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
 	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
@@ -64,26 +63,8 @@
 				
 				]);
 	}
-	function addVersion(){
-		 bootbox.prompt("What is the new version?", function(result) {
-			if (result === null) {
-			return true;
-			} else {
-
-				var x=document.getElementById("version_name");
-				var option=document.createElement("option");
-				option.text=result;
-				try{// for IE earlier than version 8
-					x.add(option,x.options[null]);
-				}
-				catch (e){
-					x.add(option,null);
-				}
-				x.selectedIndex=x.length-1; //select new version
-				return true;
-			}
-			});
-		/*var versionName = prompt("What is the new version?");
+	function addVersion(versionName){
+		//var versionName = prompt("What is the new version?");
 		
 		var x=document.getElementById("version_name");
 		var option=document.createElement("option");
@@ -96,7 +77,14 @@
 		}
 		x.selectedIndex=x.length-1; //select new version
 		return false;
-		*/
+		
+	}
+	function addVersionPrompt(){
+		bootbox.prompt("What is the new version? \n (platform name [java or native] will be automatically generated)", function(versionName) {
+			//var versionName = prompt("What is the new version?");
+		addVersion(versionName);
+		});
+		return false;
 	}
 	$(function(){//for picking a date
 		$('#dp1').datepicker({
@@ -136,7 +124,7 @@
 						<option value="@key">@value</option>
 					}
 				</select>
-				<button class="btn" onclick="return addVersion()">Add new version...</button>
+				<button class="btn" onclick="return addVersionPrompt()">Add new version...</button>
 				<span class="help-inline">Required</span>
 				</div>
 			</div>
