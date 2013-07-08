@@ -86,29 +86,11 @@ function NavigateToSite() {
 	
 }
 function VerifyDelete(id){
-	
-	bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
-		[
-		{
-		"label" : "Okay",
-		"class" : "primary",
-		"callback": function() {
-		window.location = jsRoutes.controllers.Application.deleteRun(id).url;
+		var del=confirm("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?");
+		if(del==true){
+			window.location = jsRoutes.controllers.Application.deleteRun(id).url ;
 		}
-		}, {
-		"label" : "Cancel",
-		"callback": function() {
-			return true;
-			}	
-		}
-		
-		]);
-	
-	
-}
-function deleteRun(id) {
-	window.location = jsRoutes.controllers.Application.deleteRun(id).url ;
-}
+}		
 </script>
 
 

@@ -97,7 +97,9 @@ public class NewRun extends Controller{
 	 * @return String of complete batch file
 	 */
 	public static String generateBatchFile(String command){
-		String template = "H:\\QA-Internship\\db_product\\regressionsite\\app\\batchRunScript.bat";//Path to template file
+		//Path to template file. Escape \ with \\ 
+		String template = "H:\\QA-Internship\\db_product\\regressionsite\\app\\batchRunScript.bat";
+		
 		String contents = "";
 		try{
 			contents=readFile(template,java.nio.charset.Charset.forName("UTF-8"));

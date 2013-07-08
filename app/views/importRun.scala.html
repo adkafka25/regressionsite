@@ -50,22 +50,20 @@
 		
 		var message="Are you sure you would like to submit this run?";
 		//Prompt for confirmation
-		bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
-				[
-				{
-				"label" : "Okay",
-				"class" : "primary",
-				"callback": function() {
-				window.location = jsRoutes.controllers.Application.deleteRun(id).url;
-				}
-				}, {
-				"label" : "Cancel",
-				"callback": function() {
-					window.location = jsRoutes.controllers.Application.home.url;
-					}	
-				}
-				
-				]);
+			var x=confirm("Run Name = "+runName+"\n"+
+				"Run Path = "+runPath+"\n"+
+				"Platform = "+platform+"\n"+
+				"Version = "+version+"\n"+
+				"Format = "+format+"\n"+
+				"Date = "+date+"\n"+
+				"SVN = "+svn+"\n"+
+				message);
+			if (x==true){	
+				document.newRun.submit();
+			}
+			else{
+				return false;
+			}
 		return true;
 	}
 
@@ -91,6 +89,7 @@
 		/*var versionName = prompt("What is the new version?");
 
 	function addVersion(versionName){
+		var versionName = prompt("What is the new version?(Platorm [java or native] will be added automatically");
 		
 
 
@@ -124,13 +123,6 @@
 		x.selectedIndex=x.length-1; //select new version
 		return false;
 		
-	}
-	function addVersionPrompt(){
-		bootbox.prompt("What is the new version? \n (platform name [java or native] will be automatically generated)", function(versionName) {
-			//var versionName = prompt("What is the new version?");
-		addVersion(versionName);
-		});
-		return false;
 	}
 	$(function(){//for picking a date
 		$('#dp1').datepicker({
@@ -171,7 +163,7 @@
 						<option value="@key">@value</option>
 					}
 				</select>
-				<button class="btn" onclick="return addVersionPrompt()">Add new version...</button>
+				<button class="btn" onclick="return addVersion()">Add new version...</button>
 				<span class="help-inline">Required</span>
 				</div>
 			</div>
