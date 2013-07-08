@@ -68,6 +68,9 @@ public class Platform extends Model {
     public static Map<String,String> options() {
         LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
         for(Platform c: Platform.find.orderBy("name").findList()) {
+			if(c.name.contains("Unknown")){//Skip "Unknown Platform" when listing options
+				continue;
+			}
             options.put(c.id.toString(), c.name);
         }
         return options;
