@@ -41,17 +41,20 @@
         <a href="@link(0, key, filterBy)">@title</a>
     </th>
 }
-
 <<<<<<< HEAD
-@main {
-	<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+
+
 =======
+	
 @homeSkeleton {
->>>>>>> db41ae7f79bc59d32ae80a4c8f3777c2c92ce9e7
+>>>>>>> 5434f3d3729b7c516e56f865af651ab151d509fe
+
+@homeSkeleton {
+	<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
     <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
-    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
+   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
 		
     <h1 id="homeTitle">@currentPage.getTotalRowCount Runs Found</h1>
 
@@ -226,7 +229,10 @@ function deleteRun(id) {
         </div>
         
     }
+<<<<<<< HEAD
         
+=======
+>>>>>>> 5434f3d3729b7c516e56f865af651ab151d509fe
 }
 
             
