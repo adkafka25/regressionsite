@@ -3,7 +3,7 @@
 @(content: Html)
 
 
-@link( route: String ) = @{
+@linkTo( route: String ) = @{
 	if(route == "New") {
 		routes.NewRun.newRun()
 	}
@@ -15,6 +15,15 @@
 		}
 	else if(route == "Home") {
 		routes.Application.home()
+		}
+	else if(route == "Runs") {
+		routes.Application.runIndex()
+		}
+	else if(route == "Bugs") {
+		routes.Application.listBug()
+		}
+	else if(route == "Pages") {
+		routes.Application.listPage()
 		}
 	else {
 		routes.Application.home()
@@ -35,18 +44,31 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar navbar-inverse">
  <div class="navbar-inner">
-	<a class="brand" href="@link("Home") ">Regression Database</a>
+	<a class="brand" href="@linkTo("Home") ">Regression Database</a>
    <ul class = nav nav-tabs>
   	    <li class="divider-vertical"></li>
-   		<li><a href = "@link("Import") " >Import Regression Data</a></li>
+   		<li><a href = "@linkTo("Import") " >Import Regression Data</a></li>
    		<li class="divider-vertical"></li>
-   		<li><a href = "@link("New") " >New Regression Run</a></li>
+   		<li><a href = "@linkTo("New") " >New Regression Run</a></li>
    		<li class="divider-vertical"></li>
-   		<li><a href = "@link("Overview") ">Regression Testing Overview</a></li>
+   		<li><a href = "@linkTo("Overview") ">Regression Testing Overview</a></li>
    	
        
    		
    </ul>
+           <ul class="nav">
+    <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    Quick Links
+    <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+   <li><a href = "@linkTo("Runs") ">View all Runs</a></li>
+   <li><a href = "@linkTo("Pages") " >View all Pages</a></li>
+   <li><a href = "@linkTo("Bugs") " >View all Bugs</a></li>
+    </ul>
+    </li>
+    </ul>
  <form class="navbar-search pull-left" name ="filter" onsubmit ="return search()">  
    	<input type="text" id = "searchbox" class="search-query" placeholder="Search by Run Name" />  
  	

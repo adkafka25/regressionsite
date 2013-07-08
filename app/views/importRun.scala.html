@@ -10,18 +10,21 @@
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
 	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+ 	
  
 	<!-- bootbox code -->
 	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
 	<script type="text/javascript">
 	function checkForm(){
 		if (document.newRun.version_name.value == ""){
-			alert("Please select a version");
+			bootbox.alert("Please select a Version", function() {
+				});
 			return false;
 		}
 		else if ( document.newRun.format_id.value == ""){
-			alert("Please select a file format");
-			return false;
+			bootbox.alert("Please select a File Format", function() {
+			});
+		return false;
 		}
 		else{
 			return verifySubmit();
@@ -63,10 +66,11 @@
 				}
 				
 				]);
+		return true;
 	}
 	function addVersion(){
 		 bootbox.prompt("What is the new version?", function(result) {
-			if (result === null) {
+			if (result == null) {
 			return true;
 			} else {
 

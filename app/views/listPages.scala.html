@@ -36,7 +36,7 @@
 }
 
 @homeSkeleton {
-    
+    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
     <h1 id="homeTitle">@currentPage.getTotalRowCount Pages Found</h1>
 	
     @if(flash.containsKey("success")) {
