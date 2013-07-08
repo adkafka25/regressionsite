@@ -125,12 +125,16 @@ public class Bug extends Model {
 	public static int frequency(Date date, String platform) {
 		int frequency = 0;
 		List<Bug> list = getList();
+		try {
 		for (Bug bug: list) {
 			if (getDate(bug).equals(date) && getVersion(bug).getThePlatform().getPlatformName().equals(platform) ) {
 				frequency++;
 			}
 		}
-		
+		}
+		catch (NullPointerException e) {
+			
+		}
 		return frequency;
 	}
 	

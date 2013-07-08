@@ -5,7 +5,6 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
 @homeSkeleton {
-     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
 	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
@@ -68,7 +67,7 @@
 				]);
 		return true;
 	}
-
+<<<<<<< HEAD
 	function addVersion(){
 		 bootbox.prompt("What is the new version?", function(result) {
 			if (result == null) {
@@ -89,28 +88,10 @@
 			}
 			});
 		/*var versionName = prompt("What is the new version?");
-
+=======
 	function addVersion(versionName){
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		//var versionName = prompt("What is the new version?");
+>>>>>>> 5434f3d3729b7c516e56f865af651ab151d509fe
 		
 		var x=document.getElementById("version_name");
 		var option=document.createElement("option");
@@ -212,5 +193,5 @@
         </div>
         
     </form>
-    }
+    
 }

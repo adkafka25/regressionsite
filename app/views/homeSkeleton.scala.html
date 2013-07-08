@@ -34,9 +34,13 @@
 <html>
 
 <head>
+
+	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+	 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
 	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
     <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
 	<link type = "text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.css")" >
+	<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
 </head>
 <title>Regression Database</title>
 <body>
@@ -82,14 +86,15 @@
 <script>
  function search() {
 	// <input type = "submit" style="visibility: hidden" onsubmit = "search()"/>
-      var textInput = document.getElementById("searchbox").value;
-   //  alert("I am an alert box!");
-	  window.location.href = window.location = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, "name").url;
+     var textInput = document.getElementById("searchbox").value;
+    //alert("I am an alert box!");
+    //window.location.href = 'http://www.google.com';
+    window.location.href = jsRoutes.controllers.Application.listRun(0, "name","asc", "", "name").url;
 	  return false;
 }
  </script>  
   
-<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+<
 <script src="@routes.Assets.at("js/jquery.js")"></script>
 <script src="@routes.Assets.at("js/bootstrap.js")"></script>
 <script src="@routes.Assets.at("js/bootstrap-dropdown.js")"></script>
