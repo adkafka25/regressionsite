@@ -5,6 +5,7 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
 @homeSkeleton {
+     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
 	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
@@ -49,6 +50,7 @@
 		
 		var message="Are you sure you would like to submit this run?";
 		//Prompt for confirmation
+<<<<<<< HEAD
 		bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
 				[
 				{
@@ -66,8 +68,24 @@
 				
 				]);
 		return true;
+=======
+			var x=confirm("Run Name = "+runName+"\n"+
+				"Run Path = "+runPath+"\n"+
+				"Platform = "+platform+"\n"+
+				"Version = "+version+"\n"+
+				"Format = "+format+"\n"+
+				"Date = "+date+"\n"+
+				"SVN = "+svn+"\n"+
+				message);
+			if (x==true){	
+				document.newRun.submit();
+			}
+			else{
+				return false;
+			}
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
 	}
-<<<<<<< HEAD
+
 	function addVersion(){
 		 bootbox.prompt("What is the new version?", function(result) {
 			if (result == null) {
@@ -88,10 +106,32 @@
 			}
 			});
 		/*var versionName = prompt("What is the new version?");
-=======
+
 	function addVersion(versionName){
-		//var versionName = prompt("What is the new version?");
->>>>>>> 5434f3d3729b7c516e56f865af651ab151d509fe
+<<<<<<< HEAD
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
+		var versionName = prompt("What is the new version?(Platorm [java or native] will be added automatically");
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
 		
 		var x=document.getElementById("version_name");
 		var option=document.createElement("option");
@@ -105,13 +145,6 @@
 		x.selectedIndex=x.length-1; //select new version
 		return false;
 		
-	}
-	function addVersionPrompt(){
-		bootbox.prompt("What is the new version? \n (platform name [java or native] will be automatically generated)", function(versionName) {
-			//var versionName = prompt("What is the new version?");
-		addVersion(versionName);
-		});
-		return false;
 	}
 	$(function(){//for picking a date
 		$('#dp1').datepicker({
@@ -152,7 +185,7 @@
 						<option value="@key">@value</option>
 					}
 				</select>
-				<button class="btn" onclick="return addVersionPrompt()">Add new version...</button>
+				<button class="btn" onclick="return addVersion()">Add new version...</button>
 				<span class="help-inline">Required</span>
 				</div>
 			</div>
@@ -193,5 +226,5 @@
         </div>
         
     </form>
-    
+    }
 }

@@ -5,14 +5,20 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
 @homeSkeleton {
+<<<<<<< HEAD
+	 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
 	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
+=======
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
 	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
 <<<<<<< HEAD
+
+	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
+
 =======
 	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
->>>>>>> 5434f3d3729b7c516e56f865af651ab151d509fe
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
 	
 	<script type="text/javascript">
 	function checkForm(){

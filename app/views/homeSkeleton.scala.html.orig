@@ -34,11 +34,20 @@
 <html>
 
 <head>
+<<<<<<< HEAD
+
+	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+	 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
+    <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
+	<link type = "text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.css")" >
+	<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+=======
     <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
 	<link type = "text/css" rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")" >
 	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
 
-	<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
 </head>
 <title>Regression Database</title>
 <body>
@@ -86,7 +95,7 @@
      var textInput = document.getElementById("searchbox").value;
     //alert("I am an alert box!");
     //window.location.href = 'http://www.google.com';
-    window.location.href = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, "name").url;
+    window.location.href = jsRoutes.controllers.Application.listRun(0, "name","asc", "", "name").url;
 	  return false;
 }
  </script>  

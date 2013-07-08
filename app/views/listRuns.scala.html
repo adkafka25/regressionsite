@@ -66,7 +66,7 @@
 			<option value= @field.getValue >@field.getHeader</option>
 			}
 	</select>
-	 <input type="search" id="searchbox" value="@currentFilter" placeholder="Search for...">
+	 <input type="search" id="bar" value="@currentFilter" placeholder="Search for...">
 	<input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite()"/>
 
 <!-- JS dependencies -->
@@ -78,10 +78,10 @@
 <script>
 function NavigateToSite() {
 	var ddl = document.getElementById("ddlMyList");
-	var textInput = document.getElementById("searchbox").value;
+	var barInput = document.getElementById("bar").value;
 	var selectedVal = ddl.options[ddl.selectedIndex].value;
 //	window.location = selectedVal + "?f=" + textInput;
-	window.location = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, selectedVal).url;
+	window.location = jsRoutes.controllers.Application.listRun(0, "name","asc",barInput, selectedVal).url;
 	
 	
 }
