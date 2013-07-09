@@ -1,6 +1,7 @@
 package models;
 
 import java.util.*;
+
 import javax.persistence.*;
 
 import play.db.ebean.*;
@@ -238,5 +239,8 @@ public class Run extends Model {
 	public static int calculateBugs(Run run){
 		return Bug.calculateBugs(run);
 	}
-
+	public static CallData getData(List<Run> list) {
+		return new CallData(list);
+	}
+	
 }
