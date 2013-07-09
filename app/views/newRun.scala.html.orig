@@ -1,0 +1,172 @@
+@(runForm: Form[models.NewRun])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@homeSkeleton {
+<<<<<<< HEAD
+	 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")"> 
+=======
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+<<<<<<< HEAD
+
+	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
+
+=======
+	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
+	
+	<script type="text/javascript">
+	function checkForm(){
+		//Determine if any formats are checked
+		var elements = document.getElementsByClassName("format");
+		var anyChecked=false;
+		for(var i=0; i<elements.length; i++){
+			if(elements[i].checked==true){
+				anyChecked=true;
+			}
+		}
+		//Check neccesary elements
+		if (document.newRun.platform_id.value == ""){
+			alert("Please select a platform");
+			return false;
+		}
+		else if ( anyChecked==false ){
+			alert("Please select a file format");
+			return false;
+		}
+		else{
+			return verifySubmit();
+		}
+	}
+	function getSelectedValue(elementId){
+		return document.getElementById(elementId).options[document.getElementById(elementId).selectedIndex].text;
+	}
+	function getCheckedBoxes(){
+		var checked = "";
+		$("input:checkbox[name=format]:checked").each(function(){ //for each checked box....
+			checked=checked+$(this).val()+"," // add $(this).val() to your array
+		});
+		checked=checked.substring(0,checked.lastIndexOf(","));
+		//set hidden field formats to this value
+		document.getElementById("formats").value=checked;
+		
+		return checked;
+	}
+	function verifySubmit(){
+		//Get all current values at this time
+		var runName=document.newRun.name.value;
+		var selectedFormats=getCheckedBoxes();
+		var platform=getSelectedValue("platform_id");
+		var compDir=document.newRun.compDir.value;
+		var inputDir=document.newRun.inputDir.value;
+		
+		var message="Are you sure you would like to submit this run?";
+		//Prompt for confirmation
+		
+		var x=confirm("Run Name = "+runName+"\n"+
+			"Platform = "+platform+"\n"+
+			"Formats = "+selectedFormats+"\n"+
+			"Comparison Directory = "+compDir+"\n"+
+			"Input Directory = "+inputDir+"\n"+
+			message);
+		if (x==true){		
+			document.newRun.submit();
+		}
+		else{
+			return false;
+		}
+	}
+	function selectFormats(){
+		var elements = document.getElementsByClassName("format");
+		var anyChecked=false;
+		for(var i=0; i<elements.length; i++){
+			if(elements[i].checked==true){
+				anyChecked=true;
+			}
+		}
+		if(anyChecked){//uncheck all
+			for(var i=0; i<elements.length; i++){
+				elements[i].checked=false;
+			}
+		}
+		else{//check all
+			for(var i=0; i<elements.length; i++){
+				elements[i].checked=true;
+			}
+		}
+		return false;
+	}
+	</script>
+	
+	
+    <h1>Create a new Regression Test</h1>
+    
+    <form name=newRun action="@routes.NewRun.addNewRun()" method="POST" >    
+        <fieldset>
+        
+            <div class="clearfix">
+				<label for="name">Run Name</label>
+				<div class="input">
+					<input id="name" type="text" value="" name="name" required pattern="(\w|\s|\.|-)+">
+					<span class="help-inline">Required, only word characters</span>
+				</div>
+			</div>
+			
+			@select(
+                runForm("platform.id"),
+                options(Platform.options()),
+                '_label -> "Platform", '_default -> "-- Choose a Platform --",
+                '_showConstraints -> true
+            )
+			
+			
+			<div class="clearfix">
+				<label for="formats">Formats</label>
+				<div class="input">
+					<button class="btn" onClick="return selectFormats();">Select/Deselect all</button></br>
+					@for((file,index) <- FileFormat.getList.zipWithIndex){
+						<input class="format" type="checkbox" name="format" id="format_@index" value="@file.name">
+						<span>@file.name<span>
+						<br/>
+					}
+					<input type="hidden" name="formats" id="formats" value="">
+				</div>
+			</div>
+			
+			
+			<div class="clearfix">
+				<label for="compDir">Comparison Directory</label>
+				<div class="input">
+					<input id="compDir" type="text" value="" name="compDir" required>
+					<span class="help-inline">Required</br>
+					Input should be a folder name in '\\snowtest\Regression\(java|native)\'</br>
+					Ex. 13.5-Build2-AFP</span>
+				</div>
+			</div>
+			
+			<div class="clearfix">
+				<label for="inputDir">Input Directory</label>
+				<div class="input">
+					<input id="inputDir" type="text" value="" name="inputDir" required>
+					<span class="help-inline">Required</br>
+					Input should be a path to the directory of files</br>
+					Ex. D:\Geoff\RTFs</br>
+					<b>Note: D:\</b></span>
+				</div>
+			</div>
+			
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Run..." class="btn primary" onclick="return checkForm()"> or 
+            <a href="@routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+        
+    </form>
+    
+}

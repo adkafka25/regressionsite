@@ -50,6 +50,25 @@
 		
 		var message="Are you sure you would like to submit this run?";
 		//Prompt for confirmation
+<<<<<<< HEAD
+		bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
+				[
+				{
+				"label" : "Okay",
+				"class" : "primary",
+				"callback": function() {
+				window.location = jsRoutes.controllers.Application.deleteRun(id).url;
+				}
+				}, {
+				"label" : "Cancel",
+				"callback": function() {
+					window.location = jsRoutes.controllers.Application.home.url;
+					}	
+				}
+				
+				]);
+		return true;
+=======
 			var x=confirm("Run Name = "+runName+"\n"+
 				"Run Path = "+runPath+"\n"+
 				"Platform = "+platform+"\n"+
@@ -64,7 +83,7 @@
 			else{
 				return false;
 			}
-		return true;
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
 	}
 
 	function addVersion(){
@@ -89,7 +108,7 @@
 		/*var versionName = prompt("What is the new version?");
 
 	function addVersion(versionName){
-		var versionName = prompt("What is the new version?(Platorm [java or native] will be added automatically");
+<<<<<<< HEAD
 		
 
 
@@ -110,6 +129,9 @@
 
 
 
+=======
+		var versionName = prompt("What is the new version?(Platorm [java or native] will be added automatically");
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
 		
 		var x=document.getElementById("version_name");
 		var option=document.createElement("option");

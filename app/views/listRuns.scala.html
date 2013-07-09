@@ -41,13 +41,15 @@
         <a href="@link(0, key, filterBy)">@title</a>
     </th>
 }
-	
-@homeSkeleton {
 
-    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+
+
+@homeSkeleton {
+	 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+   
     <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+    
 		
     <h1 id="homeTitle">@currentPage.getTotalRowCount Runs Found</h1>
 
@@ -64,22 +66,22 @@
 			<option value= @field.getValue >@field.getHeader</option>
 			}
 	</select>
-	 <input type="search" id="searchbox" value="@currentFilter" placeholder="Search for...">
+	 <input type="search" id="bar" value="@currentFilter" placeholder="Search for...">
 	<input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite()"/>
 
 <!-- JS dependencies -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+
  
 <!-- bootbox code -->
 <script src="@routes.Assets.at("js/bootbox.min.js")"></script>
 <script>
 function NavigateToSite() {
 	var ddl = document.getElementById("ddlMyList");
-	var textInput = document.getElementById("searchbox").value;
+	var barInput = document.getElementById("bar").value;
 	var selectedVal = ddl.options[ddl.selectedIndex].value;
 //	window.location = selectedVal + "?f=" + textInput;
-	window.location = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, selectedVal).url;
+	window.location = jsRoutes.controllers.Application.listRun(0, "name","asc",barInput, selectedVal).url;
 	
 	
 }
@@ -204,6 +206,7 @@ function VerifyDelete(id){
         </div>
         
     }
+      
 }
 
             
