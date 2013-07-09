@@ -42,6 +42,7 @@ public class NewRun extends Controller{
         );
 	}
 	
+/////////////////Generating batch file
 	
 	public static Result addNewRun(){
 		Form<models.NewRun> runForm = Form.form(models.NewRun.class).bindFromRequest();//Get from info from POST
@@ -129,6 +130,7 @@ public class NewRun extends Controller{
 	}
 	
 	//List all folders available to compare with
+	//UNUSED
 	public static List<String> listCompDirs(){
 		String pathToCompDirs = "";
 		File file = new File(pathToCompDirs);
@@ -145,21 +147,32 @@ public class NewRun extends Controller{
 		
 		return validDirs;
 	}
+	
+//////////////////////Downloads
+	
+	/**
+	 * This method takes a form submission and turns it into a download request
+	 *
+	 */
+	public static Result downloadBatch(){
+		 Form<Download> downloadForm = Form.form(Download.class).bindFromRequest();//Get from info from POST
+		
+		 if(downloadForm.hasErrors()) { //doesn't do much...
+			System.out.println(downloadForm.errors());
+            return badRequest("Error downloading batch file");
+        }
+		return downloadContent(downloadForm.get().content, "RegressionRun.bat");
+	}
 	/**
 	 * This method takes a string of data encoded as a url and serves it as a downloadable file
-	 * @param encodedURL A string that is encoded in utf-8 charset
+	 * @param content Content to write to file
+	 * @param filename What the file should be named. Should be name.ext
 	 */
-	public static Result downloadContent(String encodedURL){
-		//decode the content
-		String content="Empty";
-		try {
-			content = URLDecoder.decode(encodedURL,"utf-8");
-		}catch (java.io.UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+	public static Result downloadContent(String content, String filename){
 		//create a temp file
 		try{
-			File downloadMe = File.createTempFile("Batchfile",".bat");
+			String[] name = filename.split("\\."); //Seperate as an array with . seperating fields
+			File downloadMe = File.createTempFile(name[0],"."+name[1]);
 			//insert content into temp file
 			try {
 				FileWriter fw = new FileWriter(downloadMe.getAbsoluteFile());

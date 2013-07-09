@@ -69,8 +69,7 @@ public class Application extends Controller {
 				controllers.routes.javascript.Application.home(),
 				controllers.routes.javascript.Application.importRun(),
 				controllers.routes.javascript.Application.addBugNum(),
-				controllers.routes.javascript.Application.addDiffDesc(),
-				controllers.routes.javascript.NewRun.downloadContent()
+				controllers.routes.javascript.Application.addDiffDesc()
 
 				
 			)

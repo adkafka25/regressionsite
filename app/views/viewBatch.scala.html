@@ -23,31 +23,39 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 		text=document.getElementById("code").innerHTML;
 		
 		window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+		
+		return false;
 	}
-	function downloadBatch() {
-		var content = encodeURIComponent(document.getElementById("code").innerHTML);
-		window.location=jsRoutes.controllers.NewRun.downloadContent(content).url;
+	function submitForm(){
+		//Get content
+		text=document.getElementById("code").innerHTML;
+		//set as value of input
+		document.getElementById("content").value=text;
+		//submit
+		document.download.submit;
 	}
-	$(document).ready( function(){//run on load
-		var a = document.getElementById("download");
-		a.href = 'data:application/octet-stream;charset=utf-8;filename="Batchfile.bat",' + 
-			encodeURIComponent( 
-				document.getElementById("code").innerHTML
-			);
-			
-	});
 </script>
 
 	<H1>Code for run</H1>
-	<div class="row">
-		<button class="btn" onclick="return CopyToClipboard()">Copy to Clipboard</button> or
-		<input type="submit" value="Download .Bat" class="btn primary" onclick='return downloadBatch();'> or
-		<a id="download">Download Bat</a>
-	</div>
-	</br>
-	<div class="codebox">
-		<pre id="code">
+	 <form name=download action="@routes.NewRun.downloadBatch()" method="POST" >
+	 
+        <div class="actions">
+            <button class="btn" onclick="return CopyToClipboard()">Copy to Clipboard</button> or
+			<input type="submit" value="Download .Bat" class="btn primary" onclick='return submitForm()'>
+        </div>	 
+		
+        <fieldset>
+			<div class="clearfix">
+				<div class="input codebox">
+					<input id="content" type="hidden" value="empty" name="content" required>
+					<pre id="code">
 @batchScript
-		</pre>
-	</div>
+					</pre>
+				</div>
+			</div>
+        </fieldset>
+		
+        
+    </form>
+	
 }
