@@ -35,7 +35,8 @@ POST	/saveDiffDesc				controllers.Application.addDiffDesc()
 # Deletions
 GET		/runs/delete/:runID			controllers.Application.deleteRun(runID:Long)
 
-
+# Download
+GET		/download/:content			controllers.NewRun.downloadContent(content: String)
 
 
 

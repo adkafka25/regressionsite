@@ -1,5 +1,7 @@
 @(batchScript: String)
 
+@import controllers.routes.javascript._
+
 @****************************
 * Generate Log From sting *
 ****************************@
@@ -15,17 +17,32 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 }
 
 @homeSkeleton {
+<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
 <script language="JavaScript">
-function CopyToClipboard() {
-    text=document.getElementById("code").innerHTML;
-	
-	window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
-}
+	function CopyToClipboard() {
+		text=document.getElementById("code").innerHTML;
+		
+		window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+	}
+	function downloadBatch() {
+		var content = encodeURIComponent(document.getElementById("code").innerHTML);
+		window.location=jsRoutes.controllers.NewRun.downloadContent(content).url;
+	}
+	$(document).ready( function(){//run on load
+		var a = document.getElementById("download");
+		a.href = 'data:application/octet-stream;charset=utf-8;filename="Batchfile.bat",' + 
+			encodeURIComponent( 
+				document.getElementById("code").innerHTML
+			);
+			
+	});
 </script>
 
 	<H1>Code for run</H1>
 	<div class="row">
-		<button class="btn" onclick="return CopyToClipboard()">Copy to Clipboard</button>
+		<button class="btn" onclick="return CopyToClipboard()">Copy to Clipboard</button> or
+		<input type="submit" value="Download .Bat" class="btn primary" onclick='return downloadBatch();'> or
+		<a id="download">Download Bat</a>
 	</div>
 	</br>
 	<div class="codebox">

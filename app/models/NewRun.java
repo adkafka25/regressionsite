@@ -20,7 +20,7 @@ public class NewRun extends Model {
 	public Platform platform;
 	//Format
 	@Constraints.Required
-	public String formats; //comma seperated list of formats
+	public String formats; //comma seperated list of format names
 	//Path to comparison directory
 	@Constraints.Required
 	public String compDir;

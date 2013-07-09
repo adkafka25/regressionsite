@@ -23,6 +23,13 @@ import play.db.*;
 //For regex
 import java.util.regex.*;
 
+//For converting encoded url into content
+import java.net.URLDecoder;
+
+//For writing to a file
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 
 public class NewRun extends Controller{
 	/**
@@ -137,5 +144,46 @@ public class NewRun extends Controller{
 		}
 		
 		return validDirs;
+	}
+	/**
+	 * This method takes a string of data encoded as a url and serves it as a downloadable file
+	 * @param encodedURL A string that is encoded in utf-8 charset
+	 */
+	public static Result downloadContent(String encodedURL){
+		//decode the content
+		String content="Empty";
+		try {
+			content = URLDecoder.decode(encodedURL,"utf-8");
+		}catch (java.io.UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		//create a temp file
+		try{
+			File downloadMe = File.createTempFile("Batchfile",".bat");
+			//insert content into temp file
+			try {
+				FileWriter fw = new FileWriter(downloadMe.getAbsoluteFile());
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(content);
+				bw.close();
+	 
+			} catch (java.io.IOException e) {
+				e.printStackTrace();
+			}
+			
+			//prompt to donwload temp file
+			return downloadFile(downloadMe);
+			
+		} catch (java.io.IOException e) {
+			e.printStackTrace();
+		}
+		return ok("Error creating file and inserting content into it");
+		
+	}
+	//Prompts for download of file?
+	public static Result downloadFile(File file){
+		response().setContentType("application/x-download");  
+		response().setHeader("Content-disposition","attachment; filename="+file.getName()); 
+		return ok(file);
 	}
 }
