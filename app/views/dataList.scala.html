@@ -12,7 +12,14 @@
     <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
        
-     	  <center>Runs that share @f1 and @f2</center> 
+     	  <center><h1>Runs that share @f1 and @f2</h1> </center>
+   @if(Run.dataSet(f1, f2, p1, p2).size == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {     
         
         <table class="run zebra-striped">
             <thead>
@@ -72,11 +79,13 @@
                             }
                         </td>
                     </tr>
-                
+                }
 
             </tbody>
         </table>
+     
 	<p>
+	
 	</p>
       <table class="run zebra-striped">
             <thead>
@@ -91,7 +100,7 @@
             </thead>
             <tbody>
 
-                @for(run <- Run.dataSet(f1, f2, p1, p2)) {
+              @for(run <- Run.dataSet(f1, f2, p1, p2)) {
                     <tr>
                         <td>
                             @if(run.format.name == null) {
@@ -136,12 +145,12 @@
                             }
                         </td>
                     </tr>
-                
+                }
 
             </tbody>
         </table>
-        }
         
-    }
         
+       
+    }    
 }
