@@ -36,8 +36,7 @@ POST	/saveDiffDesc				controllers.Application.addDiffDesc()
 GET		/runs/delete/:runID			controllers.Application.deleteRun(runID:Long)
 
 # Download
-GET		/download/:content			controllers.NewRun.downloadContent(content: String)
-
+POST	/download					controllers.NewRun.downloadBatch()
 
 
 # Map static resources from the /public folder to the /assets URL path
