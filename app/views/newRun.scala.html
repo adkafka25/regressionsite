@@ -10,7 +10,7 @@
 	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
 	
 	<script type="text/javascript">
-	function checkForm(){
+	function checkForm(option){//option is where to go next...
 		//Determine if any formats are checked
 		var elements = document.getElementsByClassName("format");
 		var anyChecked=false;
@@ -29,7 +29,7 @@
 			return false;
 		}
 		else{
-			return verifySubmit();
+			return verifySubmit(option);
 		}
 	}
 	function getSelectedValue(elementId){
@@ -46,7 +46,7 @@
 		
 		return checked;
 	}
-	function verifySubmit(){
+	function verifySubmit(option){
 		//Get all current values at this time
 		var runName=document.newRun.name.value;
 		var selectedFormats=getCheckedBoxes();
@@ -54,7 +54,7 @@
 		var compDir=document.newRun.compDir.value;
 		var inputDir=document.newRun.inputDir.value;
 		
-		var message="Are you sure you would like to submit this run?";
+		var message="Are you sure you would like to submit this run for "+option+"?";
 		//Prompt for confirmation
 		
 		var x=confirm("Run Name = "+runName+"\n"+
@@ -62,9 +62,21 @@
 			"Formats = "+selectedFormats+"\n"+
 			"Comparison Directory = "+compDir+"\n"+
 			"Input Directory = "+inputDir+"\n"+
+			"\n"+
 			message);
-		if (x==true){		
-			document.newRun.submit();
+		if (x==true){
+			if(option=="download"){  //Delete...
+				alert("Make this method");
+				return false;
+			}
+			else if(option=="output"){
+				document.newRun.submit();
+			}
+			else{
+				alert("Invalid option. Please choose wither output OR Download");
+				return false;
+			}
+			
 		}
 		else{
 			return false;
@@ -152,7 +164,7 @@
         </fieldset>
         
         <div class="actions">
-            <input type="submit" value="Run..." class="btn primary" onclick="return checkForm()"> or 
+            <input type="submit" value="Output .Bat" class="btn primary" onclick='return checkForm("output")'> or 
             <a href="@routes.Application.index()" class="btn">Cancel</a> 
         </div>
         

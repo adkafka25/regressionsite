@@ -23,6 +23,13 @@ import play.db.*;
 //For regex
 import java.util.regex.*;
 
+//For converting encoded url into content
+import java.net.URLDecoder;
+
+//For writing to a file
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 
 public class NewRun extends Controller{
 	/**
@@ -35,6 +42,7 @@ public class NewRun extends Controller{
         );
 	}
 	
+/////////////////Generating batch file
 	
 	public static Result addNewRun(){
 		Form<models.NewRun> runForm = Form.form(models.NewRun.class).bindFromRequest();//Get from info from POST
@@ -122,6 +130,7 @@ public class NewRun extends Controller{
 	}
 	
 	//List all folders available to compare with
+	//UNUSED
 	public static List<String> listCompDirs(){
 		String pathToCompDirs = "";
 		File file = new File(pathToCompDirs);
@@ -137,5 +146,57 @@ public class NewRun extends Controller{
 		}
 		
 		return validDirs;
+	}
+	
+//////////////////////Downloads
+	
+	/**
+	 * This method takes a form submission and turns it into a download request
+	 *
+	 */
+	public static Result downloadBatch(){
+		 Form<Download> downloadForm = Form.form(Download.class).bindFromRequest();//Get from info from POST
+		
+		 if(downloadForm.hasErrors()) { //doesn't do much...
+			System.out.println(downloadForm.errors());
+            return badRequest("Error downloading batch file");
+        }
+		return downloadContent(downloadForm.get().content, "RegressionRun.bat");
+	}
+	/**
+	 * This method takes a string of data encoded as a url and serves it as a downloadable file
+	 * @param content Content to write to file
+	 * @param filename What the file should be named. Should be name.ext
+	 */
+	public static Result downloadContent(String content, String filename){
+		//create a temp file
+		try{
+			String[] name = filename.split("\\."); //Seperate as an array with . seperating fields
+			File downloadMe = File.createTempFile(name[0],"."+name[1]);
+			//insert content into temp file
+			try {
+				FileWriter fw = new FileWriter(downloadMe.getAbsoluteFile());
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(content);
+				bw.close();
+	 
+			} catch (java.io.IOException e) {
+				e.printStackTrace();
+			}
+			
+			//prompt to donwload temp file
+			return downloadFile(downloadMe);
+			
+		} catch (java.io.IOException e) {
+			e.printStackTrace();
+		}
+		return ok("Error creating file and inserting content into it");
+		
+	}
+	//Prompts for download of file?
+	public static Result downloadFile(File file){
+		response().setContentType("application/x-download");  
+		response().setHeader("Content-disposition","attachment; filename="+file.getName()); 
+		return ok(file);
 	}
 }
