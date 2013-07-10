@@ -165,11 +165,11 @@ public class Bug extends Model {
 	 * @param run Which run to calculate
 	 * @return Number of bugs in run
 	 */
-	public static int calculateBugs(Run run){
+	public static Set<Bug> listBugs(Run run){
 		Set<Bug> bugSet = find.where() //create a list of pagetobug with only pages from this run
 			.eq("pagesoutbug.run.id", run.id) //make sure page is from run
 			.findSet();
-		return bugSet.size();
+		return bugSet;
 	}
 	
 	/**

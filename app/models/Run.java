@@ -237,10 +237,25 @@ public class Run extends Model {
 	 * @return Number of bugs from that run
 	 */
 	public static int calculateBugs(Run run){
-		return Bug.calculateBugs(run);
+		return Bug.listBugs(run).size();
 	}
 	public static CallData getData(List<Run> list) {
 		return new CallData(list);
+	}
+	
+	/**
+	 * This method calculates if a given date occurs in any current runs in the DB
+	 */
+	public static boolean dateOccurs(Date date){
+		int occurences=find.where()
+				.eq("date",date)
+				.findRowCount();
+		if(occurences>0){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 }

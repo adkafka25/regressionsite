@@ -112,31 +112,31 @@
                             }
                         </td>
 						<td>
-                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))) == null) {
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))) == 0) {
                                 <em>-</em>
                             } else {
                                 @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))))
                             }
                         </td>
                         <td>
-                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))) == null) {
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))) == 0) {
                                 <em>-</em>
                             } else {
                                 @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))))
                             }
                         </td>
 						<td>
-                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))) == null) {
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))) == 0) {
                                 <em>-</em>
                             } else {
                                 @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))))
                             }
                         </td>
 						<td>
-                            @if(Bug.calculateBugs(run) == null) {
+                            @if(Run.calculateBugs(run) == 0) {
                                 <em>-</em>
                             } else {
-                                @(Bug.calculateBugs(run))
+                                @(Run.calculateBugs(run))
                             }
                         </td>
 						<td>

@@ -265,6 +265,19 @@ public class PageOut extends Model {
 	}
 	
 	/**
+	 * This method returns how many pages were NOT DECOMPRESSED in a given run
+	 * @param runID Id of run to get how many pages were not decompressed
+	 * @return int How many pages did not decompress
+	 */
+	public static int getPagesNotDecompressed(long runID){
+		return
+			find.where()
+				.eq("run.id", runID)
+				.isNotNull("error")
+				.findRowCount();
+	}
+	
+	/**
 	 * This method returns a string that is a comma seperated list of all files with given difference from given run
 	 * @param runID The ID of the run to check
 	 * @param difference The difference to check
@@ -281,4 +294,6 @@ public class PageOut extends Model {
 		}
 		return listPages.substring(0,(listPages.lastIndexOf(",")));
 	}
+	
+	
 }

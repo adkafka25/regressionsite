@@ -103,7 +103,7 @@ padding-left:50px;
   
   	<select id="date" name="#date" onchange= "buttonSel('date', 'dSelect')">
            <option value="Choose from Dates">Choose from dates</option>
-           @for(da <- models.Date.getList) {
+           @for(da <- models.Date.getListUsed) {
            <option value=@da.getDateName  class = @da.getDateName>@da.getDateName</option>
            }
       </select>

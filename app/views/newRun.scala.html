@@ -107,31 +107,74 @@
 		}
 	}
 	function selectFormats(){
-		var elements = document.getElementsByClassName("format");
+		var formats = document.getElementsByClassName("format");
+		var defaults = document.getElementsByClassName("defaults");
 		var anyChecked=false;
-		for(var i=0; i<elements.length; i++){
-			if(elements[i].checked==true){
+		//Check if any are checked
+		for(var i=0; i<formats.length; i++){
+			if(formats[i].checked==true){
 				anyChecked=true;
 			}
 		}
 		if(anyChecked){//uncheck all
-			for(var i=0; i<elements.length; i++){
-				elements[i].checked=false;
+			for(var i=0; i<formats.length; i++){
+				formats[i].checked=false;
+				$('#' + defaults[i].id).toggle(false);
 			}
 		}
 		else{//check all
-			for(var i=0; i<elements.length; i++){
-				elements[i].checked=true;
+			for(var i=0; i<formats.length; i++){
+				formats[i].checked=true;
+				$('#' + defaults[i].id).toggle(true);
 			}
 		}
 		return false;
 	}
+	//For making visibility toggle
+	//If format is selected/unselected
+	$(function () {
+		$('.format').change(function () {
+			//div id for corresponding default checkbox
+			var divId="inputDir_"+this.value;
+			//id of default check box
+			var checkId="dirBool_"+this.value;
+			//div id for corresponding path prompt
+			var divIdPrompt="dirPrompt_"+this.value;
+			//If using format
+			if(this.checked){
+				if($('#' + checkId).is(':checked')){//default is checked
+					//make prompt invisible
+					$('#' + divIdPrompt).toggle(false);
+				}
+				else{
+					//make prompt visible
+					$('#' + divIdPrompt).toggle(true);
+				}
+			}
+			//Hide input prompt if not using this format
+			else{
+				$('#' + divId).toggle(false);
+				$('#' + divIdPrompt).toggle(false);
+			}
+			//toggle default input checkbox
+			$('#' + divId).toggle(this.checked);
+		}).change(); //ensure visible state matches initially
+	});
+	//If default is selected/unselected
+	$(function () {
+		$('.defaultDirBool').change(function () {
+			//div id for corresponding path prompt
+			var divId="dirPrompt_"+this.value;
+			//Toggle prompt div visibility
+			$('#' + divId).toggle(!this.checked);
+		}).change(); //ensure visible state matches initially
+	});
 	</script>
 	
 	
     <h1>Create a new Regression Test</h1>
     
-    <form name=newRun action="@routes.NewRun.addNewRun()" method="POST" >    
+    <form name="newRun" action="@routes.NewRun.addNewRun()" method="POST" >    
         <fieldset>
         
             <div class="clearfix">
@@ -165,12 +208,17 @@
 				</div>
 				@for((file,index) <- FileFormat.getList.zipWithIndex){
 					<div class="row">
-						<div class="input span4">
+						<div class="input span3">
 								<input class="format" type="checkbox" name="format" id="format_@index" value="@file.name">
 								<span>@file.name<span>
 								<br/>
 						</div>
-						<div class="clearfix span6">
+						<div class="span4 defaults" id="inputDir_@file.name">
+								<input class="defaultDirBool" type="checkbox" checked="true" name="defaultDirBool" id="dirBool_@file.name" value="@file.name">
+								<span>Use default input directory?</span>
+								<br/>
+						</div>
+						<div class="clearfix span6" id="dirPrompt_@file.name"> @* change none to block to make visible*@
 							<label for="inputDir">Input Directory</label>
 							<div class="input">
 								<input id="inputDir-@file.name" type="text" value="@file.defInputDir" name="inputDir" required>

@@ -53,7 +53,7 @@ public class CallData {
 	public int getBugs(List <Run> data) {
 		int bugs = 0;
 		for( Run run: data) {
-			bugs += Bug.calculateBugs(run);
+			bugs += Run.calculateBugs(run);
 		}
 		return bugs;
 		
