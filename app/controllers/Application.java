@@ -62,6 +62,7 @@ public class Application extends Controller {
 				controllers.routes.javascript.Application.dataList(),
 				controllers.routes.javascript.Application.getData(),
 				controllers.routes.javascript.Application.runIndex(),
+				controllers.routes.javascript.Application.listPageByRun(),
 				controllers.routes.javascript.Application.listRun(),
 				controllers.routes.javascript.Application.listBug(),
 				controllers.routes.javascript.Application.listPage(),

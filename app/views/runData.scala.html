@@ -7,9 +7,10 @@
 }
 
 @homeSkeleton {
-    
-    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
-    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
+    <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/buttons.less")"> 
+   
+    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+    <script src="@routes.Assets.at("js/bootstrap-button")"></script>		
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         
         <center><h1>Info Regarding Run ID: @id</h1> </center>
@@ -140,10 +141,42 @@
 
             </tbody>
         </table>
-        }
         
+        <center>
+        
+    		<button class="btn primary" onclick="NavigateToSite('@run.format.name', 'format.name' )">Runs with same format</button>
+    		<button class="btn primary" onclick="NavigateToSite('@run.version.name of @run.version.platform.name', 'version' )">Runs with same version</button>
+    		<button class="btn primary"onclick= "NavigateToSite('@run.date.name', 'date.name' )">Runs with same date </button>
+    	 	<button class="btn primary"onclick= "return NavigateToSite('@run.id', 'pages' )">Pages with this run </button>
+   	 </center>
+   <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>  
+    <script>
+    function HtmlEncode(s)
+    {
+      var el = document.createElement("div");
+      el.innerText = el.textContent = s;
+      s = el.innerHTML;
+      return s;
     }
-        
+    function NavigateToSite(input , direction) {
+		
+		if (direction == 'pages') {
+	    	window.location = jsRoutes.controllers.Application.listPageByRun(0,"name","asc",input, "").url;
+		}
+		else {
+			dir = HtmlEncode(direction);  
+			window.location = jsRoutes.controllers.Application.listRun(0, "name", "asc", input,dir).url;
+		} 
+		return false;
+        }
+	</script>
+            
+    }
+    
+    
+	
+}
+    
 }
 
             
