@@ -54,18 +54,26 @@ public class NewRun extends Controller{
         }
 		
 		String[] fileFormats = runForm.get().formats.split(",");
+		String[] inputDirs = runForm.get().inputDirs.split(",");
+		
+		//Data verification. Same number of formats as dirs
+		if(fileFormats.length != inputDirs.length){
+			return badRequest("Mismatch between formats and input directories");
+		}
 		
 		String commands="";
 		
 		//If multiple fileFormats....
+		int index=0;//index of for loop
 		for(String format : fileFormats){
 			commands += generateCommand(
 				Platform.getByID(runForm.get().platform.id).name,
 				runForm.get().name,
 				runForm.get().compDir,
-				runForm.get().inputDir,
+				inputDirs[index],
 				FileFormat.getByName(format).name
 			);
+			index++;
 		}
 		
 		return ok(
@@ -97,7 +105,7 @@ public class NewRun extends Controller{
 			"\n"+
 			"call ant all -Dtype="+Dtype.toLowerCase()+" -Dname="+Dname+"-"+format+" -Dref="+Dref+" -Dinput.dir="+Dinputdir+
 			"\n"+
-			"rmdir D:\\\\Regression\\\\java\\\\Trunk\\\\"+Dname+
+			"rmdir D:\\\\Regression\\\\java\\\\Trunk\\\\"+Dname+"-APITestS /Q"+
 			"\n";
 	}
 	/** This method takes a string command and enters it into the batch file template

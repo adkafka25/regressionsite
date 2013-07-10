@@ -25,6 +25,9 @@ public class FileFormat extends Model {
     @Constraints.Required
     public String name;
     
+	@Column(name="Default_Input_Dir")
+	public String defInputDir;
+	
     /**
      * Generic query helper for entity Computer with id Long
      */

@@ -40,11 +40,25 @@
 		$("input:checkbox[name=format]:checked").each(function(){ //for each checked box....
 			checked=checked+$(this).val()+"," // add $(this).val() to your array
 		});
+		//Get rid of last ","
 		checked=checked.substring(0,checked.lastIndexOf(","));
 		//set hidden field formats to this value
 		document.getElementById("formats").value=checked;
 		
 		return checked;
+	}
+	function getInputDirs(checkedFormats){//Input is a comma seperated list of formats
+		var formats = checkedFormats.split(",");
+		var inputDirs = "";
+		//Add each input dir for every checked format
+		for(var i =0; i<formats.length; i++){
+			inputDirs+=document.getElementById("inputDir-"+formats[i]).value+",";
+		}
+		//Get rid of last ","
+		inputDirs=inputDirs.substring(0,inputDirs.lastIndexOf(","));
+		//set hidden field formats to this value
+		document.getElementById("inputDirs").value=inputDirs;
+		return inputDirs;
 	}
 	function verifySubmit(option){
 		//Get all current values at this time
@@ -52,18 +66,28 @@
 		var selectedFormats=getCheckedBoxes();
 		var platform=getSelectedValue("platform_id");
 		var compDir=document.newRun.compDir.value;
-		var inputDir=document.newRun.inputDir.value;
+		var inputDirs=getInputDirs(selectedFormats);
 		
 		var message="Are you sure you would like to submit this run for "+option+"?";
 		//Prompt for confirmation
 		
+		//Prepare message
+		var formats = selectedFormats.split(",");
+		var dirs = inputDirs.split(",");
+		var listInfo=""
+		for(var i = 0; i<formats.length; i++){
+			listInfo=listInfo+"\t"+formats[i]+" -> "+dirs[i]+"\n";
+		}
 		var x=confirm("Run Name = "+runName+"\n"+
 			"Platform = "+platform+"\n"+
-			"Formats = "+selectedFormats+"\n"+
 			"Comparison Directory = "+compDir+"\n"+
-			"Input Directory = "+inputDir+"\n"+
+			"Formats & Input Directories = \n"+
+			listInfo+
 			"\n"+
-			message);
+			message
+			);
+		
+		
 		if (x==true){
 			if(option=="download"){  //Delete...
 				alert("Make this method");
@@ -125,18 +149,37 @@
                 '_showConstraints -> true
             )
 			
-			
 			<div class="clearfix">
-				<label for="formats">Formats</label>
-				<div class="input">
-					<button class="btn" onClick="return selectFormats();">Select/Deselect all</button></br>
-					@for((file,index) <- FileFormat.getList.zipWithIndex){
-						<input class="format" type="checkbox" name="format" id="format_@index" value="@file.name">
-						<span>@file.name<span>
-						<br/>
-					}
-					<input type="hidden" name="formats" id="formats" value="">
+				<div class="row">
+					<div class="span3">
+						<label for="formats">Formats </label>
+					</div>
+					<div class="span4">
+						<button class="btn" onClick="return selectFormats();">Select/Deselect all</button></br>
+					</div>
+					<div class="span5">
+						<span class="help-inline">Input should be a path to the directory of files</br>
+									Ex. D:\Geoff\RTFs</br>
+						<b>Note: D:\</b></span>
+					</div>
 				</div>
+				@for((file,index) <- FileFormat.getList.zipWithIndex){
+					<div class="row">
+						<div class="input span4">
+								<input class="format" type="checkbox" name="format" id="format_@index" value="@file.name">
+								<span>@file.name<span>
+								<br/>
+						</div>
+						<div class="clearfix span6">
+							<label for="inputDir">Input Directory</label>
+							<div class="input">
+								<input id="inputDir-@file.name" type="text" value="@file.defInputDir" name="inputDir" required>
+							</div>
+						</div>
+					</div>
+				}
+				<input type="hidden" name="formats" id="formats" value="">
+				<input type="hidden" name="inputDirs" id="inputDirs" value="">
 			</div>
 			
 			
@@ -147,17 +190,6 @@
 					<span class="help-inline">Required</br>
 					Input should be a folder name in '\\snowtest\Regression\(java|native)\'</br>
 					Ex. 13.5-Build2-AFP</span>
-				</div>
-			</div>
-			
-			<div class="clearfix">
-				<label for="inputDir">Input Directory</label>
-				<div class="input">
-					<input id="inputDir" type="text" value="" name="inputDir" required>
-					<span class="help-inline">Required</br>
-					Input should be a path to the directory of files</br>
-					Ex. D:\Geoff\RTFs</br>
-					<b>Note: D:\</b></span>
 				</div>
 			</div>
 			
