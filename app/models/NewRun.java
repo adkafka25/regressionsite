@@ -26,7 +26,7 @@ public class NewRun extends Model {
 	public String compDir;
 	//Path to input directory
 	@Constraints.Required
-	public String inputDir;
+	public String inputDirs; //comma seperated list corresponding to each format (1:1)
 	
 
 }
