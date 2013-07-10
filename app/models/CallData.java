@@ -53,7 +53,7 @@ public class CallData {
 	public int getBugs(List <Run> data) {
 		int bugs = 0;
 		for( Run run: data) {
-			bugs += (Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))));
+			bugs += Bug.calculateBugs(run);
 		}
 		return bugs;
 		

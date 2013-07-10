@@ -47,13 +47,13 @@ padding-left:50px;
    <h1>Regression Testing Overview</h1>
    <p class="padding"></p>
    <body>
-      <select id="platform" name="#platform">
+      <select id="platform" name="#platform" onchange= "change('platform','format', 'pf')">
            <option value="Please select Platform">Please select Platform</option>
 			@for(plat <- Platform.getList) {
            <option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
            }
       </select>
-      <select id="format" name="#format">
+      <select id="format" name="#format" onchange= "change('platform','format', 'pf')"> 
            <option value="Please select Format">Please select Format</option>
            @for(form <- FileFormat.getList) {
            <option value=@form.getFileFormatName  class =@form.getFileFormatName>@form.getFileFormatName</option>
@@ -67,7 +67,7 @@ padding-left:50px;
            <option value="">All Runs</option> 
            
       </select>
-      <input type = "button" value= "Search" class="btn primary" 
+      <input type = "button" id = "pf" value= "Search" class="btn primary" disabled
       	onclick = "NavigateToSite('platform','format','version.platform.name', 'format.name','run')"/>
        
       <p>
@@ -75,33 +75,33 @@ padding-left:50px;
       OR
       </p>
        
-       <select id="platform2" name="#platform2">
+       <select id="platform2" name="#platform2" onchange= "buttonSel('platform2', 'pv')"> 
            <option value="Please select Platform">Please select Platform</option>
 			@for(plat <- Platform.getList) {
            <option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
            }
       </select>
-      <select id="version2" name="#version2">
+      <select id="version2" name="#version2" onchange= "buttonSel('version2', 'pv')">
            <option value="">Please select Version</option>
            @for(vers <- Version.getList) {
            <option value=@vers.getVersionName  class = @vers.getThePlatform.getPlatformName>@vers.getVersionName</option>
            }
       </select>
-      <select id="run2" name="#run2">
+      <select id="run2" name="#run2" >
            
            @for(run <- Run.getList) {
            <option value=@run.getRunID   class = @run.version.getVersionName>@run.getRunName</option>
            }
            <option value="">All Runs</option> 
       </select>
-      <input type = "button" value= "Search" class="btn primary"
+      <input type = "button" id = "pv" value= "Search" class="btn primary" 
        onclick = "NavigateToSite('platform2','version2','version.platform.name', 'version.name','run2')"/>
       
      <p>
      OR
       </p>  
   
-  	<select id="date" name="#date">
+  	<select id="date" name="#date" onchange= "buttonSel('date', 'dSelect')">
            <option value="Choose from Dates">Choose from dates</option>
            @for(da <- models.Date.getList) {
            <option value=@da.getDateName  class = @da.getDateName>@da.getDateName</option>
@@ -114,7 +114,7 @@ padding-left:50px;
            }
            <option value="">All Runs</option> 
       </select>
-      <input type = "button" value= "Search" class="btn primary" 
+      <input type = "button" id = "dSelect" value= "Search" class="btn primary" 
       onclick = "NavigateToSite('','','','','run3')"/>
  <p>
       </p>
@@ -145,6 +145,21 @@ function NavigateToSite(list1,list2,p1,p2,id) {
 	
 	
 }
+ 
+ function buttonSel(doc1, doc2) {
+ 	if (document.getElementById(doc1).selectedIndex == 0)
+ 		document.getElementById(doc2).disabled = true;
+ 	else
+ 	document.getElementById(doc2).disabled = false;
+ 	}
+ function change(doc1, doc2, doc3) {
+	 	if (document.getElementById(doc1).selectedIndex == 0 || document.getElementById(doc2).selectedIndex == 0)
+	 		document.getElementById(doc3).disabled = true;
+	 	else
+	 	document.getElementById(doc3).disabled = false;
+	 	}
+ 
+ 
 </script>
   
  
