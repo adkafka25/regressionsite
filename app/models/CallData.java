@@ -9,15 +9,22 @@ import java.util.List;
  *
  */
 public class CallData {
-	public int better, worse, neutral, bugs;
+	public int better, worse, neutral, bugs, size;
+	
 	public CallData(List <Run> data) {
+		size = data.size();
 		better = getBetter(data);
 		worse = getWorse(data);
 		neutral = getNeutral(data);
 		bugs = getBugs(data);
 	}
 	
-	
+	public static double divide( int num, int denom) {
+		double numerator = (double) num;
+		double demoninator = (double) denom; // misspelled denominator, but I thought this was funny enough
+		return numerator/demoninator;
+		
+	}
 	
 	public int getBetter(List <Run> data) {
 		int better = 0;
