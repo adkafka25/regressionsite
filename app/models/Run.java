@@ -237,7 +237,7 @@ public class Run extends Model {
 	 * @return Number of bugs from that run
 	 */
 	public static int calculateBugs(Run run){
-		return Bug.calculateBugs(run);
+		return Bug.listBugs(run).size();
 	}
 	public static CallData getData(List<Run> list) {
 		return new CallData(list);
