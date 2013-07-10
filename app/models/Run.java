@@ -243,4 +243,19 @@ public class Run extends Model {
 		return new CallData(list);
 	}
 	
+	/**
+	 * This method calculates if a given date occurs in any current runs in the DB
+	 */
+	public static boolean dateOccurs(Date date){
+		int occurences=find.where()
+				.eq("date",date)
+				.findRowCount();
+		if(occurences>0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
 }

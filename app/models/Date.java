@@ -51,6 +51,25 @@ public class Date extends Model {
     public static List<Date> getList() {
     	return find.all();
     }
+	
+	/**
+	 * This method returns a list of dates with runs in the DB
+	 */
+	public static List<Date> getListUsed(){
+		List<Date> usedDates = find.where()
+			.orderBy("name asc")
+			.findList();
+		Iterator<Date> i = usedDates.iterator();
+		while (i.hasNext()) {
+			Date date = i.next(); // must be called before you can call i.remove()
+			if(!Run.dateOccurs(date)){//Date is not in any runs in DB
+				//remove from list
+				i.remove();
+			}
+		}
+		return usedDates;
+	}
+	
     /**
      * returns name, which is essentially the date.
      * @return date.
