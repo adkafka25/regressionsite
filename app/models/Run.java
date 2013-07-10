@@ -239,6 +239,11 @@ public class Run extends Model {
 	public static int calculateBugs(Run run){
 		return Bug.listBugs(run).size();
 	}
+	/**
+	 * Used to create an object which contains data about a list of runs
+	 * @param list the list used to populate the information in call data
+	 * @return the calldata object which has information about a list of runs
+	 */
 	public static CallData getData(List<Run> list) {
 		return new CallData(list);
 	}

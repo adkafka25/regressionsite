@@ -141,31 +141,90 @@
 
             </tbody>
         </table>
+       <table class="Bug zebra-striped">
+       		<center><h1>Bugs in Run ID: @id</h1> </center>
+            <thead>
+                <tr>
+                    @header("number", "Bug Number")
+					@header("bugstatus.name", "Bug Status")
+					@header("difference.name", "Difference Desc") 
+					@header("pagesoutbug.run.format.name", "Format")
+					@header("pagesoutbug.run.version.name", "Version")
+					@header("pagesoutbug.run.date.name", "Date Appeared")					
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(bug <- Bug.listBugs(run)) {
+                    <tr>
+                        <td>@bug.number</td>
+						<td>
+                            @if(bug.bugstatus == null) {
+                                <em>-</em>
+                            } else {
+                                @bug.bugstatus.name
+                            }
+                        </td>
+						<td>
+							@for(difference <- Bug.getDifferences(bug)) {
+								@if(difference.difftype.name == "Worse") {
+									<font color="red">&bull; <i>@difference.name</i></font>  
+								} else {
+									@if(difference.difftype.name == "Better") {
+										<font color="green">&bull; <i>@difference.name</i></font>
+									} else {
+										<font color="black">&bull; <i>@difference.name</i></font>
+									}
+								}
+								
+								</br>
+							}
+                        </td>
+						<td>
+							@if(Bug.getFileFormat(bug) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getFileFormat(bug).name
+							}
+                        </td>
+						<td>
+							@if(Bug.getVersion(bug) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getVersion(bug).name
+							}
+                        </td>
+						<td>
+							@if(Bug.getDate(bug) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getDate(bug).name.format("dd MMM yyyy")
+							}
+                        </td>
+                    </tr>
+					
+                }
+
+            </tbody>
+        </table>
         
         <center>
         
     		<button class="btn primary" onclick="NavigateToSite('@run.format.name', 'format.name' )">Runs with same format</button>
-    		<button class="btn primary" onclick="NavigateToSite('@run.version.name of @run.version.platform.name', 'version' )">Runs with same version</button>
+    		<button class="btn primary" onclick="NavigateToSite('@run.version.name', 'version.name' )">Runs with same version</button>
     		<button class="btn primary"onclick= "NavigateToSite('@run.date.name', 'date.name' )">Runs with same date </button>
-    	 	<button class="btn primary"onclick= "return NavigateToSite('@run.id', 'pages' )">Pages with this run </button>
+    	 	<button class="btn primary"onclick= "return NavigateToSite('@run.id', 'pages' )">Pages From this run </button>
    	 </center>
    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>  
     <script>
-    function HtmlEncode(s)
-    {
-      var el = document.createElement("div");
-      el.innerText = el.textContent = s;
-      s = el.innerHTML;
-      return s;
-    }
+   
     function NavigateToSite(input , direction) {
 		
 		if (direction == 'pages') {
 	    	window.location = jsRoutes.controllers.Application.listPageByRun(0,"name","asc",input, "").url;
 		}
-		else {
-			dir = HtmlEncode(direction);  
-			window.location = jsRoutes.controllers.Application.listRun(0, "name", "asc", input,dir).url;
+		else {	
+			window.location = jsRoutes.controllers.Application.listRun(0, "name", "asc", input, direction).url;
 		} 
 		return false;
         }
