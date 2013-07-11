@@ -94,11 +94,28 @@ public class PageOut extends Model {
 	 * @param page The page to fin differences of
 	 * @return Returns list of differences
 	 */
-	public static List<PageOut> listPageFromBug(Bug bug){
+	public static List<PageOut> listPagesFromBug(Bug bug){
 		return
 			find.where()
 				.eq("bug.number",bug.number)
 				.findList();
+	}
+	
+	/**
+	 * This method takes a list of pages and returns a list of runs associated with that page
+	 * @param pages List of pages to test for
+	 * @return List of runs associated with thos pages
+	 */
+	public static List<Run> listRunsFromPages(List<PageOut> pages){
+		List<Run> runs = new ArrayList();
+		for(PageOut page : pages){
+			//if runs doesnt this run...
+			if(!runs.contains(page.run)){
+				//add it to run
+				runs.add(page.run);
+			}
+		}
+		return runs;
 	}
 	
 	/**
@@ -108,7 +125,7 @@ public class PageOut extends Model {
 	 * @return Returns list of differences
 	 */
 	public static PageOut pageFromBug( Bug bug ){
-		List<PageOut> listPages = listPageFromBug(bug);
+		List<PageOut> listPages = listPagesFromBug(bug);
 		if(listPages.size()>0){
 			return listPages.get(0);
 		}

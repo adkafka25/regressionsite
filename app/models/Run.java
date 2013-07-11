@@ -60,12 +60,6 @@ public class Run extends Model {
 	@Transient
 	public String path;
 	
-	//Path to comparison directory
-	@Transient
-	public String compDir;
-	//Path to input directory
-	@Transient
-	public String inputDir;
 	
 	/**
      * Generic query helper for entity Run with id Long
@@ -261,6 +255,15 @@ public class Run extends Model {
 		else{
 			return false;
 		}
+	}
+	
+	/**
+	 * This method returns a list of Runs asscoiated with the given bug
+	 * @param bug The bug to list associated runs
+	 * @return list of runs
+	 */
+	public static List<Run> listRunsFromBug(Bug bug){
+		return PageOut.listRunsFromPages(PageOut.listPagesFromBug(bug));
 	}
 	
 }
