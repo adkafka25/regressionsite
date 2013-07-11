@@ -25,7 +25,10 @@
     routes.Application.listBug(newPage, sortBy, order, currentFilter)
     
 }
+@linkByBug(bugID:Long) = @{
+routes.Application.bugData(bugID);
 
+}
 
 
 @**********************************
@@ -85,7 +88,9 @@
 
                 @for(bug <- currentPage.getList) {
                     <tr>
-                        <td>@bug.number</td>
+                        <td><a href="@linkByBug(bug.id)" title="View all Bug Information from @bug.id">@bug.number</a> 
+							
+						</td>
 						<td>
                             @if(bug.bugstatus == null) {
                                 <em>-</em>

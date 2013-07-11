@@ -136,7 +136,7 @@ function VerifyDelete(id){
 
                 @for(run <- currentPage.getList) {
                     <tr>
-                        <td><a href="@linkByRun(run.id)" title="View all pages from Run @run.name">@run.name</a> 
+                        <td><a href="@linkByRun(run.id)" title="View all Run Information from @run.name">@run.name</a> 
 							<span style="float: right"><img onclick="VerifyDelete(@run.id)" src="@routes.Assets.at("images/delete.png")" alt="Delete"></span>
 						</td>
 						<td>

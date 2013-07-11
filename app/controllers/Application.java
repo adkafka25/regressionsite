@@ -210,6 +210,18 @@ public static String createData(){
 		
 		);
 	}
+	/**
+	 * This function creates the form for loading data from a 
+	 * specific bug.
+	 * @return the page bugData.
+	 */
+	public static Result bugData(long id) {
+		Form<Bug> data = Form.form(Bug.class);
+		return ok(
+			bugData.render(id, data)
+		
+		);
+	}
    public static Result dataList(String filter1, String filter2, String param1, String param2) {
 		Form<Run> data = Form.form(Run.class);
 		return ok(
@@ -232,7 +244,7 @@ public static String createData(){
 	}
 	
 	/**
-	 * Handle sumbitting bug number manually
+	 * Handle submitting bug number manually
 	 */
 	public static Result addBugNum (){
 		Form<Bug> bugForm = Form.form(Bug.class).bindFromRequest();//Get from info from POST
@@ -244,7 +256,7 @@ public static String createData(){
 	}
 	
 	/**
-	 * Handle sumbitting difference description manually
+	 * Handle submitting difference description manually
 	 */
 	public static Result addDiffDesc (){
 		Form<Difference> diffForm = Form.form(Difference.class).bindFromRequest();//Get from info from POST

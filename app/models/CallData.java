@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 public class CallData {
-	public int better, worse, neutral, bugs, size;
+	public int better, worse, neutral, bugs, size, notDecompressed;
 	
 	public CallData(List <Run> data) {
 		size = data.size();
@@ -17,6 +17,7 @@ public class CallData {
 		worse = getWorse(data);
 		neutral = getNeutral(data);
 		bugs = getBugs(data);
+		notDecompressed = getDecompressed(data);
 	}
 	
 	public static double divide( int num, int denom) {
@@ -56,6 +57,14 @@ public class CallData {
 			bugs += Run.calculateBugs(run);
 		}
 		return bugs;
+		
+	}
+	public int getDecompressed(List <Run> data) {
+		int notDecompressed = 0;
+		for( Run run: data) {
+			notDecompressed += PageOut.getPagesNotDecompressed(run.id);
+		}
+		return notDecompressed;
 		
 	}
 }

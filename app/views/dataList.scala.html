@@ -140,11 +140,9 @@
                             }
                         </td>
 						<td>
-                            @if(run.performance == null) {
-                                <em>Not Applicable</em>
-                            } else {
-                               Not Applicable
-                            }
+                           
+                               @PageOut.getPagesNotDecompressed(run.id)
+                            
                         </td>
                     </tr>
                 }
@@ -152,6 +150,7 @@
             </tbody>
         </table>
       @if(Run.dataSet(f1, f2, p1, p2).size >= 2) {
+     
         <p>
 	
 		</p>
@@ -187,7 +186,7 @@
                                 @Run.getData(Run.dataSet(f1, f2, p1, p2)).bugs           
                         </td>
 						<td>
-                                Not Applicable
+                             
                         </td>
                     </tr>
               	  
@@ -227,7 +226,7 @@
                                 @(CallData.divide(Run.getData(Run.dataSet(f1, f2, p1, p2)).bugs, Run.dataSet(f1, f2, p1, p2).size)) 
                         </td>
 						<td>
-                                Not Applicable
+                                @(CallData.divide(Run.getData(Run.dataSet(f1, f2, p1, p2)).notDecompressed, Run.dataSet(f1, f2, p1, p2).size))
                         </td>
                     </tr>
               	  
