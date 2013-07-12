@@ -18,6 +18,8 @@ GET 	/overview					controllers.Application.overview
 GET		/runData/:id				controllers.Application.getData(id:Long)
 GET		/dataList/:filter1/:filter2/:param1/:param2					controllers.Application.dataList(filter1: String , filter2: String, param1: String , param2: String )
 GET		/bugData/:id					controllers.Application.bugData(id:Long)
+GET		/recentRuns/:filter1/:filter2/:param1/:param2/:days			controllers.Application.recentRuns(filter1: String , filter2: String, param1: String , param2: String, days:Int )
+
 
 # page by run
 GET		/pagesbyrun/:id				controllers.Application.listPageByRun(p:Int ?= 0, s ?= "name", o ?= "asc", id:Long, f ?="")

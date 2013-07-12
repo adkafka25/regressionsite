@@ -70,7 +70,8 @@ public class Application extends Controller {
 				controllers.routes.javascript.Application.home(),
 				controllers.routes.javascript.Application.importRun(),
 				controllers.routes.javascript.Application.addBugNum(),
-				controllers.routes.javascript.Application.addDiffDesc()
+				controllers.routes.javascript.Application.addDiffDesc(),
+				controllers.routes.javascript.Application.recentRuns()
 
 				
 			)
@@ -222,13 +223,25 @@ public static String createData(){
 		
 		);
 	}
+	public static Result recentRuns(String filter1, String filter2, String param1, String param2, int days) {
+		Form<Run> data = Form.form(Run.class);
+		return ok(
+			recentRuns.render(filter1, filter2, param1, param2, days, data)	
+				);
+	}
+	/**
+	 * Function loads a page which shows list of runs share similar characteristics
+	 * Param1 and Param2 are the data types you are looking for (example: Format or Date)
+	 * Filter1 and Filter2, respectively, are what you are searching for (example: PDF or 12/12/2000)
+	 * @return the page dataList
+	 */
    public static Result dataList(String filter1, String filter2, String param1, String param2) {
 		Form<Run> data = Form.form(Run.class);
 		return ok(
 			dataList.render( filter1, filter2, param1,  param2, data)	
 				);
 	}
-	
+	  
 	/**
      * Handle run deletion
      */

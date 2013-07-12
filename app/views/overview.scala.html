@@ -64,7 +64,9 @@ padding-left:50px;
            @for(run <- Run.getList) {
            <option value=@run.getRunID   class = @run.getPlatformFormat>@run.getRunName</option>
            }
-           <option value="">All Runs</option> 
+           <option value="" name= "AllRuns">All Runs</option>
+           <option value="" name = "last5">Last 5 Runs</option>
+           <option value="" name = "last10">Last 10 Runs</option>
            
       </select>
       <input type = "button" id = "pf" value= "Search" class="btn primary" disabled
@@ -90,9 +92,12 @@ padding-left:50px;
       <select id="run2" name="#run2" >
            
            @for(run <- Run.getList) {
-           <option value=@run.getRunID   class = @run.version.getVersionName>@run.getRunName</option>
+           <option value=@run.getRunID   class = @run.version.getVersionName>@run.getRunName</option> 
            }
-           <option value="">All Runs</option> 
+           <option value="" name= "AllRuns">All Runs</option>
+           <option value="" name = "last5">Last 5 Runs</option>
+           <option value="" name = "last10">Last 10 Runs</option>
+           
       </select>
       <input type = "button" id = "pv" value= "Search" class="btn primary" 
        onclick = "NavigateToSite('platform2','version2','version.platform.name', 'version.name','run2')"/>
@@ -131,10 +136,22 @@ padding-left:50px;
 function NavigateToSite(list1,list2,p1,p2,id) {
 	
 	var value = document.getElementById(id).value;
+	var option = document.getElementById(id).options[document.getElementById(id).selectedIndex].text;
+	var f1 = document.getElementById(list1).value;
+	var f2 = document.getElementById(list2).value;
+	
 	if (value == ""){
-		var f1 = document.getElementById(list1).value
-		var f2 = document.getElementById(list2).value
+		if (option == 'All Runs'){
+		
 		window.location = jsRoutes.controllers.Application.dataList(f1,f2,p1,p2).url ;
+		}
+		else if (option == 'Last 5 Runs'){
+			
+			window.location = jsRoutes.controllers.Application.recentRuns(f1,f2,p1,p2,5).url ;
+		}
+		else { // Last 10 runs
+			window.location = jsRoutes.controllers.Application.recentRuns(f1,f2,p1,p2,10).url ;
+		}
 	}
 	else {
 		

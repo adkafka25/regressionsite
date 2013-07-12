@@ -18,18 +18,31 @@
         <table class="run zebra-striped">
             <thead>
                 <tr>
+                	@header("date.name", "Date")
                     @header("name", "Run Name")
                     @header("version.name", "Version")
                     @header("format.name", "Format")
-					@header("date.name", "Date")
                     @header("svn.num", "SVN")
                     @header("performance.time", "Performance Time")
+                    @header("format", "Format")
+                    @header("better", "# Better")
+                    @header("worse", "# Worse")
+					@header("neutral", "# Neutral")
+                    @header("bugs", "# Bugs")
+                    @header("notdecompressed", "# Not Decompressed")
                 </tr>
             </thead>
             <tbody>
 
                 @for(run <- Run.runByID(id)) {
                     <tr>
+                    	<td>
+                            @if(run.date == null) {
+                                <em>-</em>
+                            } else {
+                                @run.date.name.format("dd MMM yyyy")
+                            }
+                        </td>
                         <td>
                             @if(run.name == null) {
                                 <em>-</em>
@@ -52,13 +65,6 @@
                             }
                         </td>
 						<td>
-                            @if(run.date == null) {
-                                <em>-</em>
-                            } else {
-                                @run.date.name.format("dd MMM yyyy")
-                            }
-                        </td>
-						<td>
                             @if(run.svn == null) {
                                 <em>-</em>
                             } else {
@@ -72,28 +78,6 @@
                                 @run.performance.time.format("hh:mm:ss")
                             }
                         </td>
-                    </tr>
-                
-
-            </tbody>
-        </table>
-	<p>
-	</p>
-      <table class="run zebra-striped">
-            <thead>
-                <tr>
-                    @header("format", "Format")
-                    @header("better", "# Better")
-                    @header("worse", "# Worse")
-					@header("neutral", "# Neutral")
-                    @header("bugs", "# Bugs")
-                    @header("notdecompressed", "# Not Decompressed")
-                </tr>
-            </thead>
-            <tbody>
-
-                @for(run <- Run.runByID(id)) {
-                    <tr>
                         <td>
                             @if(run.format.name == null) {
                                 <em>-</em>
@@ -136,11 +120,13 @@
                                 @PageOut.getPagesNotDecompressed(run.id)
                             }
                         </td>
+                        
                     </tr>
                 
 
             </tbody>
         </table>
+	
        <table class="Bug zebra-striped">
        		<center><h1>Bugs in Run ID: @id</h1> </center>
             <thead>
@@ -238,6 +224,6 @@
 }
  		
     
-}
+
 
             

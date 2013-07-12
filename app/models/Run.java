@@ -150,8 +150,26 @@ public class Run extends Model {
 		List<SortType> sortFields = Arrays.asList(sortable);
 		return sortFields;
 	}
-	
-
+	/**
+	 * Method used to populate list of most recent runs (by date)
+	 * @param list
+	 * @param elements
+	 * @return
+	 */
+	public static List<Run> truncate (List<Run> list, int elements) {
+		List <Run> trunc = new ArrayList();
+		int count;
+		if (list.size() < elements) {
+			count = list.size();	
+		}
+		else {
+			count = 5;
+		}
+		for (int i = 0; i < count; i++) {
+			trunc.add(list.get(i));
+		}
+		return trunc;
+	}
 	
 	/**
 	 * 
@@ -170,7 +188,7 @@ public class Run extends Model {
 	public static List<Run> getList(){
 		return find.all();
 	}
-
+	
 	/**
 	 * 
 	 * @return a string with the platform name and the format name.
@@ -218,6 +236,7 @@ public class Run extends Model {
 		List<Run> list =find.where()
 				.eq(param1, filter1)
 				.eq(param2, filter2)
+				.orderBy("date asc")
 				.findList();
 				return list;
 	}
