@@ -15,12 +15,28 @@ import models.*;
 
 //for testing/file
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
-public class Application extends Controller {
+// For excel file
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import java.io.FileOutputStream;
+
+
+
+
+
+public class Application extends Controller  {
 	/**
      * This result directly redirect to application home.
      */
@@ -49,10 +65,11 @@ public class Application extends Controller {
         );
     }
  
+    
 
   	
 	
-	public static Result javascriptRoutes() {
+	public static Result javascriptRoutes()  {
 		response().setContentType("text/javascript");
 		return ok(
 			Routes.javascriptRouter("jsRoutes",
@@ -71,12 +88,84 @@ public class Application extends Controller {
 				controllers.routes.javascript.Application.importRun(),
 				controllers.routes.javascript.Application.addBugNum(),
 				controllers.routes.javascript.Application.addDiffDesc(),
-				controllers.routes.javascript.Application.recentRuns()
-
+			    controllers.routes.javascript.Application.recentRuns(),
+			 	controllers.routes.javascript.Application.createFile()
 				
 			)
 		);
 	}
+	/**
+	 * This creates excel spreadsheet for report. Method should be modified at some point into 
+	 * a couple different methods.
+	 * The parameters create the list you want. 
+	 * @return
+	 * @throws IOException
+	 */
+	public static Result createFile(String f1, String f2, String p1, String p2) throws IOException  {
+		
+		File file = new File("mydata.xls");
+        FileOutputStream fileOut = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
+        String filename = f1 + "/" + f2 + ".xls";
+           
+        Sheet sheet = wb.createSheet("Sheet1");
+        int rNum = 0;
+        Row row = sheet.createRow(rNum);
+        int cNum = 0;
+        Cell cell = row.createCell(cNum);
+        cell.setCellValue("Date");
+        row.createCell(1).setCellValue("Run Name");
+        row.createCell(2).setCellValue("Version");
+        row.createCell(3).setCellValue("Format");
+        row.createCell(4).setCellValue("SVN");
+        row.createCell(5).setCellValue("Performance Time");
+        row.createCell(6).setCellValue("# Better");
+        row.createCell(7).setCellValue("# Worse");
+        row.createCell(8).setCellValue("# Neutral");
+        row.createCell(9).setCellValue("# Bugs");
+        row.createCell(10).setCellValue("# Not Decompressed");
+        
+        List<Run> list = Run.dataSet(f1, f2, p1, p2);
+        int brNum = 1;
+        
+        for (Run run: list) {
+        	Row bro = sheet.createRow(brNum);
+        	bro.createCell(0).setCellValue(run.date.name);
+        	bro.createCell(1).setCellValue(run.name);
+            bro.createCell(2).setCellValue(run.version.name);
+            bro.createCell(3).setCellValue(run.format.name);
+            try{
+            bro.createCell(4).setCellValue(run.svn.num);
+            }
+            catch (NullPointerException i) {	
+            }
+            try{
+            bro.createCell(5).setCellValue(run.performance.time);
+            }
+            catch (NullPointerException i) {	
+            }
+            bro.createCell(6).setCellValue(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))));
+            bro.createCell(7).setCellValue(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))));
+            bro.createCell(8).setCellValue(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))));
+            bro.createCell(9).setCellValue(Run.calculateBugs(run));
+            bro.createCell(10).setCellValue(PageOut.getPagesNotDecompressed(run.id));
+            brNum++;
+        }
+        
+       
+        for(int i = 0; i < 11; i++) {
+            sheet.autoSizeColumn(i);
+            }
+        
+        wb.write(fileOut);
+        fileOut.close();
+        response().setContentType("application/x-download");  
+		response().setHeader("Content-disposition","attachment; filename=" + filename);  
+		
+		
+        return ok(file);
+	}	
+	
 	
 	/**
      * Display the paginated list of runs.
@@ -159,7 +248,7 @@ public class Application extends Controller {
 
 public static String createData(){
 	
-		List<models.Date> allDates = models.Date.getList();
+		List<models.Date> allDates = models.Date.getListUsed();
 		//int[] frequency = models.Company.allFrequency();
 		
 		String data = "[ ";
@@ -181,7 +270,7 @@ public static String createData(){
 		data+="]";
 		
 		
-		String datsa = "[ [new Date(2012, 8 , 2), 300, 800] ]";
+		
 		
 		//data+= "[new Date(2008, 1 ,8), 30000, null, null, 40645, null, null]]";
 		
@@ -279,4 +368,9 @@ public static String createData(){
 		difference.save();
 		return ok();
 	}
+	
+	
+	
+	
+	
 }

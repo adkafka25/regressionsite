@@ -31,7 +31,6 @@
                     @header("format.name", "Format")
                     @header("svn.num", "SVN")
                     @header("performance.time", "Performance Time")
-                    @header("format", "Format")
                     @header("better", "# Better")
                     @header("worse", "# Worse")
 					@header("neutral", "# Neutral")
@@ -87,13 +86,7 @@
                                 @run.performance.time.format("hh:mm:ss")
                             }
                         </td>
-                        <td>
-                            @if(run.format.name == null) {
-                                <em>-</em>
-                            } else {
-                                @run.format.name
-                            }
-                        </td>
+
 						<td>
                             @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))) == 0) {
                                 <em>-</em>
@@ -223,7 +216,16 @@
 
             </tbody>
         </table>
-        
+        <input type = "button" id = "test" value= "Download in Excel" class="btn primary" 
+    	  onclick = "download('@f1','@f2', '@p1', '@p2')" method = "POST"/>
+		<script>
+			function download(f1,f2,p1,p2) {
+
+			window.location = jsRoutes.controllers.Application.createFile(f1,f2,p1,p2).url ;
+	
+	
+				}
+		</script>
        
     }    
 }
