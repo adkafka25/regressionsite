@@ -120,6 +120,7 @@ public class Application extends Controller  {
         Cell cell = row.createCell(cNum);
         cell.setCellValue("Page Name");
         row.createCell(1).setCellValue("Run Name");
+        row.createCell(2).setCellValue("Format");
         row.createCell(3).setCellValue("Performance Time");
         row.createCell(4).setCellValue("Error");
         row.createCell(5).setCellValue("Difference Description");
@@ -133,23 +134,23 @@ public class Application extends Controller  {
         	bro.createCell(1).setCellValue(run.name);
             bro.createCell(2).setCellValue(run.format.name);
             
-            try{
+            try {
             bro.createCell(3).setCellValue(run.performance.time);
             }
             catch (NullPointerException i) {	
             }
-            try{
+            try {
             bro.createCell(4).setCellValue(page.error.description);
             }
             catch (NullPointerException i) {	
             }
-            try{
+            try {
             	List<Difference> diff = Difference.listDifferences(page);
             	String dif = " ";
             	
             		for(Difference difference: diff) {
             			if(difference.name != null) {
-            				dif += difference.name + " ";
+            				dif += difference.name + " / ";
             			}
             	}
             	bro.createCell(5).setCellValue(dif);

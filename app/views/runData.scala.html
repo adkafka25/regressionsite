@@ -76,18 +76,18 @@
                                 @run.svn.num
                             }
                         </td>
-						<td>
-                            @if(run.performance == null) {
-                                <em>-</em>
-                            } else {
-                                @run.performance.time.format("hh:mm:ss")
-                            }
-                        </td>
                         <td>
                             @if(run.format.name == null) {
                                 <em>-</em>
                             } else {
                                 @run.format.name
+                            }
+                        </td>
+                        <td>
+                            @if(run.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @run.performance.time.format("hh:mm:ss")
                             }
                         </td>
 						<td>

@@ -39,19 +39,19 @@
     
     <h1 id="homeTitle">
     @if(d == "all") {
-	 Displaying all pages From Run @Run.nameByID(runID)
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID)
 	}
     @if(d == "error") {
-	 Displaying all pages From Run @Run.nameByID(runID) with Errors
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Errors
 	}
 	@if(d == "worse") {
-	 Displaying all pages From Run @Run.nameByID(runID) with Worse Differences
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Worse Differences
 	}
 	@if(d == "better") {
-	 Displaying all pages From Run @Run.nameByID(runID) with Better Differences
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Better Differences
 	}
 	@if(d == "neutral") {
-	 Displaying all pages From Run @Run.nameByID(runID) with Neutral Differences
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Neutral Differences
 	}
     </h1>
 	
