@@ -6,10 +6,24 @@
     </th>
 }
 
+   @link(input: Long, input2: String, direction:String, pageDir:String) = @{
+    	if (direction == "download")
+			routes.Application.pageExcel(input)	
+		else if (direction == "pages") {
+	    	routes.Application.listPageByRun(0,"name","asc",input, "", pageDir)
+		}
+		else {	
+			routes.Application.listRun(0, "name", "asc", input2, direction)
+		} 
+		
+        }
+
+
 @homeSkeleton {
     <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/buttons.less")"> 
    
     <script src="@routes.Assets.at("js/bootstrap-button")"></script>		
+    <script src="@routes.Assets.at("js/bootstrap-dropdown")"></script>		
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         
         <center><h1>Info Regarding Run ID: @id</h1> </center>
@@ -188,25 +202,57 @@
         <center>
         
         
-    		<button class="btn primary" onclick="NavigateToSite('@run.format.name', 'format.name' )">Runs with same format</button>
-    		<button class="btn primary" onclick="NavigateToSite('@run.version.name', 'version.name' )">Runs with same version</button>
-    		<button class="btn primary"onclick= "NavigateToSite('@run.date.name', 'date.name' )">Runs with same date </button>
-    	 	<button class="btn primary"onclick= "return NavigateToSite('@run.id', 'pages' )">Pages From this run </button>
+		<div class="navbar ">
+
+ <div class="navbar-inner">
+	<a class="brand" >Run Options</a>
+	 <ul class="nav">
+    <li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+			Pages from this Run
+			
+		</a>
+		
+		<ul class="dropdown-menu">
+			<li><a href ="@link(run.id," ", "pages", "all") " >All Pages</a></li>
+			<li><a href ="@link(run.id," ", "pages", "better") " >Better Pages</a></li>
+			<li><a href ="@link(run.id," ", "pages", "worse") "  >Worse Pages</a></li>
+			<li><a href = "@link(run.id," ", "pages", "neutral") " >Neutral Pages</a></li>
+			<li><a href = "@link(run.id," ", "pages", "error") " >Pages with Errors</a></li>
+		</ul>
+    </li>
+    </ul>
+   <ul class = nav nav-tabs>
+   		
+  	    <li class="divider-vertical"></li>
+   		<li><a href = "@link(3, run.date.name, "date.name"," " ) "  >Runs with Same Date </a></li>
+   		<li class="divider-vertical"></li>
+   		<li><a href = "@link(3, run.version.name, "version.name"," " ) "  >Runs with Same Version </a></li> 
+   		<li class="divider-vertical"></li>
+   		<li><a href = "@link(3, run.format.name, "format.name"," " ) "  >Runs with Same Format </a></li>
+   		<li class="divider-vertical"></li>
+   		<li><a href = "@link(run.id, " ", "download"," " ) "  >Export Page Data to Excel</a></li>
+   	
+       
+   		
+   </ul>
+          
+
+   
+
+   </div>
+   </div>
+  </div>
+
+
+        
+    		
+    	 
    	 </center>
    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>  
-    <script>
-   
-    function NavigateToSite(input , direction) {
-		
-		if (direction == 'pages') {
-	    	window.location = jsRoutes.controllers.Application.listPageByRun(0,"name","asc",input, "").url;
-		}
-		else {	
-			window.location = jsRoutes.controllers.Application.listRun(0, "name", "asc", input, direction).url;
-		} 
-		return false;
-        }
-	</script>
+    
+
+	
             
     }
     

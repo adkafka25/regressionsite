@@ -83,8 +83,9 @@ public class Application extends Controller  {
 				controllers.routes.javascript.Application.listRun(),
 				controllers.routes.javascript.Application.listBug(),
 				controllers.routes.javascript.Application.listPage(),
+								
 			//	controllers.routes.javascript.Application.createNewRun(),
-				controllers.routes.javascript.Application.home(),
+
 				controllers.routes.javascript.Application.importRun(),
 				controllers.routes.javascript.Application.addBugNum(),
 				controllers.routes.javascript.Application.addDiffDesc(),
@@ -95,10 +96,92 @@ public class Application extends Controller  {
 		);
 	}
 	/**
+	 * This method takes a run and returns and excel spreadsheet with data from 
+	 * the runs pages.
+	 * @param run, the run you are using.
+	 * @return file, the excel spreadsheet.
+	 * @throws IOException
+	 */
+	public static Result pageExcel(Long id) throws IOException {
+		
+		
+		
+		
+		File file = new File("mydata.xls");
+        FileOutputStream fileOut = new FileOutputStream(file);
+        Workbook wb = new HSSFWorkbook();
+        Run run = Run.getRunByID(id);
+        String filename = run.name + ".xls";
+        
+        Sheet sheet = wb.createSheet("Sheet1");
+        int rNum = 0;
+        Row row = sheet.createRow(rNum);
+        int cNum = 0;
+        Cell cell = row.createCell(cNum);
+        cell.setCellValue("Page Name");
+        row.createCell(1).setCellValue("Run Name");
+        row.createCell(3).setCellValue("Performance Time");
+        row.createCell(4).setCellValue("Error");
+        row.createCell(5).setCellValue("Difference Description");
+        
+        
+        List<PageOut> list = PageOut.pageList(id);
+        int brNum = 1;
+        for (PageOut page: list) {
+        	Row bro = sheet.createRow(brNum);
+        	bro.createCell(0).setCellValue(page.name);
+        	bro.createCell(1).setCellValue(run.name);
+            bro.createCell(2).setCellValue(run.format.name);
+            
+            try{
+            bro.createCell(3).setCellValue(run.performance.time);
+            }
+            catch (NullPointerException i) {	
+            }
+            try{
+            bro.createCell(4).setCellValue(page.error.description);
+            }
+            catch (NullPointerException i) {	
+            }
+            try{
+            	List<Difference> diff = Difference.listDifferences(page);
+            	String dif = " ";
+            	
+            		for(Difference difference: diff) {
+            			if(difference.name != null) {
+            				dif += difference.name + " ";
+            			}
+            	}
+            	bro.createCell(5).setCellValue(dif);
+            }
+            
+            	
+            catch (NullPointerException i) {
+            	
+            }
+            brNum++;
+        }
+        	for(int i = 0; i < 11; i++) {
+        		sheet.autoSizeColumn(i);
+            	}
+        
+        
+        wb.write(fileOut);
+        fileOut.close();
+        response().setContentType("application/x-download");  
+		response().setHeader("Content-disposition","attachment; filename=" + filename);  
+		
+		
+        return ok(file);
+		
+		
+	}
+	
+	/**
 	 * This creates excel spreadsheet for report. Method should be modified at some point into 
 	 * a couple different methods.
 	 * The parameters create the list you want. 
-	 * @return
+	 * @return The excel file
 	 * @throws IOException
 	 */
 	public static Result createFile(String f1, String f2, String p1, String p2) throws IOException  {
@@ -228,14 +311,14 @@ public class Application extends Controller  {
      * @param order Sort order (either asc or desc)
      * @param runID Filter applied on page names
      */
-    public static Result listPageByRun(int page, String sortBy, String order, Long runID, String filter) {
+    public static Result listPageByRun(int page, String sortBy, String order, Long runID, String filter, String diff) {
         if(Run.getRunByID(runID)==null){//if runID does not exist...
 			return RUN_INDEX;
 		}
 		return ok(
             listPagesByRun.render(
-                PageOut.pageFromRun(page, 10, sortBy, order, runID, filter),
-                sortBy, order, runID, filter
+                PageOut.pageFromRun(page, 10, sortBy, order, runID, filter, diff),
+                sortBy, order, runID, filter, diff
             )
         );
     
@@ -294,6 +377,9 @@ public static String createData(){
 	 * @return the page runData.
 	 */
 	public static Result getData(long id) {
+		if (Run.getRunByID(id)==null) {
+			return GO_HOME;
+		}
 		Form<Run> data = Form.form(Run.class);
 		return ok(
 			runData.render(id, data)
@@ -306,6 +392,9 @@ public static String createData(){
 	 * @return the page bugData.
 	 */
 	public static Result bugData(long id) {
+		if(Bug.getBugFromID(id)==null) {//if bugID does not exist...
+			return GO_HOME;
+		}
 		Form<Bug> data = Form.form(Bug.class);
 		return ok(
 			bugData.render(id, data)
@@ -325,6 +414,7 @@ public static String createData(){
 	 * @return the page dataList
 	 */
    public static Result dataList(String filter1, String filter2, String param1, String param2) {
+	   
 		Form<Run> data = Form.form(Run.class);
 		return ok(
 			dataList.render( filter1, filter2, param1,  param2, data)	

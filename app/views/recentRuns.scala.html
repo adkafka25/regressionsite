@@ -161,19 +161,19 @@
               
                     <tr>
                     	<td>
-                                @Run.dataSet(f1, f2, p1, p2).size                          
+                                @Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).size                         
                         </td>
 						<td>
-                                @Run.getData(Run.dataSet(f1, f2, p1, p2)).better                          
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).better                       
                         </td>
                         <td>
-                                @Run.getData(Run.dataSet(f1, f2, p1, p2)).worse                            
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).worse                          
                         </td>
 						<td>
-                                @Run.getData(Run.dataSet(f1, f2, p1, p2)).neutral                            
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).neutral                             
                         </td>
 						<td>
-                                @Run.getData(Run.dataSet(f1, f2, p1, p2)).bugs           
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).bugs            
                         </td>
 						<td>
                              

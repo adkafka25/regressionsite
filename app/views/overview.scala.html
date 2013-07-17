@@ -219,7 +219,7 @@ function NavigateToSite(list1,list2,p1,p2,id) {
 		return tmpElement.innerHTML;
 	  }
     /**
-    Converts data into suitable
+    Converts data into suitable format
     **/
         function ra(){
          var table="@{controllers.Application.createData()}";
@@ -254,18 +254,20 @@ function NavigateToSite(list1,list2,p1,p2,id) {
              }
            },
            // Initial range: 2012-02-09 to 2012-03-20.
-           'state': {'range': {'start': new Date(2012, 1, 9), 'end': new Date(2012, 2, 20)}}
+          // 'state': {'range': {'start': new Date(2012, 1, 9), 'end': new Date(2012, 2, 20)}}
          });
       
          var chart = new google.visualization.ChartWrapper({
+        	
            'chartType': 'LineChart',
            'containerId': 'chart',
            'options': {
              // Use the same chart area width as the control for axis alignment.
              'chartArea': {'height': '80%', 'width': '90%'},
              'hAxis': {'slantedText': false},
-             'vAxis': {'viewWindow': {'min': 0, 'max': 2000}},
-             'legend': {'position': 'none'}
+             'vAxis': {'viewWindow': {'min': 0, 'max': 10}, 'title': 'Number of Bugs'},
+             'legend': {'position': 'none'},
+             'title': 'Number of Bugs: Java Versus Native'
            },
            // Convert the first column from 'date' to 'string'.
            'view': {
@@ -281,11 +283,11 @@ function NavigateToSite(list1,list2,p1,p2,id) {
       
          var data = new google.visualization.DataTable();
          data.addColumn('date', 'Date');
-         data.addColumn('number', 'Stock low');
-         data.addColumn('number', 'Stock open');
+         data.addColumn('number', 'Java Bugs');
+         data.addColumn('number', 'Native Bugs');
          
       
-         // Create random stock values, just like it works in reality.
+         /* Create random stock values, just like it works in reality.
          var open, close = 300;
          var low, high;
          for (var day = 1; day < 121; ++day) {
@@ -299,6 +301,7 @@ function NavigateToSite(list1,list2,p1,p2,id) {
            
            data.addRow([new Date(2012, 0 ,day), Math.round(low), Math.round(open)]);
          }
+         */
          data.addRows(ra());
          dashboard.bind(control, chart);
          dashboard.draw(data);
@@ -314,6 +317,11 @@ function NavigateToSite(list1,list2,p1,p2,id) {
         <div id="control" style='width: 915px; height: 50px;'></div>
     </div>
   </body>
+  <p>
+  </p>
+  @runChart {
+
+}
 </center>
 
 

@@ -141,10 +141,16 @@ public class PageOut extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static Page<PageOut> pageFromRun(int page, int pageSize, String sortBy, String order, Long runID, String filter) {
-		return 
+    public static Page<PageOut> pageFromRun(int page, int pageSize, String sortBy, String order, Long runID, String filter, String diff) {
+    	if(diff.equals("error")) {
+			return pageErrorRun(page, pageSize, sortBy, order, runID, filter, diff);
+		}
+    	
+    	else if(!diff.equals("all")) {
+    	return 
             find.where()
                 .eq("run.id", runID)
+                .eq("difference.difftype.id", DiffType.getDiffTypeID(diff))
 				.ilike("name", "%" + filter + "%")
                 .orderBy(sortBy + " " + order)
                 .fetch("run")
@@ -152,8 +158,51 @@ public class PageOut extends Model {
 				.fetch("error")
                 .findPagingList(pageSize)
                 .getPage(page);
+    	
+    			
+    			
+			}
+			
+			else {
+		return
+			find.where()
+				.eq("run.id", runID)
+				.ilike("name", "%" + filter + "%")
+				.orderBy(sortBy + " " + order)
+				.fetch("run")
+				.fetch("performance")
+				.fetch("error")
+				.findPagingList(pageSize)
+				.getPage(page);
+			
+		}
     }
-	
+    
+    public static Page<PageOut> pageErrorRun(int page, int pageSize, String sortBy, String order, Long runID, String filter, String diff) {
+    	return
+    			find.where()
+    				.eq("run.id", runID)
+    				.isNotNull("error")
+    				.ilike("name", "%" + filter + "%")
+    				.orderBy(sortBy + " " + order)
+    				.fetch("run")
+    				.fetch("performance")
+    				.fetch("error")
+    				.findPagingList(pageSize)
+    				.getPage(page);
+    }
+    
+    public static List <PageOut> pageList(Long runID) {
+		
+    	return 
+            find.where()
+                .eq("run.id", runID)
+                .orderBy("name" + " " + "asc")
+                .findList();
+    			
+    			
+			
+    }
 	/**
 	 * Returns the pageID of given page and runID
 	 * @param page Which page name to find ID for
@@ -249,6 +298,19 @@ public class PageOut extends Model {
 				.eq("difference.difftype.id",difftype.id)
                 .findRowCount();
 	}
+	/**
+	 * This method creates a list of diffType that occured in given run
+	 * @param run Which run to calculate
+	 * @param diffType Which difftpye of run to calculate
+	 * @return list of diffType in run
+	 */
+	public static List<PageOut> listDifferences(Run run, DiffType difftype){
+		return
+			find.where()
+                .eq("run.id", run.id)
+				.eq("difference.difftype.id",difftype.id)
+                .findList();
+	}
 	
 	/**
 	 * This method returns a list of all pages from a given run that are missing a difference description
@@ -292,6 +354,19 @@ public class PageOut extends Model {
 				.eq("run.id", runID)
 				.isNotNull("error")
 				.findRowCount();
+	}
+	
+	/**
+	 * This method returns the list of pages NOT DECOMPRESSED in a given run
+	 * @param runID Id of run to get how many pages were not decompressed
+	 * @return list How many pages did not decompress
+	 */
+	public static List<PageOut> getListNotDecompressed(long runID){
+		return
+			find.where()
+				.eq("run.id", runID)
+				.isNotNull("error")
+				.findList();
 	}
 	
 	/**

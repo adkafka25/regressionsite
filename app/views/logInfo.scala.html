@@ -107,7 +107,7 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	
 	@if(runID !=(-1 : Long)){
-		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"")'>View Run</a><br/></H2>
+		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"","")'>View Run</a><br/></H2>
 	}
 	
 	<div class="addMissingInfo">

@@ -1,4 +1,4 @@
-@(currentPage: com.avaje.ebean.Page[PageOut], currentSortBy: String, currentOrder: String, runID: Long, currentFilter: String)
+@(currentPage: com.avaje.ebean.Page[PageOut], currentSortBy: String, currentOrder: String, runID: Long, currentFilter: String, d:String)
 
 @****************************************
 * Helper generating navigation links    *
@@ -22,7 +22,7 @@
     }
     
     // Generate the link
-    routes.Application.listPageByRun(newPage, sortBy, order, runID, currentFilter)
+    routes.Application.listPageByRun(newPage, sortBy, order, runID, currentFilter, d)
     
 }
 
@@ -37,7 +37,25 @@
 
 @homeSkeleton {
     
-    <h1 id="homeTitle">@currentPage.getTotalRowCount Pages Found From Run @Run.nameByID(runID)</h1>
+    <h1 id="homeTitle">
+    @if(d == "all") {
+	 Displaying all pages From Run @Run.nameByID(runID)
+	}
+    @if(d == "error") {
+	 Displaying all pages From Run @Run.nameByID(runID) with Errors
+	}
+	@if(d == "worse") {
+	 Displaying all pages From Run @Run.nameByID(runID) with Worse Differences
+	}
+	@if(d == "better") {
+	 Displaying all pages From Run @Run.nameByID(runID) with Better Differences
+	}
+	@if(d == "neutral") {
+	 Displaying all pages From Run @Run.nameByID(runID) with Neutral Differences
+	}
+    </h1>
+	
+	
 	
     @if(flash.containsKey("success")) {
         <div class="alert-message warning">
@@ -157,6 +175,13 @@
         </div>
         
     }
+      <input type="submit" id="searchsubmit" value="Go Back to Run" class="btn primary" onclick = "goToRun('@runID')">
+    <script>
+    function goToRun(id) {
+    	window.location = jsRoutes.controllers.Application.getData(id).url;
+    }
+    </script>
+    
         
 }
 
