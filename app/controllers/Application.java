@@ -43,6 +43,9 @@ public class Application extends Controller  {
     public static Result GO_HOME = redirect(
         routes.Application.overview()
     );
+    /**
+     *  Go to the Run Index.
+     */
     public static Result RUN_INDEX = redirect( 
     	routes.Application.listRun(0, "name", "asc", "","name")
     );
@@ -54,6 +57,7 @@ public class Application extends Controller  {
     public static Result index() {
         return GO_HOME;
     }
+    
     public static Result overview() {
         return ok(
             overview.render()
@@ -67,7 +71,12 @@ public class Application extends Controller  {
  
     
 
-  	
+    /**
+     * Javascript routes. Allows for easier navigation in the html files.
+     * Note that, in jsroutes, there are no arguments needed. However you still
+     * need to put in arguments in the html file
+     * @return page you want to redirect to
+     */
 	
 	public static Result javascriptRoutes()  {
 		response().setContentType("text/javascript");
@@ -402,6 +411,11 @@ public static String createData(){
 		
 		);
 	}
+	/**
+	 * This function returns a list of recent runs that share the same characteristics.
+	 * @param days how far you are willing to go back.
+	 * @return recentrun page
+	 */
 	public static Result recentRuns(String filter1, String filter2, String param1, String param2, int days) {
 		Form<Run> data = Form.form(Run.class);
 		return ok(

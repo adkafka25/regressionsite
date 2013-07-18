@@ -33,10 +33,36 @@ padding-left:50px;
       <script type="text/javascript" src="@routes.Assets.at("js/jquery.chained.min.js")" charset="utf-8"></script>
       <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
    </head>
+   
+   
    <center>
    <h1>Regression Testing Overview</h1>
    <p class="padding"></p>
    <body>
+      
+      
+      <!-- The following code is dropdown menus. However, it uses
+      the jquery library "chained select", so it might be a bit difficult to understand.
+      Here is the basic idea. The first list gets all the platforms (calls a java function)
+      and gives them a class based on their name. The second list gets all the formats and gives 
+      them a class based on their name(i.e. Microsoft Word). 
+      
+      Now this sets up the last option. The last option will call every single run. However, it 
+      will only display the run if the run shares the same format and platform. It does this by
+      calling a function in Run, getPlatformFormat. This function just returns a string of
+      the run's platform and format. Jquery checks to see that all the (option) classes are 
+      the same.
+      
+      If you didn't get that, pretty much: class of the first drop down + class of the second drop down
+	  must equal the class of third drop down. That is how jquery chained select works. 
+	  
+	  There are minor variations, but that's the basic idea.
+      
+      
+      -->
+      
+      
+      
       <select id="platform" name="#platform" onchange= "change('platform','format', 'pf')">
            <option value="Please select Platform">Please select Platform</option>
 			@for(plat <- Platform.getList) {
@@ -118,7 +144,7 @@ padding-left:50px;
       		onclick = "NavigateToSite('','','','','run3')"/>
  	<p>
  
-     W</p>
+    </p>
       
 
 <script>
@@ -180,8 +206,13 @@ function NavigateToSite(list1,list2,p1,p2,id) {
   
  
       
+ 
 
       <script language="JavaScript" type="text/javascript">
+    /**
+    This is what "chains" the the lists together. See full documentation:
+    	http://www.appelsiini.net/projects/chained
+    **/
       $("#run").chained("#platform, #format"); 
       $("#version2").chained("#platform2");
       $("#run2").chained("#version2"); 
@@ -202,9 +233,7 @@ function NavigateToSite(list1,list2,p1,p2,id) {
   @javaNative {
   
   }
-  
 
-  
   <p>
   </p>
   @runChart {

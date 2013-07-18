@@ -5,7 +5,7 @@ import java.util.List;
 
 
 /** 
- * Nested class. Obtains information necessary to create statistics on data.
+ * Obtains information necessary to create statistics on data.
  *
  */
 public class CallData {

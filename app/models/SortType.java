@@ -3,7 +3,7 @@ package models;
 /**
  * Class of SortTypes. Made to populate list in "listruns".
  * Examples of Sort Types include Date, SVN, etc.
- * @author acarey
+ *
  *
  */
 public class SortType {

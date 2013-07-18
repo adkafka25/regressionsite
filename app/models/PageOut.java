@@ -140,44 +140,55 @@ public class PageOut extends Model {
      * @param sortBy PageOut property used for sorting
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
+     * @param diff necessary for redirecting function to proper page ("Error", "All", etc)
      */
-    public static Page<PageOut> pageFromRun(int page, int pageSize, String sortBy, String order, Long runID, String filter, String diff) {
+	public static Page<PageOut> pageFromRun(int page, int pageSize, String sortBy, String order, Long runID, String filter, String diff) {
+    	
+    	// error
     	if(diff.equals("error")) {
 			return pageErrorRun(page, pageSize, sortBy, order, runID, filter, diff);
 		}
     	
+    	 //better, worse, neutral
     	else if(!diff.equals("all")) {
-    	return 
-            find.where()
-                .eq("run.id", runID)
-                .eq("difference.difftype.id", DiffType.getDiffTypeID(diff))
-				.ilike("name", "%" + filter + "%")
-                .orderBy(sortBy + " " + order)
-                .fetch("run")
-				.fetch("performance")
-				.fetch("error")
-                .findPagingList(pageSize)
-                .getPage(page);
-    	
-    			
-    			
+    		return pageDifRun(page, pageSize, sortBy, order, runID, filter, diff);		
 			}
-			
+			// All pages
 			else {
-		return
-			find.where()
-				.eq("run.id", runID)
-				.ilike("name", "%" + filter + "%")
-				.orderBy(sortBy + " " + order)
-				.fetch("run")
-				.fetch("performance")
-				.fetch("error")
-				.findPagingList(pageSize)
-				.getPage(page);
-			
+				
+				return pageAllRun(page, pageSize, sortBy, order, runID, filter, diff);			
 		}
     }
-    
+    /**
+     * Returns all pages of a certain run with errors.
+     * @param page Page to display
+     * @param pageSize Number of PageOuts per page
+     * @param sortBy PageOut property used for sorting
+     * @param order Sort order (either or asc or desc)
+     * @param filter Filter applied on the name column 
+     */
+    public static Page<PageOut> pageAllRun(int page, int pageSize, String sortBy, String order, Long runID, String filter, String diff) {
+    	return
+    			find.where()
+    				.eq("run.id", runID)
+    				.isNotNull("error")
+    				.ilike("name", "%" + filter + "%")
+    				.orderBy(sortBy + " " + order)
+    				.fetch("run")
+    				.fetch("performance")
+    				.fetch("error")
+    				.findPagingList(pageSize)
+    				.getPage(page);
+    }
+    /**
+     * Returns all pages of a certain run.
+     * @param page Page to display
+     * @param pageSize Number of PageOuts per page
+     * @param sortBy PageOut property used for sorting
+     * @param order Sort order (either or asc or desc)
+     * @param filter Filter applied on the name column 
+     * @return
+     */
     public static Page<PageOut> pageErrorRun(int page, int pageSize, String sortBy, String order, Long runID, String filter, String diff) {
     	return
     			find.where()
@@ -190,6 +201,29 @@ public class PageOut extends Model {
     				.fetch("error")
     				.findPagingList(pageSize)
     				.getPage(page);
+    }
+    
+    
+    /**
+     * Returns all pages of a certain difference.
+     * @param page Page to display
+     * @param pageSize Number of PageOuts per page
+     * @param sortBy PageOut property used for sorting
+     * @param order Sort order (either or asc or desc)
+     * @param filter Filter applied on the name column 
+     */
+    public static Page<PageOut> pageDifRun(int page, int pageSize, String sortBy, String order, Long runID, String filter, String diff) {
+    	return
+    			find.where()
+                	.eq("run.id", runID)
+                	.eq("difference.difftype.id", DiffType.getDiffTypeID(diff))
+                	.ilike("name", "%" + filter + "%")
+                	.orderBy(sortBy + " " + order)
+                	.fetch("run")
+                	.fetch("performance")
+                	.fetch("error")
+                	.findPagingList(pageSize)
+                	.getPage(page);
     }
     
     public static List <PageOut> pageList(Long runID) {
