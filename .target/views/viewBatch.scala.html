@@ -1,0 +1,61 @@
+@(batchScript: String)
+
+@import controllers.routes.javascript._
+
+@****************************
+* Generate Log From sting *
+****************************@
+@log(logInfo:String) = @{
+    
+def replace = logInfo.replaceAll(_, _)
+
+var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") replace("ERROR:","<br/><font color=\"red\">ERROR:</font>")
+
+    //Output
+    logInfoFixed
+    
+}
+
+@homeSkeleton {
+<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+<script language="JavaScript">
+	function CopyToClipboard() {
+		text=document.getElementById("code").innerHTML;
+		
+		window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+		
+		return false;
+	}
+	function submitForm(){
+		//Get content
+		text=document.getElementById("code").innerHTML;
+		//set as value of input
+		document.getElementById("content").value=text;
+		//submit
+		document.download.submit;
+	}
+</script>
+
+	<H1>Code for run</H1>
+	 <form name=download action="@routes.NewRun.downloadBatch()" method="POST" >
+	 
+        <div class="actions">
+            <button class="btn" onclick="return CopyToClipboard()">Copy to Clipboard</button> or
+			<input type="submit" value="Download .Bat" class="btn primary" onclick='return submitForm()'>
+        </div>	 
+		
+        <fieldset>
+			<div class="clearfix">
+				<div class="input codebox">
+					<input id="content" type="hidden" value="empty" name="content" required>
+					<pre id="code">
+@batchScript
+					</pre>
+				</div>
+			</div>
+        </fieldset>
+		
+        
+    </form>
+	
+}

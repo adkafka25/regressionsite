@@ -1,0 +1,113 @@
+
+
+@(content: Html)
+
+
+@linkTo( route: String ) = @{
+	if(route == "New") {
+		routes.NewRun.newRun()
+	}
+	else if(route == "Import"){
+		routes.Application.importRun()
+	}
+	else if(route == "Overview") {
+		routes.Application.overview()
+		}
+	else if(route == "Home") {
+		routes.Application.home()
+		}
+	else if(route == "Runs") {
+		routes.Application.runIndex()
+		}
+	else if(route == "Bugs") {
+		routes.Application.listBug()
+		}
+	else if(route == "Pages") {
+		routes.Application.listPage()
+		}
+	else {
+		routes.Application.home()
+	}
+ 
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+<<<<<<< HEAD
+
+	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+	 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
+    <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
+	<link type = "text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.css")" >
+	<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+=======
+    <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
+	<link type = "text/css" rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")" >
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
+
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
+</head>
+<title>Regression Database</title>
+<body>
+
+<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-inverse">
+ <div class="navbar-inner">
+	<a class="brand" href="@linkTo("Home") ">Regression Database</a>
+   <ul class = nav nav-tabs>
+  	    <li class="divider-vertical"></li>
+   		<li><a href = "@linkTo("Import") " >Import Regression Data</a></li>
+   		<li class="divider-vertical"></li>
+   		<li><a href = "@linkTo("New") " >New Regression Run</a></li>
+   		<li class="divider-vertical"></li>
+   		<li><a href = "@linkTo("Overview") ">Regression Testing Overview</a></li>
+   	
+       
+   		
+   </ul>
+           <ul class="nav">
+    <li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+			Quick Links
+		</a>
+		<ul class="dropdown-menu">
+			<li><a href = "@linkTo("Runs") ">View all Runs</a></li>
+			<li><a href = "@linkTo("Pages") " >View all Pages</a></li>
+			<li><a href = "@linkTo("Bugs") " >View all Bugs</a></li>
+		</ul>
+    </li>
+    </ul>
+ <form class="navbar-search pull-left" name ="filter" onsubmit ="return search()">  
+   	<input type="text" id = "searchbox" class="search-query" placeholder="Search by Run Name" />  
+ 	
+ </form> 
+   
+
+   </div>
+   </div>
+  </div>
+ 
+<script>
+ function search() {
+	// <input type = "submit" style="visibility: hidden" onsubmit = "search()"/>
+     var textInput = document.getElementById("searchbox").value;
+    //alert("I am an alert box!");
+    //window.location.href = 'http://www.google.com';
+    window.location.href = jsRoutes.controllers.Application.listRun(0, "name","asc", "", "name").url;
+	  return false;
+}
+ </script>  
+  
+<
+<script src="@routes.Assets.at("js/jquery.js")"></script>
+<script src="@routes.Assets.at("js/bootstrap.js")"></script>
+<script src="@routes.Assets.at("js/bootstrap-dropdown.js")"></script>
+
+		<section id="main">
+            @content
+        </section>
+
+	</body>
+</html>

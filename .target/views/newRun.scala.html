@@ -1,0 +1,252 @@
+@(runForm: Form[models.NewRun])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@homeSkeleton {
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
+	
+	<script type="text/javascript">
+	function checkForm(option){//option is where to go next...
+		//Determine if any formats are checked
+		var elements = document.getElementsByClassName("format");
+		var anyChecked=false;
+		for(var i=0; i<elements.length; i++){
+			if(elements[i].checked==true){
+				anyChecked=true;
+			}
+		}
+		//Check neccesary elements
+		if (document.newRun.platform_id.value == ""){
+			alert("Please select a platform");
+			return false;
+		}
+		else if ( anyChecked==false ){
+			alert("Please select a file format");
+			return false;
+		}
+		else{
+			return verifySubmit(option);
+		}
+	}
+	function getSelectedValue(elementId){
+		return document.getElementById(elementId).options[document.getElementById(elementId).selectedIndex].text;
+	}
+	function getCheckedBoxes(){
+		var checked = "";
+		$("input:checkbox[name=format]:checked").each(function(){ //for each checked box....
+			checked=checked+$(this).val()+"," // add $(this).val() to your array
+		});
+		//Get rid of last ","
+		checked=checked.substring(0,checked.lastIndexOf(","));
+		//set hidden field formats to this value
+		document.getElementById("formats").value=checked;
+		
+		return checked;
+	}
+	function getInputDirs(checkedFormats){//Input is a comma seperated list of formats
+		var formats = checkedFormats.split(",");
+		var inputDirs = "";
+		//Add each input dir for every checked format
+		for(var i =0; i<formats.length; i++){
+			inputDirs+=document.getElementById("inputDir-"+formats[i]).value+",";
+		}
+		//Get rid of last ","
+		inputDirs=inputDirs.substring(0,inputDirs.lastIndexOf(","));
+		//set hidden field formats to this value
+		document.getElementById("inputDirs").value=inputDirs;
+		return inputDirs;
+	}
+	function verifySubmit(option){
+		//Get all current values at this time
+		var runName=document.newRun.name.value;
+		var selectedFormats=getCheckedBoxes();
+		var platform=getSelectedValue("platform_id");
+		var compDir=document.newRun.compDir.value;
+		var inputDirs=getInputDirs(selectedFormats);
+		
+		var message="Are you sure you would like to submit this run for "+option+"?";
+		//Prompt for confirmation
+		
+		//Prepare message
+		var formats = selectedFormats.split(",");
+		var dirs = inputDirs.split(",");
+		var listInfo=""
+		for(var i = 0; i<formats.length; i++){
+			listInfo=listInfo+"\t"+formats[i]+" -> "+dirs[i]+"\n";
+		}
+		var x=confirm("Run Name = "+runName+"\n"+
+			"Platform = "+platform+"\n"+
+			"Comparison Directory = "+compDir+"\n"+
+			"Formats & Input Directories = \n"+
+			listInfo+
+			"\n"+
+			message
+			);
+		
+		
+		if (x==true){
+			if(option=="download"){  //Delete...
+				alert("Make this method");
+				return false;
+			}
+			else if(option=="output"){
+				document.newRun.submit();
+			}
+			else{
+				alert("Invalid option. Please choose wither output OR Download");
+				return false;
+			}
+			
+		}
+		else{
+			return false;
+		}
+	}
+	function selectFormats(){
+		var formats = document.getElementsByClassName("format");
+		var defaults = document.getElementsByClassName("defaults");
+		var anyChecked=false;
+		//Check if any are checked
+		for(var i=0; i<formats.length; i++){
+			if(formats[i].checked==true){
+				anyChecked=true;
+			}
+		}
+		if(anyChecked){//uncheck all
+			for(var i=0; i<formats.length; i++){
+				formats[i].checked=false;
+				$('#' + defaults[i].id).toggle(false);
+			}
+		}
+		else{//check all
+			for(var i=0; i<formats.length; i++){
+				formats[i].checked=true;
+				$('#' + defaults[i].id).toggle(true);
+			}
+		}
+		return false;
+	}
+	//For making visibility toggle
+	//If format is selected/unselected
+	$(function () {
+		$('.format').change(function () {
+			//div id for corresponding default checkbox
+			var divId="inputDir_"+this.value;
+			//id of default check box
+			var checkId="dirBool_"+this.value;
+			//div id for corresponding path prompt
+			var divIdPrompt="dirPrompt_"+this.value;
+			//If using format
+			if(this.checked){
+				if($('#' + checkId).is(':checked')){//default is checked
+					//make prompt invisible
+					$('#' + divIdPrompt).toggle(false);
+				}
+				else{
+					//make prompt visible
+					$('#' + divIdPrompt).toggle(true);
+				}
+			}
+			//Hide input prompt if not using this format
+			else{
+				$('#' + divId).toggle(false);
+				$('#' + divIdPrompt).toggle(false);
+			}
+			//toggle default input checkbox
+			$('#' + divId).toggle(this.checked);
+		}).change(); //ensure visible state matches initially
+	});
+	//If default is selected/unselected
+	$(function () {
+		$('.defaultDirBool').change(function () {
+			//div id for corresponding path prompt
+			var divId="dirPrompt_"+this.value;
+			//Toggle prompt div visibility
+			$('#' + divId).toggle(!this.checked);
+		}).change(); //ensure visible state matches initially
+	});
+	</script>
+	
+	
+    <h1>Create a new Regression Test</h1>
+    
+    <form name="newRun" action="@routes.NewRun.addNewRun()" method="POST" >    
+        <fieldset>
+        
+            <div class="clearfix">
+				<label for="name">Run Name</label>
+				<div class="input">
+					<input id="name" type="text" value="" name="name" required pattern="(\w|\s|\.|-)+">
+					<span class="help-inline">Required, only word characters</span>
+				</div>
+			</div>
+			
+			@select(
+                runForm("platform.id"),
+                options(Platform.options()),
+                '_label -> "Platform", '_default -> "-- Choose a Platform --",
+                '_showConstraints -> true
+            )
+			
+			<div class="clearfix">
+				<div class="row">
+					<div class="span3">
+						<label for="formats">Formats </label>
+					</div>
+					<div class="span4">
+						<button class="btn" onClick="return selectFormats();">Select/Deselect all</button></br>
+					</div>
+					<div class="span5">
+						<span class="help-inline">Input should be a path to the directory of files</br>
+									Ex. D:\Geoff\RTFs</br>
+						<b>Note: D:\</b></span>
+					</div>
+				</div>
+				@for((file,index) <- FileFormat.getList.zipWithIndex){
+					<div class="row">
+						<div class="input span3">
+								<input class="format" type="checkbox" name="format" id="format_@index" value="@file.name">
+								<span>@file.name<span>
+								<br/>
+						</div>
+						<div class="span4 defaults" id="inputDir_@file.name">
+								<input class="defaultDirBool" type="checkbox" checked="true" name="defaultDirBool" id="dirBool_@file.name" value="@file.name">
+								<span>Use default input directory?</span>
+								<br/>
+						</div>
+						<div class="clearfix span6" id="dirPrompt_@file.name"> @* change none to block to make visible*@
+							<label for="inputDir">Input Directory</label>
+							<div class="input">
+								<input id="inputDir-@file.name" type="text" value="@file.defInputDir" name="inputDir" required>
+							</div>
+						</div>
+					</div>
+				}
+				<input type="hidden" name="formats" id="formats" value="">
+				<input type="hidden" name="inputDirs" id="inputDirs" value="">
+			</div>
+			
+			
+			<div class="clearfix">
+				<label for="compDir">Comparison Directory</label>
+				<div class="input">
+					<input id="compDir" type="text" value="" name="compDir" required>
+					<span class="help-inline">Required</br>
+					Input should be a folder name in '\\snowtest\Regression\(java|native)\'</br>
+					Ex. 13.5-Build2-AFP</span>
+				</div>
+			</div>
+			
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Output .Bat" class="btn primary" onclick='return checkForm("output")'> or 
+            <a href="@routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+        
+    </form>
+    
+}

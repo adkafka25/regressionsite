@@ -1,0 +1,166 @@
+@(currentPage: com.avaje.ebean.Page[PageOut], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Application.listPage(newPage, sortBy, order, currentFilter)
+    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key)">@title</a>
+    </th>
+}
+
+@homeSkeleton {
+     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <h1 id="homeTitle">@currentPage.getTotalRowCount Pages Found</h1>
+	
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+
+	
+    <div id="actions">
+        
+        <form action="@link(0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Search by Page name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        </form>
+        
+    </div>
+    
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="PageOut zebra-striped">
+            <thead>
+                <tr>
+                    @header("name", "Page Name")
+                    @header("run.name", "Run")
+                    @header("run.format.name", "Format")
+                    @header("performance.time", "Performance Time")
+					@header("error.num", "Error")
+					@header("difference.name", "Difference Desc")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(page <- currentPage.getList) {
+                    <tr>
+                        <td>@page.name</a></td>
+						<td>
+                            @if(page.run == null) {
+                                <em>-</em>
+                            } else {
+                                @page.run.name
+                            }
+                        </td>
+                        <td>
+                            @if(page.run.format == null) {
+                                <em>-</em>
+                            } else {
+                                @page.run.format.name
+                            }
+                        </td>
+						<td>
+                            @if(page.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @page.performance.time.format("hh:mm:ss")
+                            }
+                        </td>
+						<td>
+                            @if(page.error == null) {
+                                <em>-</em>
+                            } else {
+                                @page.error.num -> @page.error.description
+                            }
+                        </td>
+						<td>
+							@for(difference <- Difference.listDifferences(page)) {
+								@if(difference.difftype.name == "Worse") {
+									<font color="red">&bull; <i>@difference.name</i></font>  
+								} else {
+									@if(difference.difftype.name == "Better") {
+										<font color="green">&bull; <i>@difference.name</i></font>
+									} else {
+										<font color="black">&bull; <i>@difference.name</i></font>
+									}
+								}
+								
+								</br>
+							}
+                        </td>
+						
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }
+  
+        
+}
+
+            

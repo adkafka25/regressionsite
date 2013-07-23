@@ -1,0 +1,173 @@
+@(currentPage: com.avaje.ebean.Page[Bug], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Application.listBug(newPage, sortBy, order, currentFilter)
+    
+}
+@linkByBug(bugID:Long) = @{
+routes.Application.bugData(bugID);
+
+}
+
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key)">@title</a>
+    </th>
+}
+
+@homeSkeleton {
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <h1 id="homeTitle">@currentPage.getTotalRowCount Bugs Found</h1>
+    
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+
+	
+    <div id="actions">
+        
+        <form action="@link(0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Search by Bug name...">
+            <input type="submit" id="searchsubmit" value="Filter by number" class="btn primary">
+        </form>
+        
+    </div>
+    
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="Bug zebra-striped">
+            <thead>
+                <tr>
+                    @header("number", "Bug Number")
+					@header("bugstatus.name", "Bug Status")
+					@header("difference.name", "Difference Desc") 
+					@header("pagesoutbug.run.format.name", "Format")
+					@header("pagesoutbug.run.version.name", "Version")
+					@header("pagesoutbug.run.date.name", "Date Appeared")					
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(bug <- currentPage.getList) {
+                    <tr>
+                        <td><a href="@linkByBug(bug.id)" title="View all Bug Information from @bug.id">@bug.number</a> 
+							
+						</td>
+						<td>
+                            @if(bug.bugstatus == null) {
+                                <em>-</em>
+                            } else {
+                                @bug.bugstatus.name
+                            }
+                        </td>
+						<td>
+							@for(difference <- Bug.getDifferences(bug)) {
+								@if(difference.difftype.name == "Worse") {
+									<font color="red">&bull; <i>@difference.name</i></font>  
+								} else {
+									@if(difference.difftype.name == "Better") {
+										<font color="green">&bull; <i>@difference.name</i></font>
+									} else {
+										<font color="black">&bull; <i>@difference.name</i></font>
+									}
+								}
+								
+								</br>
+							}
+                        </td>
+						<td>
+							@if(Bug.getFileFormat(bug) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getFileFormat(bug).name
+							}
+                        </td>
+						<td>
+							@if(Bug.getVersion(bug) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getVersion(bug).name
+							}
+                        </td>
+						<td>
+							@if(Bug.getDate(bug) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getDate(bug).name.format("dd MMM yyyy")
+							}
+                        </td>
+                    </tr>
+					
+                }
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }
+        
+}
+
+            

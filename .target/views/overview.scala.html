@@ -1,0 +1,249 @@
+@link(f1:String, f2:String, p1:String, p2:String ) = @{
+    
+    
+    
+    // Generate the link
+    routes.Application.dataList(f1, f2, p1, p2)
+    
+}
+
+
+
+@homeSkeleton{
+<!DOCTYPE html>
+  <html>
+  <style>
+p
+{
+
+}
+p.padding
+{
+padding-top:25px;
+padding-bottom:25px;
+padding-right:50px;
+padding-left:50px;
+}
+</style>
+  <head>
+      <meta charset="utf-8">
+      <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+      <script type="text/javascript" src="@routes.Assets.at("js/jquery.chained.min.js")" charset="utf-8"></script>
+      <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+   </head>
+   
+   
+   <center>
+   <h1>Regression Testing Overview</h1>
+   <p class="padding"></p>
+   <body>
+      
+      
+      <!-- The following code is dropdown menus. However, it uses
+      the jquery library "chained select", so it might be a bit difficult to understand.
+      Here is the basic idea. The first list gets all the platforms (calls a java function)
+      and gives them a class based on their name. The second list gets all the formats and gives 
+      them a class based on their name(i.e. Microsoft Word). 
+      
+      Now this sets up the last option. The last option will call every single run. However, it 
+      will only display the run if the run shares the same format and platform. It does this by
+      calling a function in Run, getPlatformFormat. This function just returns a string of
+      the run's platform and format. Jquery checks to see that all the (option) classes are 
+      the same.
+      
+      If you didn't get that, pretty much: class of the first drop down + class of the second drop down
+	  must equal the class of third drop down. That is how jquery chained select works. 
+	  
+	  There are minor variations, but that's the basic idea.
+      
+      
+      -->
+      
+      
+      
+      <select id="platform" name="#platform" onchange= "change('platform','format', 'pf')">
+           <option value="Please select Platform">Please select Platform</option>
+			@for(plat <- Platform.getList) {
+           <option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
+           }
+      </select>
+      <select id="format" name="#format" onchange= "change('platform','format', 'pf')"> 
+           <option value="Please select Format">Please select Format</option>
+           @for(form <- FileFormat.getList) {
+           <option value=@form.getFileFormatName  class =@form.getFileFormatName>@form.getFileFormatName</option>
+           }
+      </select>
+      <select id="run" name="#run">
+             
+           @for(run <- Run.getList) {
+           <option value=@run.getRunID   class = @run.getPlatformFormat>@run.getRunName</option>
+           }
+           <option value="" name= "AllRuns">All Runs</option>
+           <option value="" name = "last5">Last 5 Runs</option>
+           <option value="" name = "last10">Last 10 Runs</option>
+           
+      </select>
+      <input type = "button" id = "pf" value= "Search" class="btn primary" disabled
+      	onclick = "NavigateToSite('platform','format','version.platform.name', 'format.name','run')"/>
+       
+      <p>
+      
+      OR
+      </p>
+       
+       		<select id="platform2" name="#platform2" onchange= "buttonSel('platform2', 'pv')"> 
+           		<option value="Please select Platform">Please select Platform</option>
+					@for(plat <- Platform.getList) {
+           		<option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
+           			}
+      		</select>
+      		
+      		<select id="version2" name="#version2" onchange= "buttonSel('version2', 'pv')">
+           		<option value="">Please select Version</option>
+           		@for(vers <- Version.getList) {
+           		<option value=@vers.getVersionName  class = @vers.getThePlatform.getPlatformName>@vers.getVersionName</option>
+           			}
+      		</select>
+      		
+      		
+     	 	<select id="run2" name="#run2" >           
+          		 @for(run <- Run.getList) {
+           		<option value=@run.getRunID   class = @run.version.getVersionName>@run.getRunName</option> 
+           		}
+           		<option value="" name= "AllRuns">All Runs</option>
+           		<option value="" name = "last5">Last 5 Runs</option>
+           		<option value="" name = "last10">Last 10 Runs</option>
+      		</select>
+      		
+      		<input type = "button" id = "pv" value= "Search" class="btn primary" 
+       		onclick = "NavigateToSite('platform2','version2','version.platform.name', 'version.name','run2')"/>
+      
+     <p>
+     OR
+     </p>  
+  
+  			<select id="date" name="#date" onchange= "buttonSel('date', 'dSelect')">
+          	 	<option value="Choose from Dates">Choose from dates</option>
+           		@for(da <- models.Date.getListUsed) {
+           		<option value=@da.getDateName  class = @da.getDateName>@da.getDateName</option>
+           		}
+      		</select>
+      		
+      		
+      		<select id="run3" name="#run3">
+           		@for(run <- Run.getList) {
+           		<option value=@run.getRunID  class = @run.getDateName>@run.getRunName</option>
+           		}
+           		<option value="">All Runs</option> 
+      		</select>
+      		
+      		
+      		<input type = "button" id = "dSelect" value= "Search" class="btn primary" 
+      		onclick = "NavigateToSite('','','','','run3')"/>
+ 	<p>
+ 
+    </p>
+      
+
+<script>
+/**
+ * Redirects to proper run data
+ *  p1: param one (format.name, etc)
+ *  p2: param two
+ *	list1: The first list you're pulling a value from
+ *	list2: The second list you're pulling a value from
+ */
+function NavigateToSite(list1,list2,p1,p2,id) {
+	
+	var value = document.getElementById(id).value;
+	var option = document.getElementById(id).options[document.getElementById(id).selectedIndex].text;
+	var f1 = document.getElementById(list1).value;
+	var f2 = document.getElementById(list2).value;
+	
+	if (value == ""){
+		if (option == 'All Runs'){
+		
+		window.location = jsRoutes.controllers.Application.dataList(f1,f2,p1,p2).url ;
+		}
+		else if (option == 'Last 5 Runs'){
+			
+			window.location = jsRoutes.controllers.Application.recentRuns(f1,f2,p1,p2,5).url ;
+		}
+		else { // Last 10 runs
+			window.location = jsRoutes.controllers.Application.recentRuns(f1,f2,p1,p2,10).url ;
+		}
+	}
+	else {
+		
+		window.location = jsRoutes.controllers.Application.getData(value).url ;
+		
+	}
+	
+	
+	
+}
+ /**
+ These methods ensure that a button is disabled unless the 
+ approriate fields are filled out.
+ **/
+ function buttonSel(doc1, doc2) {
+ 	if (document.getElementById(doc1).selectedIndex == 0)
+ 		document.getElementById(doc2).disabled = true;
+ 	else
+ 	document.getElementById(doc2).disabled = false;
+ 	}
+ function change(doc1, doc2, doc3) {
+	 	if (document.getElementById(doc1).selectedIndex == 0 || document.getElementById(doc2).selectedIndex == 0)
+	 		document.getElementById(doc3).disabled = true;
+	 	else
+	 	document.getElementById(doc3).disabled = false;
+	 	}
+ 
+ 
+</script>
+  
+ 
+      
+ 
+
+      <script language="JavaScript" type="text/javascript">
+    /**
+    This is what "chains" the the lists together. See full documentation:
+    	http://www.appelsiini.net/projects/chained
+    **/
+      $("#run").chained("#platform, #format"); 
+      $("#version2").chained("#platform2");
+      $("#run2").chained("#version2"); 
+      $("#run3").chained("#date"); 
+      
+      $('form').submit(function(){
+    	    if($('#platform').val() == "" || $('#format').val() == ""){
+    	        return false;
+    	    }
+    	    });
+      
+      
+      </script>
+
+  </body>
+ 
+
+  @javaNative {
+  
+  }
+
+  <p>
+  </p>
+  @runChart {
+
+}
+</center>
+
+
+       
+           
+      
+
+}

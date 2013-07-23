@@ -1,0 +1,269 @@
+@link(f1:String, f2:String, p1:String, p2:String ) = @{
+    
+    
+    
+    // Generate the link
+    routes.Application.dataList(f1, f2, p1, p2)
+    
+}
+
+
+@homeMain{
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js">
+      </script>
+      <script type="text/javascript" src="@routes.Assets.at("js/jquery.chained.min.js")" charset="utf-8"></script>
+      <script>
+        /* if (jQuery().chained) {  
+              alert('jQuery is loaded!');  
+         }
+          else{   
+             alert('jQuery is not loaded!');  
+         }
+        */
+      </script>
+      <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+   </head>
+   <center>
+   <body>
+      <select id="platform" name="#platform">
+           <option value="Please select Platform">Please select Platform</option>
+			@for(plat <- Platform.getList) {
+           <option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
+           }
+      </select>
+      <select id="format" name="#format">
+           <option value="Please select Format">Please select Format</option>
+           @for(form <- FileFormat.getList) {
+           <option value=@form.getFileFormatName  class =@form.getFileFormatName>@form.getFileFormatName</option>
+           }
+      </select>
+      <select id="run" name="#run">
+             
+           @for(run <- Run.getList) {
+           <option value=@run.getRunID   class = @run.getPlatformFormat>@run.getRunName</option>
+           }
+           <option value="">All Runs</option> 
+           
+      </select>
+      <input type = "button" value= "Search" class="btn primary" 
+      	onclick = "NavigateToSite('platform','format','version.platform.name', 'format.name','run')"/>
+       
+      <p>
+      
+      OR
+      </p>
+       
+       <select id="platform2" name="#platform2">
+           <option value="Please select Platform">Please select Platform</option>
+			@for(plat <- Platform.getList) {
+           <option value=@plat.getPlatformName class = @plat.getPlatformName> @plat.getPlatformName</option>
+           }
+      </select>
+      <select id="version2" name="#version2">
+           <option value="">Please select Version</option>
+           @for(vers <- Version.getList) {
+           <option value=@vers.getVersionName  class = @vers.getThePlatform.getPlatformName>@vers.getVersionName</option>
+           }
+      </select>
+      <select id="run2" name="#run2">
+           
+           @for(run <- Run.getList) {
+           <option value=@run.getRunID   class = @run.version.getVersionName>@run.getRunName</option>
+           }
+           <option value="">All Runs</option> 
+      </select>
+      <input type = "button" value= "Search" class="btn primary"
+       onclick = "NavigateToSite('platform2','version2','version.platform.name', 'version.name','run2')"/>
+      
+     <p>
+     OR
+      </p>  
+  
+  	<select id="date" name="#date">
+           <option value="Choose from Dates">Choose from dates</option>
+           @for(da <- models.Date.getList) {
+           <option value=@da.getDateName  class = @da.getDateName>@da.getDateName</option>
+           }
+      </select>
+      <select id="run3" name="#run3">
+           
+           @for(run <- Run.getList) {
+           <option value=@run.getRunID  class = @run.getDateName>@run.getRunName</option>
+           }
+           <option value="">All Runs</option> 
+      </select>
+      <input type = "button" value= "Search" class="btn primary" 
+      onclick = "NavigateToSite('','','','','run3')"/>
+ <p>
+      </p>
+      
+
+<script>
+/**
+ * Redirects to proper run data
+ *  p1: param one (format.name, etc)
+ *  p2: param two
+ *	list1: The first list you're pulling a value from
+ *	list2: The second list you're pulling a value from
+ */
+function NavigateToSite(list1,list2,p1,p2,id) {
+	
+	var value = document.getElementById(id).value;
+	if (value == ""){
+		var f1 = document.getElementById(list1).value
+		var f2 = document.getElementById(list2).value
+		window.location = jsRoutes.controllers.Application.dataList(f1,f2,p1,p2).url ;
+	}
+	else {
+		
+		window.location = jsRoutes.controllers.Application.getData(value).url ;
+		
+	}
+	
+	
+	
+}
+</script>
+  
+ 
+      
+
+      <script language="JavaScript" type="text/javascript">
+      $("#run").chained("#platform, #format"); 
+      $("#version2").chained("#platform2");
+      $("#run2").chained("#version2"); 
+      $("#run3").chained("#date"); 
+      
+      $('form').submit(function(){
+    	    if($('#platform').val() == "" || $('#format').val() == ""){
+    	        return false;
+    	    }
+    	    });
+      
+      
+      </script>
+
+  </body>
+ 
+
+ 
+  
+<head>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>
+      Google Visualization API Sample
+    </title>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1.1', {packages: ['corechart', 'controls']});
+    </script>
+    <script type="text/javascript">
+    function decode(encodedString) {
+		var tmpElement = document.createElement('span');
+		tmpElement.innerHTML = encodedString;
+		return tmpElement.innerHTML;
+	  }
+    /**
+    Converts data into suitable
+    **/
+        function ra(){
+         var table="@{controllers.Application.createData()}";
+         var tableFormatted=decode(table);
+         var obj = eval("(" + tableFormatted + ")");
+         return obj;
+        }
+    
+      function drawVisualization() {
+        var dashboard = new google.visualization.Dashboard(
+             document.getElementById('dashboard'));
+      
+         var control = new google.visualization.ControlWrapper({
+           'controlType': 'ChartRangeFilter',
+           'containerId': 'control',
+           'options': {
+             // Filter by the date axis.
+             'filterColumnIndex': 0,
+             'ui': {
+               'chartType': 'LineChart',
+               'chartOptions': {
+                 'chartArea': {'width': '90%'},
+                 'hAxis': {'baselineColor': 'none'}
+               },
+               // Display a single series that shows the closing value of the stock.
+               // Thus, this view has two columns: the date (axis) and the stock value (line series).
+               'chartView': {
+                 'columns': [0, 2]
+               },
+               // 1 day in milliseconds = 24 * 60 * 60 * 1000 = 86,400,000
+               'minRangeSize': 86400000
+             }
+           },
+           // Initial range: 2012-02-09 to 2012-03-20.
+           'state': {'range': {'start': new Date(2012, 1, 9), 'end': new Date(2012, 2, 20)}}
+         });
+      
+         var chart = new google.visualization.ChartWrapper({
+           'chartType': 'LineChart',
+           'containerId': 'chart',
+           'options': {
+             // Use the same chart area width as the control for axis alignment.
+             'chartArea': {'height': '80%', 'width': '90%'},
+             'hAxis': {'slantedText': false},
+             'vAxis': {'viewWindow': {'min': 0, 'max': 2000}},
+             'legend': {'position': 'none'}
+           },
+           // Convert the first column from 'date' to 'string'.
+           'view': {
+             'columns': [
+               {
+                 'calc': function(dataTable, rowIndex) {
+                   return dataTable.getFormattedValue(rowIndex, 0);
+                 },
+                 'type': 'string'
+               }, 1, 2]
+           }
+         });
+      
+         var data = new google.visualization.DataTable();
+         data.addColumn('date', 'Date');
+         data.addColumn('number', 'Stock low');
+         data.addColumn('number', 'Stock open');
+         
+      
+         // Create random stock values, just like it works in reality.
+         var open, close = 300;
+         var low, high;
+         for (var day = 1; day < 121; ++day) {
+           var change = (Math.sin(day / 2.5 + Math.PI) + Math.sin(day / 3) - Math.cos(day * 0.7)) * 150;
+           change = change >= 0 ? change + 10 : change - 10;
+           open = close;
+           close = Math.max(50, open + change);
+           low = Math.min(open, close) - (Math.cos(day * 1.7) + 1) * 15;
+           low = Math.max(0, low);
+           high = Math.max(open, close) + (Math.cos(day * 1.3) + 1) * 15;
+           
+           data.addRow([new Date(2012, 0 ,day), Math.round(low), Math.round(open)]);
+         }
+         data.addRows(ra());
+         dashboard.bind(control, chart);
+         dashboard.draw(data);
+      }
+      
+
+      google.setOnLoadCallback(drawVisualization);
+    </script>
+  </head>
+  <body>
+    <div id="dashboard">
+        <div id="chart" style='width: 915px; height: 300px;'></div>
+        <div id="control" style='width: 915px; height: 50px;'></div>
+    </div>
+  </body>
+</center>
+}

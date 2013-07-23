@@ -1,0 +1,188 @@
+@(currentPage: com.avaje.ebean.Page[PageOut], currentSortBy: String, currentOrder: String, runID: Long, currentFilter: String, d:String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Application.listPageByRun(newPage, sortBy, order, runID, currentFilter, d)
+    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key)">@title</a>
+    </th>
+}
+
+@homeSkeleton {
+    
+    <h1 id="homeTitle">
+    @if(d == "all") {
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID)
+	}
+    @if(d == "error") {
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Errors
+	}
+	@if(d == "worse") {
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Worse Differences
+	}
+	@if(d == "better") {
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Better Differences
+	}
+	@if(d == "neutral") {
+	 Displaying all @currentPage.getTotalRowCount pages From Run @Run.nameByID(runID) with Neutral Differences
+	}
+    </h1>
+	
+	
+	
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+
+	
+    <div id="actions">
+        
+        <form action="@link(0, "name")" method="GET">
+            <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by Page name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        </form>
+        
+    </div>
+    
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="PageOut zebra-striped">
+            <thead>
+                <tr>
+                    @header("name", "Page Name")
+                    @header("run.name", "Run")
+                    @header("run.format.name", "Format")
+                    @header("performance.time", "Performance Time")
+					@header("error.num", "Error")
+					@header("difference.name", "Difference Desc")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(page <- currentPage.getList) {
+                    <tr>
+                        <td>@page.name</a></td>
+						<td>
+                            @if(page.run == null) {
+                                <em>-</em>
+                            } else {
+                                @page.run.name
+                            }
+                        </td>
+                        <td>
+                            @if(page.run.format == null) {
+                                <em>-</em>
+                            } else {
+                                @page.run.format.name
+                            }
+                        </td>
+						<td>
+                            @if(page.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @page.performance.time.format("hh:mm:ss")
+                            }
+                        </td>
+						<td>
+                            @if(page.error == null) {
+                                <em>-</em>
+                            } else {
+                                @page.error.num -> @page.error.description
+                            }
+                        </td>
+						<td>
+							@for(difference <- Difference.listDifferences(page)) {
+								@if(difference.difftype.name == "Worse") {
+									<font color="red">&bull; <i>@difference.name</i></font>  
+								} else {
+									@if(difference.difftype.name == "Better") {
+										<font color="green">&bull; <i>@difference.name</i></font>
+									} else {
+										<font color="black">&bull; <i>@difference.name</i></font>
+									}
+								}
+								
+								</br>
+							}
+                        </td>
+						
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }
+      <input type="submit" id="searchsubmit" value="Go Back to Run" class="btn primary" onclick = "goToRun('@runID')">
+    <script>
+    function goToRun(id) {
+    	window.location = jsRoutes.controllers.Application.getData(id).url;
+    }
+    </script>
+    
+        
+}
+
+            

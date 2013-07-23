@@ -1,0 +1,239 @@
+@(f1: String, f2: String, p1: String, p2: String, d: Int,  dataList: Form[Run])
+
+
+
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header "headerSortUp"">
+        <a href= >@title</a>
+    </th>
+}
+
+@homeSkeleton {
+	<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+       
+     	  <center><h1> Last @d Runs that share @f1 and @f2</h1> </center>
+   @if(Run.dataSet(f1, f2, p1, p2).size == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {     
+        
+        <table class="run zebra-striped">
+            <thead>
+                <tr>
+                	@header("date.name", "Date")
+                    @header("name", "Run Name")
+                    @header("version.name", "Version")
+                    @header("format.name", "Format")
+                    @header("svn.num", "SVN")
+                    @header("performance.time", "Performance Time")
+                    @header("format", "Format")
+                    @header("better", "# Better")
+                    @header("worse", "# Worse")
+					@header("neutral", "# Neutral")
+                    @header("bugs", "# Bugs")
+                    @header("notdecompressed", "# Not Decompressed")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(run <- Run.truncate(Run.dataSet(f1, f2, p1, p2), d)) {
+                    <tr>
+                    
+ 						<td>
+                            @if(run.date == null) {
+                                <em>-</em>
+                            } else {
+                                @run.date.name.format("dd MMM yyyy")
+                            }
+                        </td>                   
+                        <td>
+                            @if(run.name == null) {
+                                <em>-</em>
+                            } else {
+                                @run.name
+                            }
+                        </td>
+						<td>
+                            @if(run.version == null) {
+                                <em>-</em>
+                            } else {
+                                @run.version.name of @run.version.platform.name
+                            }
+                        </td>
+                        <td>
+                            @if(run.format == null) {
+                                <em>-</em>
+                            } else {
+                                @run.format.name
+                            }
+                        </td>
+
+						<td>
+                            @if(run.svn == null) {
+                                <em>-</em>
+                            } else {
+                                @run.svn.num
+                            }
+                        </td>
+						<td>
+                            @if(run.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @run.performance.time.format("hh:mm:ss")
+                            }
+                        </td>
+                        <td>
+                            @if(run.format.name == null) {
+                                <em>-</em>
+                            } else {
+                                @run.format.name
+                            }
+                        </td>
+						<td>
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))) == 0) {
+                                <em>-</em>
+                            } else {
+                                @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Better"))))
+                            }
+                        </td>
+                        <td>
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))) == 0) {
+                                <em>-</em>
+                            } else {
+                                @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Worse"))))
+                            }
+                        </td>
+						<td>
+                            @if(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))) == 0) {
+                                <em>-</em>
+                            } else {
+                                @(Run.calculateDifferences(run,DiffType.getDiffTypeByID(DiffType.getDiffTypeID("Neutral"))))
+                            }
+                        </td>
+						<td>
+                            @if(Run.calculateBugs(run) == 0) {
+                                <em>-</em>
+                            } else {
+                                @(Run.calculateBugs(run))
+                            }
+                        </td>
+						<td>
+                           
+                               @PageOut.getPagesNotDecompressed(run.id)
+                            
+                        </td>
+                        
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+     
+	<p>
+	
+	</p>
+
+      @if(Run.dataSet(f1, f2, p1, p2).size >= 2) {
+     
+        <p>
+	
+		</p>
+		 <center><h1>Total Stats</h1> </center>
+         <table class="run zebra-striped">
+            <thead>
+                <tr>
+                    @header("Runs", "Number of runs")
+                    @header("better", "Total # Better")
+                    @header("worse", "Total # Worse")
+					@header("neutral", "Total # Neutral")
+                    @header("bugs", "Total # Bugs")
+                    @header("notdecompressed", "Total # Not Decompressed")
+                </tr>
+            </thead>
+            <tbody>
+		
+              
+                    <tr>
+                    	<td>
+                                @Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).size                         
+                        </td>
+						<td>
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).better                       
+                        </td>
+                        <td>
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).worse                          
+                        </td>
+						<td>
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).neutral                             
+                        </td>
+						<td>
+                                @Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).bugs            
+                        </td>
+						<td>
+                             
+                        </td>
+                    </tr>
+              	  
+              	
+
+            </tbody>
+        </table>
+        
+    } 
+       
+         <table class="run zebra-striped">
+            <thead>
+                <tr>
+                    
+                    @header("better", "Average Better")
+                    @header("worse", "Average Worse")
+					@header("neutral", "Average Neutral")
+                    @header("bugs", "Average Bugs")
+                    @header("notdecompressed", "Average Total # Not Decompressed")
+                </tr>
+            </thead>
+            <tbody>
+		
+              
+                    <tr>
+						<td>
+                                @(CallData.divide(Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).better, Run.dataSet(f1, f2, p1, p2).size))  
+                                                         
+                        </td>
+                        <td>
+                                @(CallData.divide(Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).worse, Run.dataSet(f1, f2, p1, p2).size))                          
+                        </td>
+						<td>
+                                @(CallData.divide(Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).neutral, Run.dataSet(f1, f2, p1, p2).size))                       
+                        </td>
+						<td>
+                                @CallData.divide(Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).bugs, Run.dataSet(f1, f2, p1, p2).size)) 
+                        </td>
+						<td>
+                                @(CallData.divide(Run.getData(Run.truncate(Run.dataSet(f1, f2, p1, p2), d)).notDecompressed, Run.dataSet(f1, f2, p1, p2).size))
+                        </td>
+                    </tr>
+              	  
+              	
+
+            </tbody>
+        </table>
+         <input type = "button" id = "test" value= "Download in Excel" class="btn primary" 
+      		onclick = "download('@f1','@f2', '@p1', '@p2')" method = "POST"/>
+		<script>
+			function download(f1,f2,p1,p2) {
+
+			window.location = jsRoutes.controllers.Application.createFile(f1,f2,p1,p2).url ;
+	
+	
+				}
+		</script>
+       
+    }    
+}

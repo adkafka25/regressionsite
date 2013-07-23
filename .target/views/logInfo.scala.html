@@ -1,0 +1,137 @@
+@(text: List[String], runID: Long = -1)
+
+@****************************
+* Generate Log From sting *
+****************************@
+@log(logInfo:String) = @{
+    
+def replace = logInfo.replaceAll(_, _)
+
+var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") replace("ERROR:","<br/><font color=\"red\">ERROR:</font>")
+
+    //Output
+    logInfoFixed
+    
+}
+@*************************************
+* Prompt user to fill out bug numb   *
+*************************************@
+@promptBug(bug: Bug, index: Int) = @{
+	var id : String = "addBugNum_" + index
+	var funcName = "submitBugNum" + index
+    var jscript : String = """<script>
+	function """+funcName+"""(){
+		$('#"""+id+"""').submit(function (){
+			var formdata = $(this).serialize();
+				$.ajax({
+					type: "POST",
+					url: jsRoutes.controllers.Application.addBugNum().url,
+					data: formdata,
+					success: function(data){
+						alert('Submitted');
+					}
+				});
+			document.getElementById(""""+id+"""").style.visibility = "hidden";
+			return false;
+		});
+	}
+	</script>"""
+	
+	var form : String = """<form id=""""+id+"""" name=""""+id+"""" method="POST">
+	<fieldset>
+	<div class="clearfix ">
+		<label for="bugNum">Bug Number for difference: <b>"""+bug.difference.name+"""</b></label>
+		<div class="input">
+			<input type="text" id="number" name="number" value="" required pattern="\d*">
+			<span class="help-inline">Required (Numbers only)</span>
+		</div>
+			<input type="hidden" id="id" name="id" value=""""+bug.id+"""">
+		</div>
+	</fieldset>
+
+		<div class="actions">
+			<input type="submit" value="Save this Bug Number" class="btn primary" onclick="return """+funcName+"""()">
+	</div>
+
+</form>"""
+    
+	Html(jscript+" \n "+form)
+}
+@**********************************
+* Prompt user for difference desc *
+***********************************@
+@promptDifference(difference: Difference, index: Int, files: String) = @{
+	var id : String = "addDiffDesc_" + index
+	var funcName = "submitDiffDesc" + index
+    var jscript : String = """<script>
+	function """+funcName+"""(){
+		$('#"""+id+"""').submit(function (){
+			var formdata = $(this).serialize();
+			$.ajax({
+				type: "POST",
+				url: jsRoutes.controllers.Application.addDiffDesc().url,
+				data: formdata,
+				success: function(data){
+					alert('Submitted');
+				}
+			});
+			document.getElementById(""""+id+"""").style.visibility = "hidden";
+			return false;
+		});
+	}
+	</script>"""
+	
+	var form : String = """<form id=""""+id+"""" name=""""+id+"""" method="POST">
+	<fieldset>
+	<div class="clearfix ">
+		<label for="DiffDesc">Please describe the difference that occureed in these files: <b>"""+files+"""</b></label>
+		<div class="input">
+			<input type="text" id="name" name="name" value="" required pattern="(\w|\s|\.|-)+">
+			<span class="help-inline">Required (only word characters)</span>
+		</div>
+			<input type="hidden" id="id" name="id" value=""""+difference.id+"""">
+		</div>
+	</fieldset>
+
+		<div class="actions">
+			<input type="submit" value="Save this Difference" class="btn primary" onclick="return """+funcName+"""()">
+	</div>
+
+</form>"""
+    
+	Html(jscript+" \n "+form)
+}
+
+@homeSkeleton {
+	<script type="text/javascript" src="/assets/javascripts/routes"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	
+	@if(runID !=(-1 : Long)){
+		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"","")'>View Run</a><br/></H2>
+	}
+	
+	<div class="addMissingInfo">
+		<H1>Missing information...</H1>
+		
+		@for((difference,index) <- Difference.getMissingDiffDesc(runID).zipWithIndex){
+			@if(index==0){
+				<H3>Missing Difference Description/Name</H3>
+			}
+			@promptDifference(difference,index, PageOut.listFilesFromDiff(runID,difference))
+		}
+		
+		@for((bug,index) <- Bug.getMissingBugNum(runID).zipWithIndex){
+			@if(index==0){
+				<H3>Missing Bug Number</H3>
+			}
+			@(promptBug(bug,index))
+		}
+	</div>
+	
+	<div class="Log">
+		<H1>Log:</H1>
+		@for(line <- text){
+			<br/> @Html(log(line))
+		}
+	</div>
+}

@@ -1,0 +1,238 @@
+@(currentPage: com.avaje.ebean.Page[Run], currentSortBy: String, currentOrder: String, currentFilter: String, filterBy:String)
+
+@import controllers.routes.javascript._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String, filterBy:String ) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Application.listRun(newPage, sortBy, order, currentFilter, filterBy)
+    
+}
+
+@linkByRun(runID:Long) = @{
+	routes.Application.listPageByRun(0,"name","asc",runID, "")
+}
+
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key, filterBy)">@title</a>
+    </th>
+}
+<<<<<<< HEAD
+
+
+=======
+	
+@homeSkeleton {
+>>>>>>> 5434f3d3729b7c516e56f865af651ab151d509fe
+
+@homeSkeleton {
+	<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+		
+    <h1 id="homeTitle">@currentPage.getTotalRowCount Runs Found</h1>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    } 
+
+<form>
+	<select name="carey" id="ddlMyList">
+			<option value="name">- Please Select -</option>
+		@for(field <- Run.getSortFields ) {
+			<option value= @field.getValue >@field.getHeader</option>
+			}
+	</select>
+	 <input type="search" id="searchbox" value="@currentFilter" placeholder="Search for...">
+	<input type = "button" value= "Search" class="btn primary" onclick = "NavigateToSite()"/>
+
+<!-- JS dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+ 
+<!-- bootbox code -->
+<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
+<script>
+function NavigateToSite() {
+	var ddl = document.getElementById("ddlMyList");
+	var textInput = document.getElementById("searchbox").value;
+	var selectedVal = ddl.options[ddl.selectedIndex].value;
+//	window.location = selectedVal + "?f=" + textInput;
+	window.location = jsRoutes.controllers.Application.listRun(0, "name","asc", textInput, selectedVal).url;
+	
+	
+}
+function VerifyDelete(id){
+	
+	bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
+		[
+		{
+		"label" : "Okay",
+		"class" : "primary",
+		"callback": function() {
+		window.location = jsRoutes.controllers.Application.deleteRun(id).url;
+		}
+		}, {
+		"label" : "Cancel",
+		"callback": function() {
+			return true;
+			}	
+		}
+		
+		]);
+	
+	
+}
+function deleteRun(id) {
+	window.location = jsRoutes.controllers.Application.deleteRun(id).url ;
+}
+</script>
+
+
+
+</form> 
+	
+    <div id="actions">
+        
+        <form action="@link(0, "format.name", "format.name")" method="GET">
+			<select name="f">
+				<option value="" >Please Select by File Format </option>option>
+			@for(file <- FileFormat.getList ) {
+				<option value= @file.name >@file.name</option>
+				}
+			</select> 
+			<input type="submit" id="searchsubmit" value="Search by File Fomat" class="btn primary">
+        </form>
+        
+    </div>
+    
+    
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    } else {
+        
+        <table class="run zebra-striped">
+            <thead>
+                <tr>
+                    @header("name", "Run Name")
+                    @header("version.name", "Version")
+                    @header("format.name", "Format")
+					@header("date.name", "Date")
+                    @header("svn.num", "SVN")
+                    @header("performance.time", "Performance Time")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(run <- currentPage.getList) {
+                    <tr>
+                        <td><a href="@linkByRun(run.id)" title="View all pages from Run @run.name">@run.name</a> 
+							<span style="float: right"><img onclick="VerifyDelete(@run.id)" src="@routes.Assets.at("images/delete.png")" alt="Delete"></span>
+						</td>
+						<td>
+                            @if(run.version == null) {
+                                <em>-</em>
+                            } else {
+                                @run.version.name of @run.version.platform.name
+                            }
+                        </td>
+                        <td>
+                            @if(run.format == null) {
+                                <em>-</em>
+                            } else {
+                                @run.format.name
+                            }
+                        </td>
+						<td>
+                            @if(run.date == null) {
+                                <em>-</em>
+                            } else {
+                                @run.date.name.format("dd MMM yyyy")
+                            }
+                        </td>
+						<td>
+                            @if(run.svn == null) {
+                                <em>-</em>
+                            } else {
+                                @run.svn.num
+                            }
+                        </td>
+						<td>
+                            @if(run.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @run.performance.time.format("hh:mm:ss")
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div id="pagination" class="pagination">
+            <ul>
+                @if(currentPage.hasPrev) {
+                    <li class="prev">
+                        <a href="@link(currentPage.getPageIndex - 1, null, filterBy)">&larr; Previous</a>
+                    </li>
+                } else {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null, filterBy)">Next &rarr;</a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }
+<<<<<<< HEAD
+        
+=======
+>>>>>>> 5434f3d3729b7c516e56f865af651ab151d509fe
+}
+
+            

@@ -1,0 +1,230 @@
+@(runForm: Form[Run])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@homeSkeleton {
+     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/datepicker.css")">
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src='@routes.Assets.at("js/bootstrap-datepicker.js")' charset="utf-8"></script>
+	<script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+ 	
+ 
+	<!-- bootbox code -->
+	<script src="@routes.Assets.at("js/bootbox.min.js")"></script>
+	<script type="text/javascript">
+	function checkForm(){
+		if (document.newRun.version_name.value == ""){
+			bootbox.alert("Please select a Version", function() {
+				});
+			return false;
+		}
+		else if ( document.newRun.format_id.value == ""){
+			bootbox.alert("Please select a File Format", function() {
+			});
+		return false;
+		}
+		else{
+			return verifySubmit();
+		}
+	}
+	function getSelectedValue(elementId){
+		return document.getElementById(elementId).options[document.getElementById(elementId).selectedIndex].text;
+	}
+	function getPlatform(path){
+		pathArray=path.split("\\");
+		var platformIndex=4; //this is in which spot the platform comes up in file name \\1\2\3...
+		return pathArray[platformIndex];
+	}
+	function verifySubmit(){
+		//Get all current values at this time
+		var runName=document.newRun.name.value;
+		var runPath=document.newRun.path.value;
+		var platform=getPlatform(runPath);
+		var version=getSelectedValue("version_name");
+		var format=getSelectedValue("format_id");
+		var date=document.newRun.dp1.value;
+		var svn=document.newRun.svn_num.value;
+		
+		var message="Are you sure you would like to submit this run?";
+		//Prompt for confirmation
+<<<<<<< HEAD
+		bootbox.dialog("Are you sure you would like to delete this run AND all pages associated with it (run id="+id+")?", 
+				[
+				{
+				"label" : "Okay",
+				"class" : "primary",
+				"callback": function() {
+				window.location = jsRoutes.controllers.Application.deleteRun(id).url;
+				}
+				}, {
+				"label" : "Cancel",
+				"callback": function() {
+					window.location = jsRoutes.controllers.Application.home.url;
+					}	
+				}
+				
+				]);
+		return true;
+=======
+			var x=confirm("Run Name = "+runName+"\n"+
+				"Run Path = "+runPath+"\n"+
+				"Platform = "+platform+"\n"+
+				"Version = "+version+"\n"+
+				"Format = "+format+"\n"+
+				"Date = "+date+"\n"+
+				"SVN = "+svn+"\n"+
+				message);
+			if (x==true){	
+				document.newRun.submit();
+			}
+			else{
+				return false;
+			}
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
+	}
+
+	function addVersion(){
+		 bootbox.prompt("What is the new version?", function(result) {
+			if (result == null) {
+			return true;
+			} else {
+
+				var x=document.getElementById("version_name");
+				var option=document.createElement("option");
+				option.text=result;
+				try{// for IE earlier than version 8
+					x.add(option,x.options[null]);
+				}
+				catch (e){
+					x.add(option,null);
+				}
+				x.selectedIndex=x.length-1; //select new version
+				return true;
+			}
+			});
+		/*var versionName = prompt("What is the new version?");
+
+	function addVersion(versionName){
+<<<<<<< HEAD
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
+		var versionName = prompt("What is the new version?(Platorm [java or native] will be added automatically");
+>>>>>>> 7b9f943ba962be1393e25803262d2acf1e06f4b5
+		
+		var x=document.getElementById("version_name");
+		var option=document.createElement("option");
+		option.text=versionName;
+		try{// for IE earlier than version 8
+			x.add(option,x.options[null]);
+		}
+		catch (e){
+			x.add(option,null);
+		}
+		x.selectedIndex=x.length-1; //select new version
+		return false;
+		
+	}
+	$(function(){//for picking a date
+		$('#dp1').datepicker({
+			format: 'yyyy-mm-dd'
+		});
+	});
+	</script>
+	
+	
+    <h1>Import an existing regression run</h1>
+    
+    <form name=newRun action="@routes.AddToDB.saveRun()" method="POST" >    
+        <fieldset>
+        
+            <div class="clearfix">
+				<label for="name">Run Name</label>
+				<div class="input">
+					<input id="name" type="text" value="" name="name" required pattern="(\w|\s|\.|-)+">
+					<span class="help-inline">Required, only word characters</span>
+				</div>
+			</div>
+			
+			<div class="clearfix ">
+				<label for="path">Path to Issues folder</label>
+				<div class="input">
+					<input type="text" id="path" name="path" value="" required pattern="..(S|s)nowtest.(R|r)egression.(java|native).*(I|i)ssues.*">
+					<span class="help-inline">Required. ex: "\\snowtest\Regression\java\13.5-Build2.1-AFP\Issues.13.5-Build2-AFP" <br />
+					Must begin with \\snowtest\Regression\(java or native)\....\Issues*"</span> 
+				</div>
+			</div>
+			
+			<div class="clearfix ">
+				<label for="version_name">Version</label>
+				<div class="input">
+				<select id="version_name" name="version.name" >
+					<option class="blank" value="">-- Choose a Version --</option>
+					@for((key, value) <- Version.options()){
+						<option value="@key">@value</option>
+					}
+				</select>
+				<button class="btn" onclick="return addVersion()">Add new version...</button>
+				<span class="help-inline">Required</span>
+				</div>
+			</div>
+			
+			<div class="clearfix ">
+				<label for="format_id">Format</label>
+				<div class="input">
+				<select id="format_id" name="format.id" >
+					<option class="blank" value="">-- Choose a Format --</option>
+					@for((key, value) <- FileFormat.options()){
+						<option value="@key">@value</option>
+					}
+				</select>
+					<span class="help-inline">Required</span> 
+				</div>
+			</div>
+			
+			<div class="clearfix ">
+				<label for="date_name">Date</label>
+				<div class="datepicker input">
+					<input type="date" class="datepicker" id="dp1" data-date-format="yyyy-mm-dd" name="date.name" value="" required pattern="\d{4}-\d{2}-\d{2}" >
+				</div>
+			</div>
+			
+			<div class="clearfix ">
+				<label for="svn_num">SVN</label>
+				<div class="input">
+				<input type="text" id="svn_num" name="svn.num" value="" pattern="\d*">
+					<span class="help-inline">Not Required (Numbers only)</span> 
+				</div>
+			</div>
+			
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create this run" class="btn primary" onclick="return checkForm()"> or 
+            <a href="@routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+        
+    </form>
+    }
+}

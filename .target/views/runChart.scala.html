@@ -1,0 +1,58 @@
+@(content: Html)
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Google Visualization API Sample</title>
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load('visualization', '1', {packages: ['annotatedtimeline']});
+    function decode(encodedString) {
+		var tmpElement = document.createElement('span');
+		tmpElement.innerHTML = encodedString;
+		return tmpElement.innerHTML;
+	  }
+    /**
+    Converts data into suitable format
+    **/
+        function ra(){
+         var table="@{controllers.Application.createData()}";
+         var tableFormatted=decode(table);
+         var obj = eval("(" + tableFormatted + ")");
+         return obj;
+        }
+    function drawVisualization() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('date', 'Date');
+      data.addColumn('number', 'Java Bugs');
+      data.addColumn('number', 'Native Bugs');
+      data.addRows(ra());
+    
+      /*data.addRows([
+        [new Date(2008, 1 ,1), 30000,  40645],
+        [new Date(2008, 1 ,2), 14045,  20374],
+        [new Date(2008, 1 ,3), 55022,  50766],
+        [new Date(2008, 1 ,4), 75284,  14334],
+        [new Date(2008, 1 ,5), 41476,  66467],
+        [new Date(2008, 1 ,6), 33322,  39463]
+      ]);
+      */
+    
+      var annotatedtimeline = new google.visualization.AnnotatedTimeLine(
+          document.getElementById('visualization'));
+      annotatedtimeline.draw(data, {
+    	  'displayAnnotations': false,
+    	  'displayZoomButtons': false,
+    	  'thickness': 2,
+    	  'highlightDot': 'last'
+    	  
+      
+      });
+    }
+    
+    google.setOnLoadCallback(drawVisualization);
+  </script>
+</head>
+<body style="font-family: Arial;border: 0 none;">
+<div id="visualization" style="width: 800px; height: 400px;"></div>
+</body>
+</html>

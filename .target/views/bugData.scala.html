@@ -1,0 +1,159 @@
+@(id: Long, dataForm: Form[Bug])
+
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header "headerSortUp"">
+        <a href= >@title</a>
+    </th>
+}
+
+@linkByRun(runID:Long) = @{
+routes.Application.getData(runID);
+
+}
+
+@homeSkeleton {
+    <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/buttons.less")"> 
+   
+    <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>
+    <script src="@routes.Assets.at("js/bootstrap-button")"></script>		
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        
+        <center><h1>Info pertaining to Bug ID: @id</h1> </center>
+        
+        <table class="Bug zebra-striped">
+            <thead>
+                <tr>
+                    @header("number", "Bug Number")
+					@header("bugstatus.name", "Bug Status")
+					@header("difference.name", "Difference Desc") 
+					@header("pagesoutbug.run.format.name", "Format")
+					@header("pagesoutbug.run.version.name", "Version")
+					@header("pagesoutbug.run.date.name", "Date Appeared")					
+                </tr>
+            </thead>
+            <tbody>
+
+                
+                    <tr>
+                        <td>@Bug.getBugFromID(id).number
+                        
+                        </a> 
+							
+						</td>
+						<td>
+                            @if(Bug.getBugFromID(id).bugstatus == null) {
+                                <em>-</em>
+                            } else {
+                                @Bug.getBugFromID(id).bugstatus.name
+                            }
+                        </td>
+						<td>
+							@for(difference <- Bug.getDifferences(Bug.getBugFromID(id))) {
+								@if(difference.difftype.name == "Worse") {
+									<font color="red">&bull; <i>@difference.name</i></font>  
+								} else {
+									@if(difference.difftype.name == "Better") {
+										<font color="green">&bull; <i>@difference.name</i></font>
+									} else {
+										<font color="black">&bull; <i>@difference.name</i></font>
+									}
+								}
+								
+								</br>
+							}
+                        </td>
+						<td>
+							@if(Bug.getFileFormat(Bug.getBugFromID(id)) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getFileFormat(Bug.getBugFromID(id)).name
+							}
+                        </td>
+						<td>
+							@if(Bug.getVersion(Bug.getBugFromID(id)) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getVersion(Bug.getBugFromID(id)).name
+							}
+                        </td>
+						<td>
+							@if(Bug.getDate(Bug.getBugFromID(id)) == null) {
+								<em>-</em>
+							} else {
+								@Bug.getDate(Bug.getBugFromID(id)).name.format("dd MMM yyyy")
+							}
+                        </td>
+                    </tr>
+					
+                
+
+            </tbody>
+        </table>
+        
+        <center><h1>Runs containing Bug ID: @id</h1> </center>
+        
+        <table class="run zebra-striped">
+            <thead>
+                <tr>
+                    @header("name", "Run Name")
+                    @header("version.name", "Version")
+                    @header("format.name", "Format")
+					@header("date.name", "Date")
+                    @header("svn.num", "SVN")
+                    @header("performance.time", "Performance Time")
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(run <- Run.listRunsFromBug(Bug.getBugFromID(id))) {
+                    <tr>
+                         <td>
+                         <a href="@linkByRun(run.id)" title="View all Run Information from @run.name">@run.name</a> 	
+						</td>
+						<td>
+                            @if(run.version == null) {
+                                <em>-</em>
+                            } else {
+                                @run.version.name of @run.version.platform.name
+                            }
+                        </td>
+                        <td>
+                            @if(run.format == null) {
+                                <em>-</em>
+                            } else {
+                                @run.format.name
+                            }
+                        </td>
+						<td>
+                            @if(run.date == null) {
+                                <em>-</em>
+                            } else {
+                                @run.date.name.format("dd MMM yyyy")
+                            }
+                        </td>
+						<td>
+                            @if(run.svn == null) {
+                                <em>-</em>
+                            } else {
+                                @run.svn.num
+                            }
+                        </td>
+						<td>
+                            @if(run.performance == null) {
+                                <em>-</em>
+                            } else {
+                                @run.performance.time.format("hh:mm:ss")
+                            }
+                        </td>
+                    </tr>
+                
+			}
+            </tbody>
+        </table>
+        
+        
+
+    
+}
+
+            
