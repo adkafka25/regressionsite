@@ -1,9 +1,0 @@
-2013-07-23 14:31:28,075 - [INFO] - from play in main 
-Listening for HTTP on /0:0:0:0:0:0:0:0:9000
-
-2013-07-23 14:31:33,051 - [INFO] - from play in play-internal-execution-context-1 
-database [default] connected at jdbc:mysql://it-08/regressionsite
-
-2013-07-23 14:31:34,288 - [INFO] - from play in play-internal-execution-context-1 
-Application started (Dev)
-
