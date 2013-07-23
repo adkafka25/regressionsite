@@ -114,7 +114,11 @@ public class NewRun extends Controller{
 	 */
 	public static String generateBatchFile(String command){
 		//Path to template file. Escape \ with \\ 
-		String template = "H:\\QA-Internship\\db_product\\regressionsite\\app\\batchRunScript.bat";
+		//String template = "H:\\QA-Internship\\db_product\\regressionsite\\app\\batchRunScript.bat";
+		String template = "app/controllers/batchRunScript.bat";
+		
+		//Get working dir
+		//System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		
 		String contents = "";
 		try{

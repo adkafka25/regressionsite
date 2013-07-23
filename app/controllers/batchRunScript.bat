@@ -14,7 +14,9 @@ echo Comparing the results to the last run on: %lastRun%
 ECHO Changing to the regression test bin directory
 call cd D:\Regression\bin
 
-COMMANDS
+REM Run regressions
+//COMMANDS GO HERE//
+REM Done running regressions
 
 echo %time%	Java regression tests complete
 
