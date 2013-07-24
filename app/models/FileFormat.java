@@ -13,7 +13,7 @@ import com.avaje.ebean.*;
  * FileFormat entity managed by Ebean
  */
 @Entity
-@Table(name = "Format")
+@Table(name = "format")
 public class FileFormat extends Model {
 
 	@Column(name="Format_ID")

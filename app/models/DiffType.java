@@ -13,7 +13,7 @@ import com.avaje.ebean.*;
  * DiffType entity managed by Ebean
  */
 @Entity 
-@Table(name="DiffType")
+@Table(name="difftype")
 public class DiffType extends Model {
 
 	@Column(name="DiffType_ID")

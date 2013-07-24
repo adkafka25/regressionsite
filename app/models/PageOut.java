@@ -13,7 +13,7 @@ import com.avaje.ebean.*;
  * PageOut entity managed by Ebean
  */
 @Entity
-@Table(name="Page")  
+@Table(name="page")  
 public class PageOut extends Model {
 
 	@Column(name="Page_ID")
