@@ -136,12 +136,12 @@ padding-left:50px;
            		@for(run <- Run.getList) {
            		<option value=@run.getRunID  class = @run.getDateName>@run.getRunName</option>
            		}
-           		<option value="">All Runs</option> 
+           		 
       		</select>
       		
       		
       		<input type = "button" id = "dSelect" value= "Search" class="btn primary" 
-      		onclick = "NavigateToSite('','','','','run3')"/>
+      		onclick = "dateRun('run3')"/>
  	<p>
  
     </p>
@@ -176,14 +176,17 @@ function NavigateToSite(list1,list2,p1,p2,id) {
 		}
 	}
 	else {
-		
+		alert("okay");
 		window.location = jsRoutes.controllers.Application.getData(value).url ;
 		
 	}
 	
 	
-	
 }
+ function dateRun(id) {
+		var value = document.getElementById(id).value;
+		window.location = jsRoutes.controllers.Application.getData(value).url ;
+	}
  /**
  These methods ensure that a button is disabled unless the 
  approriate fields are filled out.
