@@ -33,15 +33,14 @@
 <head>
     <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
 	<link type = "text/css" rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")" >
-	<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
+	<link type = "text/css" rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-responsive.css")" >
 	
 	<script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
 </head>
 <title>Regression Database Overview</title>
 <body>
-
-<div class="navbar navbar-fixed-top">
-<div class="navbar navbar-inverse">
+<div class="navbar-outer">
+<div class="navbar navbar-inverse navbar-fixed-top">
  <div class="navbar-inner">
 	<a class="brand" href="@linkTo("Overview") ">Regression Database</a>
    <ul class = nav nav-tabs>
@@ -75,6 +74,7 @@
    </div>
    </div>
   </div>
+  
  
 <script>
  function search() {
@@ -92,6 +92,7 @@
 <script src="@routes.Assets.at("js/bootstrap.js")"></script>
 <script src="@routes.Assets.at("js/bootstrap-dropdown.js")"></script>
 <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
+<script src="@routes.Assets.at("js/bootstrap-responsive.js")"></script>	
 		<section id="main">
             @content
         </section>
