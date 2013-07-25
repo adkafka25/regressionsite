@@ -394,7 +394,7 @@ public class AddToDB extends Controller{
 			folderPath = runForm.get().path;
 		}
 		else{ //If running on Unix...
-			folderPath = runForm.get().path.replace("//","/mnt/");
+			folderPath = runForm.get().path.replace("\\\\","/mnt/").replace("\\","/");
 		}
 		File folder = new File(folderPath); //for checking if it exists
 		
