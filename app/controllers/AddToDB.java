@@ -388,7 +388,13 @@ public class AddToDB extends Controller{
             return badRequest(importRun.render(runForm));
         }
 		
-		String folderPath = runForm.get().path;
+		String folderPath="";
+		if(System.getProperty("os.name").startsWith("Windows")){ //If running on windows...
+			folderPath = runForm.get().path;
+		}
+		else{ //If running on Unix...
+			folderPath = runForm.get().path.replace("//","/mnt/");
+		}
 		File folder = new File(folderPath); //for checking if it exists
 		
 		//if path is invalid, log it and don't create run
