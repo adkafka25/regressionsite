@@ -62,7 +62,14 @@ public class AddToDB extends Controller{
 			
 			//At this point, filePath is the path to the file after dirname
 			
-			String[] fileAsArray = filePath.split("\\\\");//had to escape the backslash
+			String[] fileAsArray;
+			if(System.getProperty("os.name").startsWith("Windows")){ //If running on windows...
+				fileAsArray = filePath.split("\\\\");//had to escape the backslash
+			}
+			else{ //If running on Unix...
+				fileAsArray = filePath.split("/");
+			}
+			
 			
 			String fileName=getFileName(filePath); //FileName
 			//String[] fileNameArray = fileName.split("\\."); //had to escape again //no longer necessary
@@ -242,7 +249,13 @@ public class AddToDB extends Controller{
 	 * @return FileName
 	 */
 	public static String getFileName(String filePath){
-		String[] fileAsArray = filePath.split("\\\\");//had to escape the backslash
+		String[] fileAsArray;
+		if(System.getProperty("os.name").startsWith("Windows")){ //If running on windows...
+			fileAsArray = filePath.split("\\\\");//had to escape the backslash
+		}
+		else{ //If running on Unix...
+			fileAsArray = filePath.split("/");
+		}
 		String fileName=fileAsArray[fileAsArray.length-1];
 		
 		fileName=fileName.replaceAll(".(ref|new|dif).",""); //Take out .1ref,.2new,.3dif....
@@ -318,24 +331,40 @@ public class AddToDB extends Controller{
 	 * @return Long for that error
 	 */
 	public static Long getErrorNum(String errorFile, String appendFolder){
-		//Change \ to /
-		appendFolder = appendFolder.replace("/","\\");
+		if(System.getProperty("os.name").startsWith("Windows")){ //If running on windows...
+			//Change \ to /
+			appendFolder = appendFolder.replace("/","\\");
+		}
 		//Subtract everything before end of appendFolder
 		//use lastindex of appendFolder and add the length of append folder
 		String file = errorFile.substring(errorFile.lastIndexOf(appendFolder)+appendFolder.length()+1);
 		//Expand name through .
 		String errorNum = file.substring(0,file.indexOf("."));
 		//if error num is present...
-		if(file.indexOf(".") < file.indexOf("\\")){
-			if(errorNum.matches("\\d*")){//to prevent any errors
-				return Long.valueOf(errorNum);
+		if(System.getProperty("os.name").startsWith("Windows")){ //If running on windows...
+			if(file.indexOf(".") < file.indexOf("\\")){
+				if(errorNum.matches("\\d*")){//to prevent any errors
+					return Long.valueOf(errorNum);
+				}
+				else{
+					return Long.valueOf(errorNum);
+				}
 			}
 			else{
-				return Long.valueOf(errorNum);
+				return 0L;
 			}
-		}
-		else{
-			return 0L;
+		}else{
+			if(file.indexOf(".") < file.indexOf("/")){
+				if(errorNum.matches("\\d*")){//to prevent any errors
+					return Long.valueOf(errorNum);
+				}
+				else{
+					return Long.valueOf(errorNum);
+				}
+			}
+			else{
+				return 0L;
+			}
 		}
 	}
 	 /**
@@ -345,19 +374,33 @@ public class AddToDB extends Controller{
 	 * @return String describing that error
 	 */
 	public static String getErrorDesc(String errorFile, String appendFolder){
-		//Change \ to /
-		appendFolder = appendFolder.replace("/","\\");
+		if(System.getProperty("os.name").startsWith("Windows")){ //If running on windows...
+			//Change \ to /
+			appendFolder = appendFolder.replace("/","\\");
+		}
 		//Subtract everything before end of appendFolder
 		//use lastindex of appendFolder and add the length of append folder
 		String file = errorFile.substring(errorFile.lastIndexOf(appendFolder)+appendFolder.length()+1);
-		//if error num is present...
-		if(file.indexOf(".") < file.indexOf("\\")){
-			//Get whats between "." and "/"
-			return file.substring(file.indexOf(".")+1,file.indexOf("\\"));
-		}
-		else{
-			//Get file name
-			return file.substring(0,file.indexOf("\\"));
+		
+		
+		if(System.getProperty("os.name").startsWith("Windows")){//if error num is present...
+			if(file.indexOf(".") < file.indexOf("\\")){
+				//Get whats between "." and "/"
+				return file.substring(file.indexOf(".")+1,file.indexOf("\\"));
+			}
+			else{
+				//Get file name
+				return file.substring(0,file.indexOf("\\"));
+			}
+		}else{
+			if(file.indexOf(".") < file.indexOf("/")){
+				//Get whats between "." and "/"
+				return file.substring(file.indexOf(".")+1,file.indexOf("/"));
+			}
+			else{
+				//Get file name
+				return file.substring(0,file.indexOf("/"));
+			}
 		}
 	}
 	
