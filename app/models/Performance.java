@@ -13,6 +13,7 @@ import com.avaje.ebean.*;
  * Performance entity managed by Ebean
  */
 @Entity 
+@Table(name="performance")
 public class Performance extends Model {
 
 	@Column(name="Performance_ID")

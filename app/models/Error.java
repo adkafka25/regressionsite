@@ -13,6 +13,7 @@ import com.avaje.ebean.*;
  * Error entity managed by Ebean
  */
 @Entity
+@Table(name="error")
 public class Error extends Model {
 
 	@Column(name="Error_ID")

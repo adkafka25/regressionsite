@@ -13,6 +13,7 @@ import com.avaje.ebean.*;
  * SVN entity managed by Ebean
  */
 @Entity 
+@Table(name="svn")
 public class SVN extends Model {
 
 	@Column(name="SVN_ID")

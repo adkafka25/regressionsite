@@ -12,7 +12,8 @@ import com.avaje.ebean.*;
 /**
  * Difference entity managed by Ebean
  */
-@Entity 
+@Entity
+@Table(name="difference") 
 public class Difference extends Model {
 
 	@Column(name="Difference_ID")

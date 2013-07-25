@@ -389,6 +389,7 @@ public class AddToDB extends Controller{
         }
 		
 		String folderPath="";
+		String pathForPlatform=runForm.get().path;
 		if(System.getProperty("os.name").startsWith("Windows")){ //If running on windows...
 			folderPath = runForm.get().path;
 		}
@@ -408,12 +409,12 @@ public class AddToDB extends Controller{
 		}
 		
 		//Get foreign keys for all necessary fields
-		String query = "INSERT INTO Run (Run_Name,Version_ID,Format_ID,Date_ID,SVN_ID,Performance_ID) VALUES (?,?,?,?,?,?)";
+		String query = "INSERT INTO run (Run_Name,Version_ID,Format_ID,Date_ID,SVN_ID,Performance_ID) VALUES (?,?,?,?,?,?)";
 		long runID=-1L;
 		
 		ResultSet generatedKeys = null;
 		
-		Platform platform = Platform.getPlatformFromPath(folderPath);
+		Platform platform = Platform.getPlatformFromPath(pathForPlatform);
 		
 		//Add run into DB
 		try{

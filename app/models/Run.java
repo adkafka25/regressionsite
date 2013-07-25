@@ -15,6 +15,7 @@ import com.avaje.ebean.*;
  * Run entity managed by Ebean
  */
 @Entity 
+@Table(name="run")
 public class Run extends Model {
 	//ID
 	@Column(name="Run_ID")

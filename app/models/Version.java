@@ -13,6 +13,7 @@ import com.avaje.ebean.*;
  * Version entity managed by Ebean
  */
 @Entity 
+@Table(name="version")
 public class Version extends Model {
 
 	@Column(name="Version_ID")

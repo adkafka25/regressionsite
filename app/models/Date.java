@@ -12,7 +12,8 @@ import com.avaje.ebean.*;
 /**
  * Date entity managed by Ebean
  */
-@Entity 
+@Entity
+@Table(name="date") 
 public class Date extends Model {
 
 	@Column(name="Date_ID")
