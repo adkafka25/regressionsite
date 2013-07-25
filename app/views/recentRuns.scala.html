@@ -14,7 +14,15 @@
     <script src="@routes.Assets.at("js/bootstrap.min.js")"></script>	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
        
-     	  <center><h1> Last @d Runs that share @f1 and @f2</h1> </center>
+     	  <center>
+     	  <h1> @if(p2 == "version.name") {
+		   Last @d Runs with @f1 Version @f2
+		}
+     	  @if(p2 != "version.name") {
+     	   Last @d Runs that share @f1 and @f2
+     	  }
+     	  </h1> 
+     	  </center>
    @if(Run.dataSet(f1, f2, p1, p2).size == 0) {
         
         <div class="well">
