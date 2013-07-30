@@ -130,3 +130,7 @@ select:required:valid {
 	background-position: right top; 
 	background-repeat: no-repeat; 
 }
+.largerBox{
+	width: 500px;
+	height: 20px;
+}

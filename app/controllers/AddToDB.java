@@ -274,14 +274,14 @@ public class AddToDB extends Controller{
 	 * @return "Better", "Neutral", "Worse", or error
 	 */
 	public static String getDiffType(String filePath){
-		if(filePath.toLowerCase().contains("neutral")){
-			return "Neutral";
-		}
-		else if(filePath.toLowerCase().contains("better")){
+		if(filePath.toLowerCase().contains("better")){
 			return "Better";
 		}
 		else if(filePath.toLowerCase().contains("worse")){
 			return "Worse";
+		}
+		else if(filePath.toLowerCase().contains("neutral") || filePath.toLowerCase().contains("different")){
+			return "Neutral";
 		}
 		else{
 			return null;//Difftype not found 

@@ -107,12 +107,10 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	
 	@if(runID !=(-1 : Long)){
-		<H2><a href='@routes.Application.listPageByRun( 0,"name","asc", Run.getRunByID(runID).id,"","")'>View Run</a><br/></H2>
+		<H2><a href='@routes.Application.getData(runID)'>View Run</a><br/></H2>
 	}
 	
 	<div class="addMissingInfo">
-		<H1>Missing information...</H1>
-		
 		@for((difference,index) <- Difference.getMissingDiffDesc(runID).zipWithIndex){
 			@if(index==0){
 				<H3>Missing Difference Description/Name</H3>

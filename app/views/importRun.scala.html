@@ -15,13 +15,11 @@
 	<script type="text/javascript">
 	function checkForm(){
 		if (document.newRun.version_name.value == ""){
-			bootbox.alert("Please select a Version", function() {
-				});
+			alert("Please select a Version");
 			return false;
 		}
 		else if ( document.newRun.format_id.value == ""){
-			bootbox.alert("Please select a File Format", function() {
-			});
+			alert("Please select a File Format");
 		return false;
 		}
 		else{
@@ -126,7 +124,7 @@
 			<div class="clearfix ">
 				<label for="path">Path to Issues folder</label>
 				<div class="input">
-					<input type="text" id="path" name="path" value="" required pattern="..(S|s)nowtest.*(R|r)egression.(java|native).*(I|i)ssues.*">
+					<input type="text" class="largerBox" id="path" name="path" value="" required pattern="..(S|s)nowtest.*(R|r)egression.(java|native).*(I|i)ssues.*">
 					<span class="help-inline">Required. ex: "\\snowtest\Regression\java\13.5-Build2.1-AFP\Issues.13.5-Build2-AFP" <br />
 					Must begin with \\snowtest\Regression\(java or native)\....\Issues*"</span> 
 				</div>
