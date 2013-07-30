@@ -97,11 +97,13 @@ public class Platform extends Model {
 	public static Platform getPlatformFromPath(String folderPath){
 		int indexOfPlatform = 4; //Which slot in the filepath the platform is specified in (0\1\2\3\4...)
 		
-		if(folderPath.toLowerCase().contains("/d/")){
+		if(folderPath.toLowerCase().contains("\\d\\")){
 			indexOfPlatform = 5;
 		}
 		
 		String[] platform = folderPath.split("\\\\"); //Expand as an array with "\" as the delimiter
+		
+		System.out.println(platform[indexOfPlatform]);
 		
 		Platform plat = find.where()
 				.ilike("name",platform[indexOfPlatform])
