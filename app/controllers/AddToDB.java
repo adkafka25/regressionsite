@@ -294,10 +294,10 @@ public class AddToDB extends Controller{
 	 * @return String that describes the difference
 	 */
 	public static String getDifference(String[] fileAsArray){
-		if(fileAsArray[1].matches("[A-z ]*")){
+		if(fileAsArray[1].matches("[A-z -]*")){
 			return fileAsArray[1];
 		}
-		else if(fileAsArray[2].matches("[A-z ]*")){
+		else if(fileAsArray[2].matches("[A-z -]*")){
 			return fileAsArray[2];
 		}
 		else{
