@@ -59,7 +59,9 @@ public class Version extends Model {
     public static Map<String,String> options() {
         LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
         for(Version ver: Version.find.orderBy("name").findList()) {
-            options.put(ver.id.toString(), ver.name+" of "+ver.platform.name);
+			if(!options.containsValue(ver.name)){//if doesn't already exist...
+				options.put(ver.id.toString(), ver.name);
+			}
         }
         return options;
     }
@@ -97,6 +99,7 @@ public class Version extends Model {
 			newVersion.save();
 			return newVersion.id;
 		}
+		System.out.println(version.name);
 		return version.id;
 
 	}

@@ -103,8 +103,6 @@ public class Platform extends Model {
 		
 		String[] platform = folderPath.split("\\\\"); //Expand as an array with "\" as the delimiter
 		
-		System.out.println(platform[indexOfPlatform]);
-		
 		Platform plat = find.where()
 				.ilike("name",platform[indexOfPlatform])
 				.findUnique();
