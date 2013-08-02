@@ -38,7 +38,7 @@ POST	/saveDiffDesc				controllers.Application.addDiffDesc()
 GET		/runs/delete/:runID			controllers.Application.deleteRun(runID:Long)
 
 # Download
-POST	/download		controllers.NewRun.downloadBatch()
+POST	/download					controllers.NewRun.downloadBatch()
 GET	    /getExcel/:filter1/:filter2/:param1/:param2							controllers.Application.createFile(filter1: String , filter2: String, param1: String , param2: String)
 GET		/pageExcel/:runID													controllers.Application.pageExcel(runID:Long)			
 

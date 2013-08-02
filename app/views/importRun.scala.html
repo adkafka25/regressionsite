@@ -90,9 +90,10 @@
 		var info=runPath.split("\\");//split into array with \ as delimiter
 		var runName=info[info.length-2];
 		var format=runName.substring(runName.lastIndexOf("-")+1);
+		if(format.contains(".")){//If has ".Nightly" or something of the sort
+			format=format.substring(0,format.lastIndexOf("."));
+		}
 		var version=runName.substring(0,runName.lastIndexOf("-"));
-		
-		//alert(runPath+"\n"+runName+"\n"+format+"\n"+version);
 		
 		//Set run name
 		document.newRun.name.value=runName;
