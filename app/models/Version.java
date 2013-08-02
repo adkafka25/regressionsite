@@ -99,7 +99,6 @@ public class Version extends Model {
 			newVersion.save();
 			return newVersion.id;
 		}
-		System.out.println(version.name);
 		return version.id;
 
 	}
