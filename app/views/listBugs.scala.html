@@ -87,8 +87,12 @@ routes.Application.bugData(bugID);
 
                 @for(bug <- currentPage.getList) {
                     <tr>
-                        <td><a href="@linkByBug(bug.id)" title="View all Bug Information from @bug.id">@bug.number</a> 
-							
+                        <td>
+							@if(bug.number == null){
+								<em>-</em>
+							} else {
+								<a href="@linkByBug(bug.id)" title="View all Bug Information from @bug.id">@bug.number</a> 
+							}
 						</td>
 						<td>
                             @if(bug.bugstatus == null) {

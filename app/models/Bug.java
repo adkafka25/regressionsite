@@ -101,13 +101,23 @@ public class Bug extends Model {
      * @param filter Filter applied on the number column
      */
     public static Page<Bug> page(int page, int pageSize, String sortBy, String order, String filter) {
-        return 
-            find.where()
-                .ilike("number", "%" + filter + "%")
-                .orderBy(sortBy + " " + order)
-                .fetch("bugstatus")
-                .findPagingList(pageSize)
-                .getPage(page);
+        if(filter.equals("")){
+			return
+				find.where()
+					.orderBy(sortBy + " " + order)
+					.fetch("bugstatus")
+					.findPagingList(pageSize)
+					.getPage(page);
+		}
+		else{
+			return 
+				find.where()
+					.ilike("number", "%" + filter + "%")
+					.orderBy(sortBy + " " + order)
+					.fetch("bugstatus")
+					.findPagingList(pageSize)
+					.getPage(page);
+		}
     }
     /**     * 
      * @return all the bugs in a list.
