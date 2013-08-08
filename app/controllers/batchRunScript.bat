@@ -1,3 +1,8 @@
+REM THIS FILE IS ONLY USESD AS A REFERENCE. THE ACTUAL TEMPLATE IS IN app/models/BatchScriptTemplate.java
+
+
+
+
 @echo off
 REM We use today's date for creating all the new regression output directories
 
@@ -5,7 +10,7 @@ SET theDATE=%date:~-4,4%-%date:~-10,2%-%date:~-7,2%
 echo Start of Java regression test on %theDATE% %time%
 
 REM We use the last run date for comparing the results against the previous run
-REM Set the "lastRun" environment variable by reading this in from a file that was
+REM Set the 'lastRun' environment variable by reading this in from a file that was
 REM created the last time we ran this.
 
 call D:\Regression\bin\SetLastRun.Java.bat

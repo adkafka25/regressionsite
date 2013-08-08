@@ -120,13 +120,8 @@ public class NewRun extends Controller{
 		//Get working dir
 		//System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		
-		String contents = "";
-		try{
-			contents=readFile(template,java.nio.charset.Charset.forName("UTF-8"));
-		}
-		catch (java.io.IOException e){
-			e.printStackTrace();
-		}
+		//Get template
+		String contents=BatchScriptTemplate.getContents();
 		
 		//Insert command
 		String insertHere="//COMMANDS GO HERE//"; //This is the line to switch out for the command
@@ -136,6 +131,10 @@ public class NewRun extends Controller{
 	}
 	
 	//Set contents of file to a String
+	//No longer used
+	/** 
+	 * @deprecated
+	 */
 	public static String readFile(String path, java.nio.charset.Charset encoding) throws java.io.IOException{
 		byte[] encoded = Files.readAllBytes(java.nio.file.Paths.get(path));
 		return encoding.decode(java.nio.ByteBuffer.wrap(encoded)).toString();
