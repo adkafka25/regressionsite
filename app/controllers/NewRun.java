@@ -148,7 +148,7 @@ public class NewRun extends Controller{
 		
 		File[] files = file.listFiles();
 		
-		List<String> validDirs = new ArrayList();
+		List<String> validDirs = new ArrayList<String>();
 		
 		for(File folder : files){
 			if(folder.isDirectory()){//if it is a directory, add it to the list
