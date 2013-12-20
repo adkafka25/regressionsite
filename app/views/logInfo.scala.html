@@ -13,6 +13,14 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
     logInfoFixed
     
 }
+
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header "headerSortUp"">
+        <a href= >@title</a>
+    </th>
+}
+
+
 @*************************************
 * Prompt user to fill out bug numb   *
 *************************************@
@@ -23,6 +31,7 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 	function """+funcName+"""(){
 		$('#"""+id+"""').submit(function (){
 			var formdata = $(this).serialize();
+			alert("formdata="+formdata);
 				$.ajax({
 					type: "POST",
 					url: jsRoutes.controllers.Application.addBugNum().url,
@@ -105,26 +114,127 @@ var logInfoFixed=replace("INFO:","<br/><font color=\"green\">INFO:</font>") repl
 @homeSkeleton {
 	<script type="text/javascript" src="/assets/javascripts/routes"></script>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript">
+		function reset(){
+			var elements = document.getElementsByClassName("bug");
+			for(var i=0; i<elements.length; i++){
+				elements[i].value="";
+			}
+			var elements2 = document.getElementsByClassName("difference");
+			for(var i=0; i<elements2.length; i++){
+				elements2[i].value="";
+			}
+			return false;
+		}
+		function saveChanges(){
+			//Tabulate changes to make
+			var changes ="CHANGES TO MAKE: \n";
+			var elements = document.getElementsByClassName("bug");
+			for(var i=0; i<elements.length; i++){
+				if(elements[i].value!=""){
+					var id=elements[i].id.substring(3);
+					if(! /^\d+$/.test(elements[i].value)){
+						alert("Entry "+elements[i].value+" Must only compose of digits");
+						continue;
+					}
+					changes+="BugNum -> "+elements[i].value+"\n";
+				}
+			}
+			var elements2 = document.getElementsByClassName("difference");
+			for(var i=0; i<elements2.length; i++){
+				if(elements2[i].value!=""){
+					var id=elements2[i].id.substring(4);
+					changeDiff("name="+elements2[i].value+"&id="+id);
+					changes+="Difference -> "+elements2[i].value+"\n";
+				}
+			}
+			//Confirm changes
+			if(!confirm("Are you sure you want to make these changes? \n"+changes )){
+				return false;
+			}
+			//Make the changes
+			for(var i=0; i<elements.length; i++){
+				if(elements[i].value!=""){
+					var id=elements[i].id.substring(3);
+					if(! /^\d+$/.test(elements[i].value)){
+						continue;
+					}
+					changeBug("number="+elements[i].value+"&id="+id);
+				}
+			}
+			var elements2 = document.getElementsByClassName("difference");
+			for(var i=0; i<elements2.length; i++){
+				if(elements2[i].value!=""){
+					var id=elements2[i].id.substring(4);
+					changeDiff("name="+elements2[i].value+"&id="+id);
+				}
+			}
+			alert("Success");
+			return false;
+		}
+		function changeBug(formdata){
+			$.ajax({
+				type: "POST",
+				url: jsRoutes.controllers.Application.addBugNum().url,
+				data: formdata,
+				success: function(data){
+				}
+			});
+		}
+		function changeDiff(formdata){
+			$.ajax({
+				type: "POST",
+				url: jsRoutes.controllers.Application.addDiffDesc().url,
+				data: formdata,
+				success: function(data){
+				}
+			});
+		}
+	</script>
 	
 	@if(runID !=(-1 : Long)){
 		<H2><a href='@routes.Application.getData(runID)'>View Run</a><br/></H2>
 	}
 	
-	<div class="addMissingInfo">
-		@for((difference,index) <- Difference.getMissingDiffDesc(runID).zipWithIndex){
-			@if(index==0){
-				<H3>Missing Difference Description/Name</H3>
-			}
-			@promptDifference(difference,index, PageOut.listFilesFromDiff(runID,difference))
-		}
-		
-		@for((bug,index) <- Bug.getMissingBugNum(runID).zipWithIndex){
-			@if(index==0){
-				<H3>Missing Bug Number</H3>
-			}
-			@(promptBug(bug,index))
-		}
-	</div>
+	<div class="addInfo">
+		<table class="Bug zebra-striped">
+       		<center><h2>Bugs from this run:</h2> </center>
+            <thead>
+                <tr>
+                    @header("number", "Bug Number")
+					@header("difference.name", "Difference Desc") 
+                </tr>
+            </thead>
+            <tbody>
+
+                @for(bug <- Bug.listBugs(runID)) {
+                    <tr>
+                        <td><input type="text" class="bug" id="bug@bug.id" placeholder="@bug.number"></td>
+						<td>
+							@for(difference <- Bug.getDifferences(bug)) {
+								@if(difference.difftype.name == "Worse") {
+									<input type="text" class="difference" id="diff@difference.id" style="color:#FF0000" placeholder="@difference.name">
+								} else {
+									@if(difference.difftype.name == "Better") {
+										<input type="text" class="difference" id="diff@difference.id" style="color:#00FF00" placeholder="@difference.name">
+									} else {
+										<input type="text" class="difference" id="diff@difference.id" style="color:#000000" placeholder="@difference.name">
+									}
+								}
+								
+								</br>
+							}
+                        </td>
+                    </tr>
+					
+                }
+
+            </tbody>
+        </table>
+		<div class="actions">
+			<input type="submit" value="Reset" class="btn primary" onclick="return reset()">
+			<input type="submit" value="Save changes" class="btn primary" onclick="return saveChanges()">
+		</div>
 	
 	<div class="Log">
 		<H1>Log:</H1>

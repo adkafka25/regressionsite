@@ -74,7 +74,10 @@ public class Bug extends Model {
 	 * Get difference associated with that bug through page
 	 */
 	public static List<Difference> getDifferences(Bug bug){
-		return Difference.listDifferences(PageOut.pageFromBug(bug));
+		List<Difference> d = new ArrayList<Difference>();
+		d.add(bug.difference);
+		return d;
+		//return Difference.listDifferences(PageOut.pageFromBug(bug));
 	}
 	
 	//PageToBug
@@ -171,9 +174,9 @@ public class Bug extends Model {
 
 	
 	/**
-	 * This method calculates how many Bugs occured in given run
+	 * This method returns Bugs occurred in given run
 	 * @param run Which run to calculate
-	 * @return Number of bugs in run
+	 * @return bugs in run
 	 */
 	public static Set<Bug> listBugs(Run run){
 		Set<Bug> bugSet = find.where() //create a list of pagetobug with only pages from this run
@@ -181,6 +184,20 @@ public class Bug extends Model {
 			.findSet();
 		return bugSet;
 	}
+	
+	/**
+	 * This method returns Bugs occurred in given run
+	 * @param runID Which run to calculate
+	 * @param runID Which run to calculate
+	 * @return bugs in run
+	 */
+	public static Set<Bug> listBugs(Long runID){
+		Set<Bug> bugSet = find.where() //create a list of pagetobug with only pages from this run
+			.eq("pagesoutbug.run.id", runID) //make sure page is from run
+			.findSet();
+		return bugSet;
+	}
+	
 	
 	/**
 	 * This method returns a list of all pages from a given run that are missing a bugNum
